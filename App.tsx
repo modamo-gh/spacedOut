@@ -1,8 +1,11 @@
 import { TextInput, View } from "react-native";
+import DateTimePickerModal from "react-native-modal-datetime-picker";
 
 const App = () => {
 	return <View style={{ flex: 1, backgroundColor: "blue", alignItems: "center", justifyContent: "center" }}>
-		<TextInput style={{height: 48, width: 80, backgroundColor: "white"}} placeholder="Enter Artist"/>
+		<DateTimePickerModal 
+		isVisible="true"
+		mode="date"/>
 	</View>
 }
 
