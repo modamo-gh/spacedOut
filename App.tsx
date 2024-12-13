@@ -4,9 +4,10 @@ import DateTimePickerModal from "react-native-modal-datetime-picker";
 
 const App = () => {
 	const [showDatePicker, setShowDatePicker] = useState(true);
+	const [date, setDate] = useState(new Date());
 
 	const handleConfirm = (date: Date) => {
-		console.log(date);
+		setDate(date);
 
 		setShowDatePicker(false);
 	};
@@ -20,6 +21,12 @@ const App = () => {
 				justifyContent: "center"
 			}}
 		>
+			{date ? (
+				<View>
+					<Text>Target Date</Text>
+					<Text>{date.toString()}</Text>
+				</View>
+			) : null}
 			<TouchableOpacity
 				style={{
 					backgroundColor: "red",
