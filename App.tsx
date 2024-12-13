@@ -1,11 +1,18 @@
 import { useState } from "react";
-import { SafeAreaView, Text, TouchableOpacity, View } from "react-native";
+import {
+	FlatList,
+	SafeAreaView,
+	Text,
+	TouchableOpacity,
+	View
+} from "react-native";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { DateTime } from "luxon";
 
 const App = () => {
 	const [showDatePicker, setShowDatePicker] = useState(false);
 	const [date, setDate] = useState<Date>();
+	const [milestones, setMilestones] = useState<string[]>([]);
 	const today = new Date();
 
 	const intervals = [
@@ -37,10 +44,13 @@ const App = () => {
 			const potentialDate = concertDate.minus(dateInfo);
 
 			if (potentialDate >= DateTime.fromJSDate(today)) {
-				console.log(potentialDate.toLocaleString(DateTime.DATE_FULL));
+				milestoneDates.push(
+					potentialDate.toLocaleString(DateTime.DATE_FULL)
+				);
 			}
 		}
 
+		setMilestones(milestoneDates.reverse());
 		setShowDatePicker(false);
 	};
 
@@ -78,7 +88,13 @@ const App = () => {
 						alignItems: "center",
 						justifyContent: "center"
 					}}
-				></View>
+				>
+					<FlatList
+						data={milestones}
+						keyExtractor={(item, index) => index}
+						renderItem={(item) => <Text>{item.item}</Text>}
+					/>
+				</View>
 				<View
 					style={{
 						flex: 1,
