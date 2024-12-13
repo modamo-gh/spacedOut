@@ -3,8 +3,8 @@ import { Button, Text, TouchableOpacity, View } from "react-native";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 
 const App = () => {
-	const [showDatePicker, setShowDatePicker] = useState(true);
-	const [date, setDate] = useState(new Date());
+	const [showDatePicker, setShowDatePicker] = useState(false);
+	const [date, setDate] = useState<Date>();
 
 	const handleConfirm = (date: Date) => {
 		setDate(date);
@@ -16,28 +16,41 @@ const App = () => {
 		<View
 			style={{
 				flex: 1,
-				backgroundColor: "blue",
-				alignItems: "center",
+				alignItems: "stretch",
 				justifyContent: "center"
 			}}
 		>
-			{date ? (
-				<View>
-					<Text>Target Date</Text>
-					<Text>{date.toString()}</Text>
-				</View>
-			) : null}
-			<TouchableOpacity
+			<View
 				style={{
-					backgroundColor: "red",
-					borderRadius: 5,
-					width: 100,
-					height: 48
+					flex: 4,
+					backgroundColor: "white",
+					alignItems: "center",
+					justifyContent: "center"
 				}}
-				onPress={() => setShowDatePicker(true)}
 			>
-				<Text></Text>
-			</TouchableOpacity>
+				<Text>Target</Text>
+				{date ? <Text>{date.toString()}</Text> : null}
+			</View>
+			<View
+				style={{
+					flex: 1,
+					backgroundColor: "blue",
+					alignItems: "center",
+					justifyContent: "center"
+				}}
+			>
+				<TouchableOpacity
+					style={{
+						backgroundColor: "red",
+						borderRadius: 5,
+						width: 100,
+						height: 48
+					}}
+					onPress={() => setShowDatePicker(true)}
+				>
+					<Text></Text>
+				</TouchableOpacity>
+			</View>
 			<DateTimePickerModal
 				isVisible={showDatePicker}
 				mode="date"
