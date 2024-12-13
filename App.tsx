@@ -1,13 +1,45 @@
 import { useState } from "react";
 import { SafeAreaView, Text, TouchableOpacity, View } from "react-native";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
+import { DateTime } from "luxon";
 
 const App = () => {
 	const [showDatePicker, setShowDatePicker] = useState(false);
 	const [date, setDate] = useState<Date>();
+	const today = new Date();
+
+	const intervals = [
+		{ type: "days", amount: 0 },
+		{ type: "days", amount: 1 },
+		{ type: "days", amount: 2 },
+		{ type: "days", amount: 4 },
+		{ type: "weeks", amount: 1 },
+		{ type: "weeks", amount: 2 },
+		{ type: "weeks", amount: 4 },
+		{ type: "months", amount: 1 },
+		{ type: "months", amount: 2 },
+		{ type: "months", amount: 4 },
+		{ type: "months", amount: 8 }
+	];
 
 	const handleConfirm = (date: Date) => {
 		setDate(date);
+
+		const concertDate = DateTime.fromJSDate(date);
+
+		const milestoneDates = [];
+
+		for (const interval of intervals) {
+			const dateInfo: { [key: string]: number } = {};
+
+			dateInfo[interval.type] = interval.amount;
+
+			const potentialDate = concertDate.minus(dateInfo);
+
+			if (potentialDate >= DateTime.fromJSDate(today)) {
+				console.log(potentialDate.toLocaleString(DateTime.DATE_FULL));
+			}
+		}
 
 		setShowDatePicker(false);
 	};
@@ -37,7 +69,7 @@ const App = () => {
 					}}
 				>
 					<Text>Today</Text>
-					<Text>{new Date().toDateString()}</Text>
+					<Text>{today.toDateString()}</Text>
 				</View>
 				<View
 					style={{
