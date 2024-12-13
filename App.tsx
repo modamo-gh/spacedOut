@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Button, Text, TouchableOpacity, View } from "react-native";
+import { SafeAreaView, Text, TouchableOpacity, View } from "react-native";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 
 const App = () => {
@@ -13,7 +13,7 @@ const App = () => {
 	};
 
 	return (
-		<View
+		<SafeAreaView
 			style={{
 				flex: 1,
 				alignItems: "stretch",
@@ -24,12 +24,40 @@ const App = () => {
 				style={{
 					flex: 4,
 					backgroundColor: "white",
-					alignItems: "center",
+					alignItems: "stretch",
 					justifyContent: "center"
 				}}
 			>
-				<Text>Target</Text>
-				{date ? <Text>{date.toString()}</Text> : null}
+				<View
+					style={{
+						flex: 1,
+						backgroundColor: "green",
+						alignItems: "center",
+						justifyContent: "center"
+					}}
+				>
+					<Text>Today</Text>
+					<Text>{new Date().toDateString()}</Text>
+				</View>
+				<View
+					style={{
+						flex: 8,
+						backgroundColor: "purple",
+						alignItems: "center",
+						justifyContent: "center"
+					}}
+				></View>
+				<View
+					style={{
+						flex: 1,
+						backgroundColor: "orange",
+						alignItems: "center",
+						justifyContent: "center"
+					}}
+				>
+					<Text>Target</Text>
+					{date ? <Text>{date.toDateString()}</Text> : null}
+				</View>
 			</View>
 			<View
 				style={{
@@ -57,7 +85,7 @@ const App = () => {
 				onCancel={() => setShowDatePicker(false)}
 				onConfirm={handleConfirm}
 			/>
-		</View>
+		</SafeAreaView>
 	);
 };
 
