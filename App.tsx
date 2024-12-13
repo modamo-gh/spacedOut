@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { TextInput, View } from "react-native";
+import { Button, Text, TouchableOpacity, View } from "react-native";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 
 const App = () => {
@@ -7,8 +7,8 @@ const App = () => {
 
 	const handleConfirm = (date: Date) => {
 		console.log(date);
-		
-		setShowDatePicker(false)
+
+		setShowDatePicker(false);
 	};
 
 	return (
@@ -20,6 +20,17 @@ const App = () => {
 				justifyContent: "center"
 			}}
 		>
+			<TouchableOpacity
+				style={{
+					backgroundColor: "red",
+					borderRadius: 5,
+					width: 100,
+					height: 48
+				}}
+				onPress={() => setShowDatePicker(true)}
+			>
+				<Text></Text>
+			</TouchableOpacity>
 			<DateTimePickerModal
 				isVisible={showDatePicker}
 				mode="date"
