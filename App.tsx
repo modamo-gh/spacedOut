@@ -20,7 +20,23 @@ const App = () => {
 	const [milestones, setMilestones] = useState<string[]>([]);
 	const today = new Date();
 
-	const [fontsLoaded] = useFonts({ Orbitron: require("./assets/fonts/Orbitron-VariableFont_wght.ttf") })
+	const screenHeight = Dimensions.get("screen").height;
+	const screenWidth = Dimensions.get("screen").width;
+	const [stars, setStars] = useState(() =>
+		Array.from({ length: 25 }).map((_, i) => (
+			<Circle
+				cx={Math.random() * screenWidth}
+				cy={Math.random() * screenHeight}
+				key={i}
+				r={Math.random() * 5}
+				color="white"
+			/>
+		))
+	);
+
+	const [fontsLoaded] = useFonts({
+		Orbitron: require("./assets/fonts/Orbitron-VariableFont_wght.ttf")
+	});
 
 	const intervals = [
 		{ type: "days", amount: 0 },
@@ -61,13 +77,12 @@ const App = () => {
 		setShowDatePicker(false);
 	};
 
-	const screenHeight = Dimensions.get("screen").height;
-	const screenWidth = Dimensions.get("screen").width;
 
-	if(!fontsLoaded){
+
+	if (!fontsLoaded) {
 		return null;
-	} 
-	
+	}
+
 	return (
 		<SafeAreaView
 			style={{
@@ -85,15 +100,7 @@ const App = () => {
 					y={0}
 					color="#330099"
 				/>
-				{Array.from({ length: 25 }).map((_, i) => (
-					<Circle
-						cx={Math.random() * screenWidth}
-						cy={Math.random() * screenHeight}
-						key={i}
-						r={Math.random() * 5}
-						color="white"
-					/>
-				))}
+				{stars}
 			</Canvas>
 			<View
 				style={{
@@ -123,7 +130,7 @@ const App = () => {
 							width: screenWidth
 						}}
 						data={milestones}
-						keyExtractor={(item, index) => index}
+						keyExtractor={(item) => item}
 						renderItem={(item) => (
 							<Text style={[styles.text, styles.dateText]}>
 								{item.item}
@@ -163,9 +170,7 @@ const App = () => {
 					}}
 					onPress={() => setShowDatePicker(true)}
 				>
-					<Text
-						style={[styles.text, styles.buttonText]}
-					>
+					<Text style={[styles.text, styles.buttonText]}>
 						Choose Date
 					</Text>
 				</TouchableOpacity>
@@ -185,10 +190,10 @@ const styles = StyleSheet.create({
 		flex: 1,
 		fontSize: 18,
 		textAlign: "center",
-		color: "#330099",
+		color: "#330099"
 	},
 	canvas: { height: "100%", position: "absolute", width: "100%" },
-	dateText: { fontSize: 37,  },
+	dateText: { fontSize: 37 },
 	labelText: { fontSize: 18 },
 	text: { color: "white", fontWeight: "bold", fontFamily: "Orbitron" }
 });
