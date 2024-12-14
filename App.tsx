@@ -38,39 +38,69 @@ const App = () => {
 		Orbitron: require("./assets/fonts/Orbitron-VariableFont_wght.ttf")
 	});
 
-	const intervals = [
-		{ type: "days", amount: 0 },
-		{ type: "days", amount: 1 },
-		{ type: "days", amount: 2 },
-		{ type: "days", amount: 4 },
-		{ type: "weeks", amount: 1 },
-		{ type: "weeks", amount: 2 },
-		{ type: "weeks", amount: 4 },
-		{ type: "months", amount: 1 },
-		{ type: "months", amount: 2 },
-		{ type: "months", amount: 4 },
-		{ type: "months", amount: 8 }
-	];
-
 	const handleConfirm = (date: Date) => {
 		setDate(date);
 
 		const concertDate = DateTime.fromJSDate(date);
+		const t = DateTime.fromJSDate(today);
 
-		const milestoneDates = [];
+		const milestoneDates = [concertDate.toLocaleString(DateTime.DATE_FULL)];
 
-		for (const interval of intervals) {
-			const dateInfo: { [key: string]: number } = {};
+		let daysBetween = 1;
 
-			dateInfo[interval.type] = interval.amount;
+		while (
+			concertDate.minus({ days: daysBetween }) >= t &&
+			daysBetween < 7
+		) {
+			milestoneDates.push(
+				concertDate
+					.minus({ days: daysBetween })
+					.toLocaleString(DateTime.DATE_FULL)
+			);
 
-			const potentialDate = concertDate.minus(dateInfo);
+			daysBetween *= 2;
+		}
 
-			if (potentialDate >= DateTime.fromJSDate(today)) {
-				milestoneDates.push(
-					potentialDate.toLocaleString(DateTime.DATE_FULL)
-				);
-			}
+		let weeksBetween = 1;
+
+		while (
+			concertDate.minus({ weeks: weeksBetween }) >= t &&
+			weeksBetween <= 4
+		) {
+			milestoneDates.push(
+				concertDate
+					.minus({ weeks: weeksBetween })
+					.toLocaleString(DateTime.DATE_FULL)
+			);
+
+			weeksBetween *= 2;
+		}
+
+		let monthsBetween = 1;
+
+		while (
+			concertDate.minus({ months: monthsBetween }) >= t &&
+			monthsBetween < 12
+		) {
+			milestoneDates.push(
+				concertDate
+					.minus({ months: monthsBetween })
+					.toLocaleString(DateTime.DATE_FULL)
+			);
+
+			monthsBetween *= 2;
+		}
+
+		let yearsBetween = 1;
+
+		while (concertDate.minus({ years: yearsBetween }) >= t) {
+			milestoneDates.push(
+				concertDate
+					.minus({ years: yearsBetween })
+					.toLocaleString(DateTime.DATE_FULL)
+			);
+
+			yearsBetween *= 2;
 		}
 
 		setMilestones(milestoneDates.reverse());
