@@ -1,3 +1,4 @@
+import "react-native-reanimated"
 import { useState } from "react";
 import {
 	Dimensions,
@@ -10,6 +11,7 @@ import {
 } from "react-native";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { DateTime } from "luxon";
+import { Canvas, Circle, Rect } from "@shopify/react-native-skia";
 
 const App = () => {
 	const [showDatePicker, setShowDatePicker] = useState(false);
@@ -56,20 +58,22 @@ const App = () => {
 		setShowDatePicker(false);
 	};
 
+	const screenHeight = Dimensions.get("screen").height;
 	const screenWidth = Dimensions.get("screen").width;
 
 	return (
 		<SafeAreaView
 			style={{
+				backgroundColor: "blue",
 				flex: 1,
 				alignItems: "stretch",
 				justifyContent: "center"
 			}}
 		>
+			<Canvas style={styles.canvas}><Rect height={screenHeight} width={screenWidth} x={0} y={0} color="blue" />{Array.from({ length: 25 }).map((_, i) => (<Circle cx={Math.random() * screenWidth} cy={Math.random() * screenHeight} key={i} r={Math.random() * 5} color="white" />))}</Canvas>
 			<View
 				style={{
 					flex: 4,
-					backgroundColor: "white",
 					alignItems: "stretch",
 					justifyContent: "center"
 				}}
@@ -77,7 +81,6 @@ const App = () => {
 				<View
 					style={{
 						flex: 1,
-						backgroundColor: "green",
 						alignItems: "center",
 						justifyContent: "center"
 					}}
@@ -87,7 +90,7 @@ const App = () => {
 				</View>
 				<View style={{ flex: 8 }}>
 					<FlatList
-						contentContainerStyle={{ backgroundColor: "purple", flex: 3, justifyContent: "space-around", alignItems: "center", width: screenWidth }}
+						contentContainerStyle={{flex: 3, justifyContent: "space-around", alignItems: "center", width: screenWidth }}
 						data={milestones}
 						keyExtractor={(item, index) => index}
 						renderItem={(item) => <Text style={[styles.text, styles.dateText]}>{item.item}</Text>}
@@ -97,7 +100,6 @@ const App = () => {
 				<View
 					style={{
 						flex: 1,
-						backgroundColor: "orange",
 						alignItems: "center",
 						justifyContent: "center"
 					}}
@@ -109,7 +111,6 @@ const App = () => {
 			<View
 				style={{
 					flex: 1,
-					backgroundColor: "blue",
 					alignItems: "center",
 					justifyContent: "center"
 				}}
@@ -137,6 +138,7 @@ const App = () => {
 };
 
 const styles = StyleSheet.create({
+	canvas: { height: "100%", position: "absolute", width: "100%" },
 	dateText: { fontSize: 37, },
 	labelText: { fontSize: 17, },
 	text: { color: "white", fontWeight: "bold" }
