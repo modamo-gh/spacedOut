@@ -1,4 +1,4 @@
-import "react-native-reanimated"
+import "react-native-reanimated";
 import { useState } from "react";
 import {
 	Dimensions,
@@ -64,13 +64,30 @@ const App = () => {
 	return (
 		<SafeAreaView
 			style={{
-				backgroundColor: "blue",
+				backgroundColor: "#330099",
 				flex: 1,
 				alignItems: "stretch",
 				justifyContent: "center"
 			}}
 		>
-			<Canvas style={styles.canvas}><Rect height={screenHeight} width={screenWidth} x={0} y={0} color="blue" />{Array.from({ length: 25 }).map((_, i) => (<Circle cx={Math.random() * screenWidth} cy={Math.random() * screenHeight} key={i} r={Math.random() * 5} color="white" />))}</Canvas>
+			<Canvas style={styles.canvas}>
+				<Rect
+					height={screenHeight}
+					width={screenWidth}
+					x={0}
+					y={0}
+					color="#330099"
+				/>
+				{Array.from({ length: 25 }).map((_, i) => (
+					<Circle
+						cx={Math.random() * screenWidth}
+						cy={Math.random() * screenHeight}
+						key={i}
+						r={Math.random() * 5}
+						color="white"
+					/>
+				))}
+			</Canvas>
 			<View
 				style={{
 					flex: 4,
@@ -86,14 +103,25 @@ const App = () => {
 					}}
 				>
 					<Text style={[styles.text, styles.labelText]}>Today</Text>
-					<Text style={[styles.text, styles.labelText]}>{today.toDateString()}</Text>
+					<Text style={[styles.text, styles.labelText]}>
+						{today.toDateString()}
+					</Text>
 				</View>
 				<View style={{ flex: 8 }}>
 					<FlatList
-						contentContainerStyle={{flex: 3, justifyContent: "space-around", alignItems: "center", width: screenWidth }}
+						contentContainerStyle={{
+							flex: 3,
+							justifyContent: "space-around",
+							alignItems: "center",
+							width: screenWidth
+						}}
 						data={milestones}
 						keyExtractor={(item, index) => index}
-						renderItem={(item) => <Text style={[styles.text, styles.dateText]}>{item.item}</Text>}
+						renderItem={(item) => (
+							<Text style={[styles.text, styles.dateText]}>
+								{item.item}
+							</Text>
+						)}
 						style={{ flex: 4 }}
 					/>
 				</View>
@@ -105,7 +133,11 @@ const App = () => {
 					}}
 				>
 					<Text style={[styles.text, styles.labelText]}>Target</Text>
-					{date ? <Text style={[styles.text, styles.labelText]}>{date.toDateString()}</Text> : null}
+					{date ? (
+						<Text style={[styles.text, styles.labelText]}>
+							{date.toDateString()}
+						</Text>
+					) : null}
 				</View>
 			</View>
 			<View
@@ -117,14 +149,24 @@ const App = () => {
 			>
 				<TouchableOpacity
 					style={{
-						backgroundColor: "red",
+						backgroundColor: "white",
 						borderRadius: 5,
 						width: 100,
 						height: 48
 					}}
 					onPress={() => setShowDatePicker(true)}
 				>
-					<Text></Text>
+					<Text
+						style={{
+							flex: 1,
+							fontSize: 18,
+							textAlign: "center",
+							color: "#330099",
+							fontWeight: "bold"
+						}}
+					>
+						Choose Date
+					</Text>
 				</TouchableOpacity>
 			</View>
 			<DateTimePickerModal
@@ -139,9 +181,9 @@ const App = () => {
 
 const styles = StyleSheet.create({
 	canvas: { height: "100%", position: "absolute", width: "100%" },
-	dateText: { fontSize: 37, },
-	labelText: { fontSize: 17, },
+	dateText: { fontSize: 37 },
+	labelText: { fontSize: 18 },
 	text: { color: "white", fontWeight: "bold" }
-})
+});
 
 export default App;
