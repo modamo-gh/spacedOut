@@ -1,7 +1,9 @@
 import { useState } from "react";
 import {
+	Dimensions,
 	FlatList,
 	SafeAreaView,
+	StyleSheet,
 	Text,
 	TouchableOpacity,
 	View
@@ -54,6 +56,8 @@ const App = () => {
 		setShowDatePicker(false);
 	};
 
+	const screenWidth = Dimensions.get("screen").width;
+
 	return (
 		<SafeAreaView
 			style={{
@@ -78,21 +82,16 @@ const App = () => {
 						justifyContent: "center"
 					}}
 				>
-					<Text>Today</Text>
-					<Text>{today.toDateString()}</Text>
+					<Text style={[styles.text, styles.labelText]}>Today</Text>
+					<Text style={[styles.text, styles.labelText]}>{today.toDateString()}</Text>
 				</View>
-				<View
-					style={{
-						flex: 8,
-						backgroundColor: "purple",
-						alignItems: "center",
-						justifyContent: "center"
-					}}
-				>
+				<View style={{ flex: 8 }}>
 					<FlatList
+						contentContainerStyle={{ backgroundColor: "purple", flex: 3, justifyContent: "space-around", alignItems: "center", width: screenWidth }}
 						data={milestones}
 						keyExtractor={(item, index) => index}
-						renderItem={(item) => <Text>{item.item}</Text>}
+						renderItem={(item) => <Text style={[styles.text, styles.dateText]}>{item.item}</Text>}
+						style={{ flex: 4 }}
 					/>
 				</View>
 				<View
@@ -103,8 +102,8 @@ const App = () => {
 						justifyContent: "center"
 					}}
 				>
-					<Text>Target</Text>
-					{date ? <Text>{date.toDateString()}</Text> : null}
+					<Text style={[styles.text, styles.labelText]}>Target</Text>
+					{date ? <Text style={[styles.text, styles.labelText]}>{date.toDateString()}</Text> : null}
 				</View>
 			</View>
 			<View
@@ -136,5 +135,11 @@ const App = () => {
 		</SafeAreaView>
 	);
 };
+
+const styles = StyleSheet.create({
+	dateText: { fontSize: 37, },
+	labelText: { fontSize: 17, },
+	text: { color: "white", fontWeight: "bold" }
+})
 
 export default App;
