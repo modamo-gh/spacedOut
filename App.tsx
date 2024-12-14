@@ -12,12 +12,15 @@ import {
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { DateTime } from "luxon";
 import { Canvas, Circle, Rect } from "@shopify/react-native-skia";
+import { useFonts } from "expo-font";
 
 const App = () => {
 	const [showDatePicker, setShowDatePicker] = useState(false);
 	const [date, setDate] = useState<Date>();
 	const [milestones, setMilestones] = useState<string[]>([]);
 	const today = new Date();
+
+	const [fontsLoaded] = useFonts({ Orbitron: require("./assets/fonts/Orbitron-VariableFont_wght.ttf") })
 
 	const intervals = [
 		{ type: "days", amount: 0 },
@@ -61,6 +64,10 @@ const App = () => {
 	const screenHeight = Dimensions.get("screen").height;
 	const screenWidth = Dimensions.get("screen").width;
 
+	if(!fontsLoaded){
+		return null;
+	} 
+	
 	return (
 		<SafeAreaView
 			style={{
@@ -157,13 +164,7 @@ const App = () => {
 					onPress={() => setShowDatePicker(true)}
 				>
 					<Text
-						style={{
-							flex: 1,
-							fontSize: 18,
-							textAlign: "center",
-							color: "#330099",
-							fontWeight: "bold"
-						}}
+						style={[styles.text, styles.buttonText]}
 					>
 						Choose Date
 					</Text>
@@ -180,10 +181,16 @@ const App = () => {
 };
 
 const styles = StyleSheet.create({
+	buttonText: {
+		flex: 1,
+		fontSize: 18,
+		textAlign: "center",
+		color: "#330099",
+	},
 	canvas: { height: "100%", position: "absolute", width: "100%" },
-	dateText: { fontSize: 37 },
+	dateText: { fontSize: 37,  },
 	labelText: { fontSize: 18 },
-	text: { color: "white", fontWeight: "bold" }
+	text: { color: "white", fontWeight: "bold", fontFamily: "Orbitron" }
 });
 
 export default App;
