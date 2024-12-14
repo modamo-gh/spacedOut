@@ -77,21 +77,12 @@ const App = () => {
 		setShowDatePicker(false);
 	};
 
-
-
 	if (!fontsLoaded) {
 		return null;
 	}
 
 	return (
-		<SafeAreaView
-			style={{
-				backgroundColor: "#330099",
-				flex: 1,
-				alignItems: "stretch",
-				justifyContent: "center"
-			}}
-		>
+		<View style={{ flex: 1 }}>
 			<Canvas style={styles.canvas}>
 				<Rect
 					height={screenHeight}
@@ -102,42 +93,68 @@ const App = () => {
 				/>
 				{stars}
 			</Canvas>
-			<View
+			<SafeAreaView
 				style={{
-					flex: 4,
+					flex: 1,
 					alignItems: "stretch",
 					justifyContent: "center"
 				}}
 			>
 				<View
 					style={{
-						flex: 1,
-						alignItems: "center",
+						flex: 4,
+						alignItems: "stretch",
 						justifyContent: "center"
 					}}
 				>
-					<Text style={[styles.text, styles.labelText]}>Today</Text>
-					<Text style={[styles.text, styles.labelText]}>
-						{today.toDateString()}
-					</Text>
-				</View>
-				<View style={{ flex: 8 }}>
-					<FlatList
-						contentContainerStyle={{
-							flex: 3,
-							justifyContent: "space-around",
+					<View
+						style={{
+							flex: 1,
 							alignItems: "center",
-							width: screenWidth
+							justifyContent: "center"
 						}}
-						data={milestones}
-						keyExtractor={(item) => item}
-						renderItem={(item) => (
-							<Text style={[styles.text, styles.dateText]}>
-								{item.item}
+					>
+						<Text style={[styles.text, styles.labelText]}>
+							Today
+						</Text>
+						<Text style={[styles.text, styles.labelText]}>
+							{today.toDateString()}
+						</Text>
+					</View>
+					<View style={{ flex: 8 }}>
+						<FlatList
+							contentContainerStyle={{
+								flex: 3,
+								justifyContent: "space-around",
+								alignItems: "center",
+								width: screenWidth
+							}}
+							data={milestones}
+							keyExtractor={(item) => item}
+							renderItem={(item) => (
+								<Text style={[styles.text, styles.dateText]}>
+									{item.item}
+								</Text>
+							)}
+							style={{ flex: 4 }}
+						/>
+					</View>
+					<View
+						style={{
+							flex: 1,
+							alignItems: "center",
+							justifyContent: "center"
+						}}
+					>
+						<Text style={[styles.text, styles.labelText]}>
+							Target
+						</Text>
+						{date ? (
+							<Text style={[styles.text, styles.labelText]}>
+								{date.toDateString()}
 							</Text>
-						)}
-						style={{ flex: 4 }}
-					/>
+						) : null}
+					</View>
 				</View>
 				<View
 					style={{
@@ -146,42 +163,28 @@ const App = () => {
 						justifyContent: "center"
 					}}
 				>
-					<Text style={[styles.text, styles.labelText]}>Target</Text>
-					{date ? (
-						<Text style={[styles.text, styles.labelText]}>
-							{date.toDateString()}
+					<TouchableOpacity
+						style={{
+							backgroundColor: "white",
+							borderRadius: 5,
+							width: 100,
+							height: 48
+						}}
+						onPress={() => setShowDatePicker(true)}
+					>
+						<Text style={[styles.text, styles.buttonText]}>
+							Choose Date
 						</Text>
-					) : null}
+					</TouchableOpacity>
 				</View>
-			</View>
-			<View
-				style={{
-					flex: 1,
-					alignItems: "center",
-					justifyContent: "center"
-				}}
-			>
-				<TouchableOpacity
-					style={{
-						backgroundColor: "white",
-						borderRadius: 5,
-						width: 100,
-						height: 48
-					}}
-					onPress={() => setShowDatePicker(true)}
-				>
-					<Text style={[styles.text, styles.buttonText]}>
-						Choose Date
-					</Text>
-				</TouchableOpacity>
-			</View>
-			<DateTimePickerModal
-				isVisible={showDatePicker}
-				mode="date"
-				onCancel={() => setShowDatePicker(false)}
-				onConfirm={handleConfirm}
-			/>
-		</SafeAreaView>
+				<DateTimePickerModal
+					isVisible={showDatePicker}
+					mode="date"
+					onCancel={() => setShowDatePicker(false)}
+					onConfirm={handleConfirm}
+				/>
+			</SafeAreaView>
+		</View>
 	);
 };
 
@@ -192,7 +195,12 @@ const styles = StyleSheet.create({
 		textAlign: "center",
 		color: "#330099"
 	},
-	canvas: { height: "100%", position: "absolute", width: "100%" },
+	canvas: {
+		backgroundColor: "red",
+		height: "100%",
+		position: "absolute",
+		width: "100%"
+	},
 	dateText: { fontSize: 37 },
 	labelText: { fontSize: 18 },
 	text: { color: "white", fontWeight: "bold", fontFamily: "Orbitron" }
