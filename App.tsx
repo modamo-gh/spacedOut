@@ -46,62 +46,29 @@ const App = () => {
 
 		const milestoneDates = [concertDate.toLocaleString(DateTime.DATE_FULL)];
 
-		let daysBetween = 1;
+		const generateDates = (timeUnit: string, maxOfUnit: number) => {
+			const timeObject: { [key: string]: number } = {};
 
-		while (
-			concertDate.minus({ days: daysBetween }) >= t &&
-			daysBetween < 7
-		) {
-			milestoneDates.push(
-				concertDate
-					.minus({ days: daysBetween })
-					.toLocaleString(DateTime.DATE_FULL)
-			);
+			timeObject[timeUnit] = 1;
 
-			daysBetween *= 2;
-		}
+			while (
+				concertDate.minus(timeObject) >= t &&
+				timeObject[timeUnit] < maxOfUnit
+			) {
+				milestoneDates.push(
+					concertDate
+						.minus(timeObject)
+						.toLocaleString(DateTime.DATE_FULL)
+				);
 
-		let weeksBetween = 1;
+				timeObject[timeUnit] *= 2;
+			}
+		};
 
-		while (
-			concertDate.minus({ weeks: weeksBetween }) >= t &&
-			weeksBetween <= 4
-		) {
-			milestoneDates.push(
-				concertDate
-					.minus({ weeks: weeksBetween })
-					.toLocaleString(DateTime.DATE_FULL)
-			);
-
-			weeksBetween *= 2;
-		}
-
-		let monthsBetween = 1;
-
-		while (
-			concertDate.minus({ months: monthsBetween }) >= t &&
-			monthsBetween < 12
-		) {
-			milestoneDates.push(
-				concertDate
-					.minus({ months: monthsBetween })
-					.toLocaleString(DateTime.DATE_FULL)
-			);
-
-			monthsBetween *= 2;
-		}
-
-		let yearsBetween = 1;
-
-		while (concertDate.minus({ years: yearsBetween }) >= t) {
-			milestoneDates.push(
-				concertDate
-					.minus({ years: yearsBetween })
-					.toLocaleString(DateTime.DATE_FULL)
-			);
-
-			yearsBetween *= 2;
-		}
+		generateDates("days", 7);
+		generateDates("weeks", 4);
+		generateDates("months", 12);
+		generateDates("years", Infinity);
 
 		setMilestones(milestoneDates.reverse());
 		setShowDatePicker(false);
@@ -192,7 +159,7 @@ const App = () => {
 						alignItems: "center",
 						justifyContent: "space-around",
 						flexDirection: "row",
-						width: "100%",
+						width: "100%"
 					}}
 				>
 					<TouchableOpacity
