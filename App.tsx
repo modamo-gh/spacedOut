@@ -190,7 +190,9 @@ const App = () => {
 					style={{
 						flex: 1,
 						alignItems: "center",
-						justifyContent: "center"
+						justifyContent: "space-around",
+						flexDirection: "row",
+						width: "100%",
 					}}
 				>
 					<TouchableOpacity
@@ -204,6 +206,19 @@ const App = () => {
 					>
 						<Text style={[styles.text, styles.buttonText]}>
 							Choose Date
+						</Text>
+					</TouchableOpacity>
+					<TouchableOpacity
+						style={{
+							backgroundColor: "white",
+							borderRadius: 5,
+							width: 100,
+							height: 48
+						}}
+						onPress={() => setShowDatePicker(true)}
+					>
+						<Text style={[styles.text, styles.buttonText]}>
+							Save Dates
 						</Text>
 					</TouchableOpacity>
 				</View>
