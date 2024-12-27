@@ -12,7 +12,15 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSUserNotificationUsageDescription": "We need notifications to remind you about important dates.",
+        "UIBackgroundModes": [
+          "fetch",
+          "remote-notification"
+        ]
+      },
+      "bundleIdentifier": "xyz.modamo.spacedOut"
     },
     "android": {
       "adaptiveIcon": {
@@ -26,6 +34,11 @@
     "newArchEnabled": true,
     "plugins": [
       "expo-font"
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "2092cbd8-7139-433f-8487-2be7a115387f"
+      }
+    }
   }
 }
