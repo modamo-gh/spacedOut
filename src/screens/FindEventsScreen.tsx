@@ -1,22 +1,30 @@
+import { FlashList } from "@shopify/flash-list";
+import { Canvas, Circle, Rect } from "@shopify/react-native-skia";
+import { useFonts } from "expo-font";
+import { DateTime } from "luxon";
+import { useState } from "react";
 import {
 	Dimensions,
 	FlatList,
+	Image,
 	SafeAreaView,
 	StyleSheet,
 	Text,
+	TextInput,
 	TouchableOpacity,
 	View
 } from "react-native";
-import { useState } from "react";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
-import { DateTime } from "luxon";
-import { Canvas, Circle, Rect } from "@shopify/react-native-skia";
-import { useFonts } from "expo-font";
+import { findArtist } from "../ticketmaster";
 
 const FindEventsScreen = () => {
-	const [showDatePicker, setShowDatePicker] = useState(false);
 	const [date, setDate] = useState<Date>();
+	const [ids, setIDs] = useState<Set<string>>(new Set());
 	const [milestones, setMilestones] = useState<string[]>([]);
+	const [searchResults, setSearchResults] = useState<any[]>([]);
+	const [showDatePicker, setShowDatePicker] = useState(false);
+	const [text, setText] = useState("");
+
 	const today = new Date();
 
 	const screenHeight = Dimensions.get("screen").height;
@@ -73,6 +81,32 @@ const FindEventsScreen = () => {
 		setShowDatePicker(false);
 	};
 
+	const getSearchResults = async (artistName: string) => {
+		const { attractions, events, products } = await findArtist(artistName);
+
+		const setSearchType = (type: any[]) => {
+			setSearchResults((prev) => {
+				const newResults = [];
+				const updatedIDs = new Set(ids);
+
+				for (const t of type) {
+					if (!updatedIDs.has(t.id)) {
+						updatedIDs.add(t.id);
+						newResults.push(t);
+					}
+				}
+
+				setIDs(new Set(updatedIDs));
+
+				return [...prev, ...newResults];
+			});
+		};
+
+		setSearchType(attractions);
+		setSearchType(events);
+		setSearchType(products);
+	};
+
 	if (!fontsLoaded) {
 		return null;
 	}
@@ -91,12 +125,58 @@ const FindEventsScreen = () => {
 			</Canvas>
 			<SafeAreaView
 				style={{
+					display: "flex",
 					flex: 1,
-					alignItems: "stretch",
-					justifyContent: "center"
+					flexDirection: "column"
 				}}
 			>
-				<View
+				<TextInput
+					autoCapitalize="none"
+					autoCorrect={false}
+					onChangeText={setText}
+					onSubmitEditing={() => getSearchResults(text.trim())}
+					style={styles.textInput}
+					value={text}
+				/>
+				<View style={{ backgroundColor: "pink", flex: 1 }}>
+					<FlashList
+						data={searchResults}
+						estimatedItemSize={15}
+						keyExtractor={(item) => item.id}
+						renderItem={({ item }) => (
+							<TouchableOpacity
+								style={{
+									backgroundColor: "blue",
+									borderRadius: 8,
+									display: "flex",
+									flexDirection: "row",
+									height: 96,
+									alignItems: "center",
+									margin: 8,
+									padding: 8
+								}}
+							>
+								<Image
+									source={{ uri: item.images?.[0]?.url }}
+									style={{
+										borderRadius: 8,
+										height: 72,
+										width: 72
+									}}
+								/>
+								<View style={{ paddingLeft: 8 }}>
+									<Text style={{ color: "white" }}>
+										{item.name}
+									</Text>
+									<Text style={{ color: "white" }}>
+										{item.id}
+									</Text>
+								</View>
+							</TouchableOpacity>
+						)}
+					/>
+				</View>
+				{/* <View
 					style={{
 						flex: 4,
 						alignItems: "stretch",
@@ -195,7 +275,7 @@ const FindEventsScreen = () => {
 					mode="date"
 					onCancel={() => setShowDatePicker(false)}
 					onConfirm={handleConfirm}
-				/>
+				/> */}
 			</SafeAreaView>
 		</View>
 	);
@@ -216,7 +296,14 @@ const styles = StyleSheet.create({
 	},
 	dateText: { fontSize: 37 },
 	labelText: { fontSize: 18 },
-	text: { color: "white", fontWeight: "bold", fontFamily: "Orbitron" }
+	text: { color: "white", fontWeight: "bold", fontFamily: "Orbitron" },
+	textInput: {
+		backgroundColor: "green",
+		borderRadius: 5,
+		height: 48,
+		marginHorizontal: 8,
+		padding: 8
+	}
 });
 
 export default FindEventsScreen;

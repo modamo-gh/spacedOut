@@ -1,3 +1,5 @@
+import "react-native-gesture-handler";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 import "react-native-reanimated";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import FindEventsScreen from "./src/screens/FindEventsScreen";
@@ -13,12 +15,17 @@ const Tabs = createBottomTabNavigator({
 
 const App = () => {
 	return (
-		<NavigationContainer>
-			<Tabs.Navigator>
-				<Tabs.Screen name="My Events" component={MyEventsScreen} />
-				<Tabs.Screen name="Find Events" component={FindEventsScreen} />
-			</Tabs.Navigator>
-		</NavigationContainer>
+		<GestureHandlerRootView style={{ flex: 1 }}>
+			<NavigationContainer>
+				<Tabs.Navigator>
+					<Tabs.Screen name="My Events" component={MyEventsScreen} />
+					<Tabs.Screen
+						name="Find Events"
+						component={FindEventsScreen}
+					/>
+				</Tabs.Navigator>
+			</NavigationContainer>
+		</GestureHandlerRootView>
 	);
 };
 
