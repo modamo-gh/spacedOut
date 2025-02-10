@@ -84,9 +84,9 @@ const FindEventsScreen = () => {
 	};
 
 	const getEventResults = async (id: string) => {
-		const { events } = await getEvents(id);
+		const e = await getEvents(id);
 
-		setEvents(events);
+		setEvents(e);
 	};
 
 	const getSearchResults = async (artistName: string) => {

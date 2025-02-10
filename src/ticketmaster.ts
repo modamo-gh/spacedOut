@@ -19,15 +19,30 @@ export const findArtist = async (artistName: string) => {
 
 export const getEvents = async (id: string) => {
 	try {
-		const response = await fetch(
-			`${BASE_URL}/events.json?apikey=${API_KEY}&attractionId=${encodeURIComponent(
-				id
-			)}`
-		);
-		const data = await response.json();
+		let allEvents = [];
+		let page = 0;
+		let totalPages = 1;
 
-		return data._embedded;
+		while (page < totalPages) {
+			const response = await fetch(
+				`${BASE_URL}/events.json?apikey=${API_KEY}&attractionId=${encodeURIComponent(
+					id
+				)}&page=${page}`
+			);
+			const data = await response.json();
+
+			if (data._embedded.events) {
+				allEvents.push(...data._embedded.events);
+			}
+
+			totalPages = data.page.totalPages || 1;
+			page++;
+		}
+
+		return allEvents;
 	} catch (error) {
 		console.error("Error fetching events:", error);
+
+		return [];
 	}
 };
