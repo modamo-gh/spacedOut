@@ -16,3 +16,18 @@ export const findArtist = async (artistName: string) => {
 		console.error("Error fetching artist:", error);
 	}
 };
+
+export const getEvents = async (id: string) => {
+	try {
+		const response = await fetch(
+			`${BASE_URL}/events.json?apikey=${API_KEY}&attractionId=${encodeURIComponent(
+				id
+			)}`
+		);
+		const data = await response.json();
+
+		return data._embedded;
+	} catch (error) {
+		console.error("Error fetching events:", error);
+	}
+};

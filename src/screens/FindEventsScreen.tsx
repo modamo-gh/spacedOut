@@ -15,13 +15,15 @@ import {
 	View
 } from "react-native";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
-import { findArtist } from "../ticketmaster";
+import { findArtist, getEvents } from "../ticketmaster";
 
 const FindEventsScreen = () => {
 	const [date, setDate] = useState<Date>();
+	const [events, setEvents] = useState<any[]>([]);
 	const [ids, setIDs] = useState<Set<string>>(new Set());
 	const [milestones, setMilestones] = useState<string[]>([]);
 	const [searchResults, setSearchResults] = useState<any[]>([]);
+	const [selectedID, setSelectedID] = useState("");
 	const [showDatePicker, setShowDatePicker] = useState(false);
 	const [text, setText] = useState("");
 
@@ -81,6 +83,12 @@ const FindEventsScreen = () => {
 		setShowDatePicker(false);
 	};
 
+	const getEventResults = async (id: string) => {
+		const { events } = await getEvents(id);
+
+		setEvents(events);
+	};
+
 	const getSearchResults = async (artistName: string) => {
 		const { attractions, events, products } = await findArtist(artistName);
 
@@ -134,17 +142,24 @@ const FindEventsScreen = () => {
 					autoCapitalize="none"
 					autoCorrect={false}
 					onChangeText={setText}
-					onSubmitEditing={() => getSearchResults(text.trim())}
+					onSubmitEditing={() => {
+						setEvents([]);
+						getSearchResults(text.trim());
+					}}
 					style={styles.textInput}
 					value={text}
 				/>
 				<View style={{ backgroundColor: "pink", flex: 1 }}>
 					<FlashList
-						data={searchResults}
+						data={events.length ? events : searchResults}
 						estimatedItemSize={15}
 						keyExtractor={(item) => item.id}
 						renderItem={({ item }) => (
 							<TouchableOpacity
+								onPress={() => {
+									setSelectedID(item.id);
+									getEventResults(item.id);
+								}}
 								style={{
 									backgroundColor: "blue",
 									borderRadius: 8,
@@ -169,8 +184,19 @@ const FindEventsScreen = () => {
 										{item.name}
 									</Text>
 									<Text style={{ color: "white" }}>
-										{item.id}
+										{item.type === "event"
+											? DateTime.fromISO(
+													item.dates.start.dateTime
+											  ).toLocaleString(
+													DateTime.DATETIME_MED_WITH_WEEKDAY
+											  )
+											: item.id}
 									</Text>
+									{item.products?.length > 0 && (
+										<Text style={{ color: "white" }}>
+											{item.products[0]?.name}
+										</Text>
+									)}
 								</View>
 							</TouchableOpacity>
 						)}
