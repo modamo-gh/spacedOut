@@ -39,6 +39,12 @@ export const generateMilestones = (eventDate: string): string[] => {
 	const concertDate = DateTime.fromISO(eventDate);
 	const milestoneDates = [concertDate.toLocaleString(DateTime.DATE_FULL)];
 
+	if(!concertDate.isValid){
+		console.error("Invalid ISO date format:", eventDate);
+
+		return [];
+	}
+
 	const generateDates = (timeUnit: string, maxOfUnit: number) => {
 		const timeObject: { [key: string]: number } = {};
 
