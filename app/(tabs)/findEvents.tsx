@@ -20,56 +20,14 @@ import { Attraction } from "@/types/Attraction";
 import EventCard from "@/components/EventCard";
 
 const FindEventsScreen = () => {
-	const [date, setDate] = useState<Date>();
 	const [events, setEvents] = useState<any[]>([]);
 	const [ids, setIDs] = useState<Set<string>>(new Set());
-	const [milestones, setMilestones] = useState<string[]>([]);
 	const [searchResults, setSearchResults] = useState<Attraction[]>([]);
-	const [selectedID, setSelectedID] = useState("");
-	const [showDatePicker, setShowDatePicker] = useState(false);
 	const [text, setText] = useState("");
-
-	const today = new Date();
 
 	const [fontsLoaded] = useFonts({
 		Orbitron: require("../../assets/fonts/Orbitron-VariableFont_wght.ttf")
 	});
-
-	const handleConfirm = (date: Date) => {
-		setDate(date);
-
-		const concertDate = DateTime.fromJSDate(date);
-		const t = DateTime.fromJSDate(today);
-
-		const milestoneDates = [concertDate.toLocaleString(DateTime.DATE_FULL)];
-
-		const generateDates = (timeUnit: string, maxOfUnit: number) => {
-			const timeObject: { [key: string]: number } = {};
-
-			timeObject[timeUnit] = 1;
-
-			while (
-				concertDate.minus(timeObject) >= t &&
-				timeObject[timeUnit] < maxOfUnit
-			) {
-				milestoneDates.push(
-					concertDate
-						.minus(timeObject)
-						.toLocaleString(DateTime.DATE_FULL)
-				);
-
-				timeObject[timeUnit] *= 2;
-			}
-		};
-
-		generateDates("days", 7);
-		generateDates("weeks", 4);
-		generateDates("months", 12);
-		generateDates("years", Infinity);
-
-		setMilestones(milestoneDates.reverse());
-		setShowDatePicker(false);
-	};
 
 	const getEventResults = async (id: string) => {
 		const e = await getEvents(id);

@@ -1,15 +1,8 @@
 import { useEventContext } from "@/context/EventContext";
 import { EventCardProps } from "@/types/EventCardProps";
+import { DateTime } from "luxon";
 import React from "react";
-import {
-	Image,
-	Pressable,
-	SafeAreaView,
-	StyleSheet,
-	Text,
-	TouchableOpacity,
-	View
-} from "react-native";
+import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 
 const EventCard: React.FC<EventCardProps> = ({ event }) => {
 	const { addEvent } = useEventContext();
@@ -19,8 +12,21 @@ const EventCard: React.FC<EventCardProps> = ({ event }) => {
 			<Image source={{ uri: event.imageURL }} style={styles.image} />
 			<View style={styles.textContainer}>
 				<Text style={styles.text}>{event.name}</Text>
-				<Text style={styles.text}>{event.dateTime}</Text>
+				<Text style={styles.text}>
+					{DateTime.fromISO(event.dateTime).toLocaleString(
+						DateTime.DATETIME_MED_WITH_WEEKDAY
+					)}
+				</Text>
 				<Text style={styles.text}>{event.location}</Text>
+				{event.milestones.length && (
+					<Text
+						style={styles.text}
+					>{`Next Milestone: ${DateTime.fromISO(
+						event.milestones[0]
+					).toLocaleString(
+						DateTime.DATETIME_MED_WITH_WEEKDAY
+					)}`}</Text>
+				)}
 			</View>
 		</Pressable>
 	);

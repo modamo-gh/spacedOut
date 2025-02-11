@@ -1,13 +1,13 @@
+import EventCard from "@/components/EventCard";
+import StarryBackground from "@/components/StarryBackground";
+import { useEventContext } from "@/context/EventContext";
 import { FlashList } from "@shopify/flash-list";
 import * as Notifications from "expo-notifications";
 import React from "react";
 import { SafeAreaView, View } from "react-native";
-import { useEventContext } from "@/context/EventContext";
-import StarryBackground from "@/components/StarryBackground";
-import EventCard from "@/components/EventCard";
 
 const MyEventsScreen = () => {
-	const { savedEvents } = useEventContext();
+	const { savedEvents } = useEventContext()
 
 	Notifications.setNotificationHandler({
 		handleNotification: async () => ({
