@@ -1,10 +1,15 @@
+import { FlashList } from "@shopify/flash-list";
 import * as Notifications from "expo-notifications";
-import { TouchableOpacity, View } from "react-native";
+import React from "react";
+import { Image, SafeAreaView, Text, View } from "react-native";
+import { useEventContext } from "@/context/EventContext";
 
 const MyEventsScreen = () => {
+	const { savedEvents } = useEventContext();
+
 	Notifications.setNotificationHandler({
 		handleNotification: async () => ({
-			shouldShowAlert: true, 
+			shouldShowAlert: true,
 			shouldPlaySound: true,
 			shouldSetBadge: false
 		})
@@ -54,21 +59,50 @@ const MyEventsScreen = () => {
 	};
 
 	return (
-		<View
-			style={{
-				flex: 1,
-				justifyContent: "center",
-				alignItems: "center"
-			}}
-		>
-			<TouchableOpacity
-				style={{ backgroundColor: "purple", width: 96, height: 48 }}
-				onPress={() => {
-					scheduleNotification();
-					debugScheduledNotifications();
-				}}
-			></TouchableOpacity>
-		</View>
+		<SafeAreaView style={{ flex: 1 }}>
+			<FlashList
+				data={savedEvents}
+				renderItem={({ item }) => (
+					<View
+						style={{
+							backgroundColor: "#6600CC",
+							borderRadius: 8,
+							display: "flex",
+							flexDirection: "row",
+							height: 96,
+							alignItems: "center",
+							margin: 8,
+							padding: 8
+						}}
+					>
+						<Image
+							source={{ uri: item.image }}
+							style={{
+								borderRadius: 8,
+								height: 72,
+								width: 72
+							}}
+						/>
+						<View style={{ paddingLeft: 8 }}>
+							<Text style={{ color: "white", width: "80%" }}>
+								{item.name}
+							</Text>
+							<Text
+								style={{
+									color: "white",
+									flexWrap: "wrap"
+								}}
+							>
+								{item.date}
+							</Text>
+							<Text style={{ color: "white" }}>
+								{item.location}
+							</Text>
+						</View>
+					</View>
+				)}
+			/>
+		</SafeAreaView>
 	);
 };
 

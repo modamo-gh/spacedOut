@@ -4,18 +4,19 @@ import { useFonts } from "expo-font";
 import { DateTime } from "luxon";
 import React, { useState } from "react";
 import {
-  Dimensions,
-  FlatList,
-  Image,
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View
+	Dimensions,
+	FlatList,
+	Image,
+	SafeAreaView,
+	StyleSheet,
+	Text,
+	TextInput,
+	TouchableOpacity,
+	View
 } from "react-native";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { findArtist, getEvents } from "../../services/ticketmaster";
+import { useEventContext } from "@/context/EventContext";
 
 const FindEventsScreen = () => {
 	const [date, setDate] = useState<Date>();
@@ -27,6 +28,7 @@ const FindEventsScreen = () => {
 	const [showDatePicker, setShowDatePicker] = useState(false);
 	const [text, setText] = useState("");
 
+	const { addEvent } = useEventContext();
 	const today = new Date();
 
 	const screenHeight = Dimensions.get("screen").height;
@@ -170,8 +172,33 @@ const FindEventsScreen = () => {
 						renderItem={({ item }) => (
 							<TouchableOpacity
 								onPress={() => {
-									setSelectedID(item.id);
-									getEventResults(item.id);
+									if (!selectedID) {
+										setSelectedID(item.id);
+										getEventResults(item.id);
+									} else {
+										addEvent({
+											date: DateTime.fromISO(
+												item.dates.start.dateTime
+											).toLocaleString(
+												DateTime.DATETIME_MED_WITH_WEEKDAY
+											),
+											id: item.id,
+											image: item.images?.[0]?.url,
+											location: `${
+												item._embedded?.venues?.[0].city
+													?.name
+											}, ${
+												item._embedded?.venues?.[0]
+													.state?.stateCode ||
+												item._embedded?.venues?.[0]
+													.country?.countryCode
+											}`,
+											name: item.name
+										});
+										setEvents([]);
+										setSearchResults([]);
+										setSelectedID("");
+									}
 								}}
 								style={{
 									backgroundColor: "#6600CC",
