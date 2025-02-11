@@ -1,40 +1,33 @@
 import { AttractionCardProps } from "@/types/AttractionCardProps";
 import React from "react";
-import { Image, StyleSheet, Text, TouchableOpacity } from "react-native";
+import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 
-const AttractionCard: React.FC<AttractionCardProps> = ({ attraction }) => {
+const AttractionCard: React.FC<AttractionCardProps> = ({
+	attraction,
+	getEventResults
+}) => {
 	return (
-		<TouchableOpacity
-			// onPress={() => {
-			// 	if (!selectedID) {
-			// 		setSelectedID(attraction.id);
-			// 		getEventResults(attraction.id);
-			// 	} else {
-			// 		addEvent({
-
-			// 			name: attraction.name
-			// 		});
-			// 		setEvents([]);
-			// 		setSearchResults([]);
-			// 		setSelectedID("");
-			// 	}
-			// }}
+		<Pressable
+			onPress={() => getEventResults(attraction.id)}
 			style={styles.card}
 		>
 			<Image source={{ uri: attraction.imageURL }} style={styles.image} />
-			<Text style={styles.text}>{attraction.name}</Text>
-		</TouchableOpacity>
+			<View style={styles.textContainer}>
+				<Text style={styles.text}>{attraction.name}</Text>
+			</View>
+		</Pressable>
 	);
 };
 
 const styles = StyleSheet.create({
 	card: {
+		alignItems: "center",
 		backgroundColor: "#6600CC",
 		borderRadius: 8,
 		display: "flex",
 		flexDirection: "row",
 		height: 96,
-		alignItems: "center",
+		justifyContent: "space-between",
 		margin: 8,
 		padding: 8
 	},
@@ -43,7 +36,8 @@ const styles = StyleSheet.create({
 		height: 72,
 		width: 72
 	},
-	text: { color: "white", paddingLeft: 8, width: "80%" }
+	text: { color: "white", flexWrap: "wrap" },
+	textContainer: { flex: 1, paddingLeft: 8 }
 });
 
 export default AttractionCard;

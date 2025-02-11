@@ -1,9 +1,10 @@
 import { FlashList } from "@shopify/flash-list";
 import * as Notifications from "expo-notifications";
 import React from "react";
-import { Image, SafeAreaView, Text, View } from "react-native";
+import { SafeAreaView, View } from "react-native";
 import { useEventContext } from "@/context/EventContext";
 import StarryBackground from "@/components/StarryBackground";
+import EventCard from "@/components/EventCard";
 
 const MyEventsScreen = () => {
 	const { savedEvents } = useEventContext();
@@ -65,45 +66,7 @@ const MyEventsScreen = () => {
 			<SafeAreaView style={{ flex: 1 }}>
 				<FlashList
 					data={savedEvents}
-					renderItem={({ item }) => (
-						<View
-							style={{
-								backgroundColor: "#6600CC",
-								borderRadius: 8,
-								display: "flex",
-								flexDirection: "row",
-								height: 96,
-								alignItems: "center",
-								margin: 8,
-								padding: 8
-							}}
-						>
-							<Image
-								source={{ uri: item.image }}
-								style={{
-									borderRadius: 8,
-									height: 72,
-									width: 72
-								}}
-							/>
-							<View style={{ paddingLeft: 8 }}>
-								<Text style={{ color: "white", width: "80%" }}>
-									{item.name}
-								</Text>
-								<Text
-									style={{
-										color: "white",
-										flexWrap: "wrap"
-									}}
-								>
-									{item.date}
-								</Text>
-								<Text style={{ color: "white" }}>
-									{item.location}
-								</Text>
-							</View>
-						</View>
-					)}
+					renderItem={({ item }) => <EventCard event={item} />}
 				/>
 			</SafeAreaView>
 		</View>

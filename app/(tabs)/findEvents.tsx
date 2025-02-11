@@ -129,7 +129,10 @@ const FindEventsScreen = () => {
 						keyExtractor={(item) => item.id}
 						renderItem={({ item }) =>
 							item.type === "attraction" ? (
-								<AttractionCard attraction={item} />
+								<AttractionCard
+									attraction={item}
+									getEventResults={getEventResults}
+								/>
 							) : (
 								<EventCard event={item} />
 							)

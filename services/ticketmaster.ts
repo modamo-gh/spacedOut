@@ -47,7 +47,7 @@ export const getSuggestions = async (artistName: string) => {
 
 export const getEvents = async (id: string) => {
 	try {
-		let allEvents = [];
+		let allEvents: Event[] = [];
 		let page = 0;
 		let totalPages = 1;
 
@@ -59,8 +59,20 @@ export const getEvents = async (id: string) => {
 			);
 			const data = await response.json();
 
-			if (data._embedded.events) {
-				allEvents.push(...data._embedded.events);
+			for (const event of data._embedded.events) {
+				allEvents.push({
+					dateTime: DateTime.fromISO(
+						event.dates.start.dateTime
+					).toLocaleString(DateTime.DATETIME_MED_WITH_WEEKDAY),
+					id: event.id,
+					imageURL: event.images?.[0]?.url,
+					location: `${event._embedded?.venues?.[0].city?.name}, ${
+						event._embedded?.venues?.[0].state?.stateCode ||
+						event._embedded?.venues?.[0].country?.countryCode
+					}`,
+					name: event.name,
+					type: event.type
+				});
 			}
 
 			totalPages = data.page.totalPages || 1;
