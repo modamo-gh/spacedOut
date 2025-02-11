@@ -86,11 +86,25 @@ const FindEventsScreen = () => {
 	const getEventResults = async (id: string) => {
 		const e = await getEvents(id);
 
-		setEvents(e);
+		setEvents((prev) => {
+			const newResults = [];
+			const updatedIDs = new Set<string>();
+
+			for (const ev of e) {
+				if (!updatedIDs.has(ev.id)) {
+					updatedIDs.add(ev.id);
+					newResults.push(ev);
+				}
+			}
+
+			setIDs(new Set(updatedIDs));
+
+			return [...prev, ...newResults];
+		});
 	};
 
 	const getSearchResults = async (artistName: string) => {
-		const { attractions, events, products } = await findArtist(artistName);
+		const { attractions, events } = await findArtist(artistName);
 
 		const setSearchType = (type: any[]) => {
 			setSearchResults((prev) => {
@@ -112,7 +126,6 @@ const FindEventsScreen = () => {
 
 		setSearchType(attractions);
 		setSearchType(events);
-		setSearchType(products);
 	};
 
 	if (!fontsLoaded) {
@@ -149,7 +162,7 @@ const FindEventsScreen = () => {
 					style={styles.textInput}
 					value={text}
 				/>
-				<View style={{ backgroundColor: "pink", flex: 1 }}>
+				<View style={{ flex: 1 }}>
 					<FlashList
 						data={events.length ? events : searchResults}
 						estimatedItemSize={15}
@@ -161,7 +174,7 @@ const FindEventsScreen = () => {
 									getEventResults(item.id);
 								}}
 								style={{
-									backgroundColor: "blue",
+									backgroundColor: "#6600CC",
 									borderRadius: 8,
 									display: "flex",
 									flexDirection: "row",
@@ -180,10 +193,17 @@ const FindEventsScreen = () => {
 									}}
 								/>
 								<View style={{ paddingLeft: 8 }}>
-									<Text style={{ color: "white" }}>
+									<Text
+										style={{ color: "white", width: "80%" }}
+									>
 										{item.name}
 									</Text>
-									<Text style={{ color: "white" }}>
+									<Text
+										style={{
+											color: "white",
+											flexWrap: "wrap"
+										}}
+									>
 										{item.type === "event"
 											? DateTime.fromISO(
 													item.dates.start.dateTime
@@ -192,9 +212,17 @@ const FindEventsScreen = () => {
 											  )
 											: item.id}
 									</Text>
-									{item.products?.length > 0 && (
+									{selectedID && (
 										<Text style={{ color: "white" }}>
-											{item.products[0]?.name}
+											{`${
+												item._embedded?.venues?.[0].city
+													?.name
+											}, ${
+												item._embedded?.venues?.[0]
+													.state?.stateCode ||
+												item._embedded?.venues?.[0]
+													.country?.countryCode
+											}`}
 										</Text>
 									)}
 								</View>
@@ -324,8 +352,9 @@ const styles = StyleSheet.create({
 	labelText: { fontSize: 18 },
 	text: { color: "white", fontWeight: "bold", fontFamily: "Orbitron" },
 	textInput: {
-		backgroundColor: "green",
+		backgroundColor: "#E0E0E0",
 		borderRadius: 5,
+		color: "#220066",
 		height: 48,
 		marginHorizontal: 8,
 		padding: 8
