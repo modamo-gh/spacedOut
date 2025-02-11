@@ -1,6 +1,7 @@
 import { Event } from "@/types/Event";
 import { EventContextType } from "@/types/EventContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as Notifications from "expo-notifications";
 import { DateTime } from "luxon";
 import React, {
 	createContext,
@@ -32,14 +33,68 @@ const saveEventsToStorage = async (events: Event[]) => {
 	}
 };
 
+Notifications.setNotificationHandler({
+	handleNotification: async () => ({
+		shouldShowAlert: true,
+		shouldPlaySound: true,
+		shouldSetBadge: true
+	})
+});
+
+const registerForPushNotifications = async () => {
+	const { status: existingStatus } =
+		await Notifications.requestPermissionsAsync();
+	let finalStatus = existingStatus;
+
+	if (existingStatus !== "granted") {
+		const { status } = await Notifications.requestPermissionsAsync();
+		finalStatus = status;
+	}
+};
+
+const checkPermissions = async () => {
+	const { status, canAskAgain } = await Notifications.getPermissionsAsync();
+	console.log("Notification Permissions:", { status, canAskAgain });
+};
+
+checkPermissions();
+
+const debugScheduledNotifications = async () => {
+	const scheduled = await Notifications.getAllScheduledNotificationsAsync();
+	console.log("Scheduled Notifications:", scheduled);
+};
+
+debugScheduledNotifications();
+
+const scheduleEventNotification = async (event: Event) => {
+	const nextMilestone = event.milestones[0];
+
+	if (!nextMilestone) {
+		return;
+	}
+
+	await Notifications.scheduleNotificationAsync({
+		content: {
+			title: `Upcoming Event: ${event.name}`,
+			body: "Your event is coming up!",
+			data: { eventID: event.id },
+			interruptionLevel: "active"
+		},
+		trigger: {
+			date: DateTime.fromISO(nextMilestone).toJSDate(),
+			type: Notifications.SchedulableTriggerInputTypes.DATE
+		}
+	});
+};
+
 const EventContext = createContext<EventContextType | undefined>(undefined);
 
 export const generateMilestones = (eventDate: string): string[] => {
 	const today = DateTime.now();
 	const concertDate = DateTime.fromISO(eventDate);
-	const milestoneDates = [concertDate.toLocaleString(DateTime.DATE_FULL)];
+	const milestoneDates = [eventDate];
 
-	if(!concertDate.isValid){
+	if (!concertDate.isValid) {
 		console.error("Invalid ISO date format:", eventDate);
 
 		return [];
@@ -81,6 +136,7 @@ export const EventProvider: React.FC<{ children: React.ReactNode }> = ({
 		};
 
 		fetchStoredEvents();
+		registerForPushNotifications();
 	}, []);
 
 	const addEvent = useCallback((event: Event) => {
@@ -95,6 +151,7 @@ export const EventProvider: React.FC<{ children: React.ReactNode }> = ({
 			);
 
 			saveEventsToStorage(updatedEvents);
+			scheduleEventNotification(event);
 
 			return updatedEvents;
 		});
