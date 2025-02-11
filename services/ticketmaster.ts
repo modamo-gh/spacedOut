@@ -1,18 +1,29 @@
+import { Attraction } from "@/types/Attraction";
+
 const BASE_URL = "https://app.ticketmaster.com/discovery/v2";
 
-export const findArtist = async (artistName: string) => {
+export const getSuggestions = async (artistName: string) => {
 	try {
-		console.log(process.env.EXPO_PUBLIC_API_KEY);
 		const response = await fetch(
 			`${BASE_URL}/suggest.json?apikey=${
 				process.env.EXPO_PUBLIC_API_KEY
 			}&keyword=${encodeURIComponent(artistName)}`
 		);
 		const data = await response.json();
+		const suggestions: Attraction[] = [];
 
-		console.log(data._embedded);
+		for (const suggestion of data._embedded.attractions) {
+			suggestions.push({
+				id: suggestion.id,
+				imageURL: suggestion.images?.[0]?.url,
+				name: suggestion.name,
+				type: suggestion.type
+			});
+		}
 
-		return data._embedded;
+		console.log(suggestions);
+
+		return suggestions;
 	} catch (error) {
 		console.error("Error fetching artist:", error);
 	}

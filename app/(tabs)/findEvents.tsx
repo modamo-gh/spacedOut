@@ -13,16 +13,18 @@ import {
 	View
 } from "react-native";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
-import { findArtist, getEvents } from "../../services/ticketmaster";
+import { getEvents, getSuggestions } from "../../services/ticketmaster";
 import { useEventContext } from "@/context/EventContext";
 import StarryBackground from "@/components/StarryBackground";
+import AttractionCard from "@/components/AttractionCard";
+import { Attraction } from "@/types/Attraction";
 
 const FindEventsScreen = () => {
 	const [date, setDate] = useState<Date>();
 	const [events, setEvents] = useState<any[]>([]);
 	const [ids, setIDs] = useState<Set<string>>(new Set());
 	const [milestones, setMilestones] = useState<string[]>([]);
-	const [searchResults, setSearchResults] = useState<any[]>([]);
+	const [searchResults, setSearchResults] = useState<Attraction[]>([]);
 	const [selectedID, setSelectedID] = useState("");
 	const [showDatePicker, setShowDatePicker] = useState(false);
 	const [text, setText] = useState("");
@@ -90,29 +92,10 @@ const FindEventsScreen = () => {
 		});
 	};
 
-	const getSearchResults = async (artistName: string) => {
-		const { attractions, events } = await findArtist(artistName);
+	const getSearchResults = async (searchTerm: string) => {
+		const searchResults = await getSuggestions(searchTerm);
 
-		const setSearchType = (type: any[]) => {
-			setSearchResults((prev) => {
-				const newResults = [];
-				const updatedIDs = new Set(ids);
-
-				for (const t of type) {
-					if (!updatedIDs.has(t.id)) {
-						updatedIDs.add(t.id);
-						newResults.push(t);
-					}
-				}
-
-				setIDs(new Set(updatedIDs));
-
-				return [...prev, ...newResults];
-			});
-		};
-
-		setSearchType(attractions);
-		setSearchType(events);
+		setSearchResults(searchResults);
 	};
 
 	if (!fontsLoaded) {
@@ -143,94 +126,13 @@ const FindEventsScreen = () => {
 				<View style={{ flex: 1 }}>
 					<FlashList
 						data={events.length ? events : searchResults}
-						estimatedItemSize={15}
+						estimatedItemSize={10}
 						keyExtractor={(item) => item.id}
-						renderItem={({ item }) => (
-							<TouchableOpacity
-								onPress={() => {
-									if (!selectedID) {
-										setSelectedID(item.id);
-										getEventResults(item.id);
-									} else {
-										addEvent({
-											date: DateTime.fromISO(
-												item.dates.start.dateTime
-											).toLocaleString(
-												DateTime.DATETIME_MED_WITH_WEEKDAY
-											),
-											id: item.id,
-											image: item.images?.[0]?.url,
-											location: `${
-												item._embedded?.venues?.[0].city
-													?.name
-											}, ${
-												item._embedded?.venues?.[0]
-													.state?.stateCode ||
-												item._embedded?.venues?.[0]
-													.country?.countryCode
-											}`,
-											name: item.name
-										});
-										setEvents([]);
-										setSearchResults([]);
-										setSelectedID("");
-									}
-								}}
-								style={{
-									backgroundColor: "#6600CC",
-									borderRadius: 8,
-									display: "flex",
-									flexDirection: "row",
-									height: 96,
-									alignItems: "center",
-									margin: 8,
-									padding: 8
-								}}
-							>
-								<Image
-									source={{ uri: item.images?.[0]?.url }}
-									style={{
-										borderRadius: 8,
-										height: 72,
-										width: 72
-									}}
-								/>
-								<View style={{ paddingLeft: 8 }}>
-									<Text
-										style={{ color: "white", width: "80%" }}
-									>
-										{item.name}
-									</Text>
-									<Text
-										style={{
-											color: "white",
-											flexWrap: "wrap"
-										}}
-									>
-										{item.type === "event"
-											? DateTime.fromISO(
-													item.dates.start.dateTime
-											  ).toLocaleString(
-													DateTime.DATETIME_MED_WITH_WEEKDAY
-											  )
-											: item.id}
-									</Text>
-									{selectedID && (
-										<Text style={{ color: "white" }}>
-											{`${
-												item._embedded?.venues?.[0].city
-													?.name
-											}, ${
-												item._embedded?.venues?.[0]
-													.state?.stateCode ||
-												item._embedded?.venues?.[0]
-													.country?.countryCode
-											}`}
-										</Text>
-									)}
-								</View>
-							</TouchableOpacity>
-						)}
+						renderItem={({ item }) =>
+							item.type === "attraction" ? (
+								<AttractionCard attraction={item} />
+							) : null
+						}
 					/>
 				</View>
 				{/* <View
