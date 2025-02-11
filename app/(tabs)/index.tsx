@@ -1,31 +1,75 @@
-import { StyleSheet } from 'react-native';
+import * as Notifications from "expo-notifications";
+import { TouchableOpacity, View } from "react-native";
 
-import EditScreenInfo from '@/components/EditScreenInfo';
-import { Text, View } from '@/components/Themed';
+const MyEventsScreen = () => {
+	Notifications.setNotificationHandler({
+		handleNotification: async () => ({
+			shouldShowAlert: true, 
+			shouldPlaySound: true,
+			shouldSetBadge: false
+		})
+	});
 
-export default function TabOneScreen() {
-  return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Tab One</Text>
-      <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-      <EditScreenInfo path="app/(tabs)/index.tsx" />
-    </View>
-  );
-}
+	const registerForPushNotifications = async () => {
+		const { status: existingStatus } =
+			await Notifications.requestPermissionsAsync();
+		let finalStatus = existingStatus;
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: '80%',
-  },
-});
+		if (existingStatus !== "granted") {
+			const { status } = await Notifications.requestPermissionsAsync();
+			finalStatus = status;
+		}
+	};
+
+	registerForPushNotifications();
+
+	const checkPermissions = async () => {
+		const { status, canAskAgain } =
+			await Notifications.getPermissionsAsync();
+		console.log("Notification Permissions:", { status, canAskAgain });
+	};
+
+	checkPermissions();
+
+	const debugScheduledNotifications = async () => {
+		const scheduled =
+			await Notifications.getAllScheduledNotificationsAsync();
+		console.log("Scheduled Notifications:", scheduled);
+	};
+
+	debugScheduledNotifications();
+
+	const scheduleNotification = async () => {
+		await Notifications.scheduleNotificationAsync({
+			content: {
+				title: "You've got mail! 📬",
+				body: "Here is the notification body",
+				data: { data: "goes here", test: { test1: "more data" } },
+				interruptionLevel: "active"
+			},
+			trigger: null
+		});
+
+		console.log("Notification scheduled!");
+	};
+
+	return (
+		<View
+			style={{
+				flex: 1,
+				justifyContent: "center",
+				alignItems: "center"
+			}}
+		>
+			<TouchableOpacity
+				style={{ backgroundColor: "purple", width: 96, height: 48 }}
+				onPress={() => {
+					scheduleNotification();
+					debugScheduledNotifications();
+				}}
+			></TouchableOpacity>
+		</View>
+	);
+};
+
+export default MyEventsScreen;
