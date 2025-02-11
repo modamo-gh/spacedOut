@@ -62,7 +62,7 @@ const MyEventsScreen = () => {
 	return (
 		<View style={{ flex: 1 }}>
 			<StarryBackground />
-			<View style={{ flex: 1 }}>
+			<SafeAreaView style={{ flex: 1 }}>
 				<FlashList
 					data={savedEvents}
 					renderItem={({ item }) => (
@@ -105,7 +105,7 @@ const MyEventsScreen = () => {
 						</View>
 					)}
 				/>
-			</View>
+			</SafeAreaView>
 		</View>
 	);
 };

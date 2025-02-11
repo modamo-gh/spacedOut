@@ -14,10 +14,10 @@ import {
 } from "react-native";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { getEvents, getSuggestions } from "../../services/ticketmaster";
-import { useEventContext } from "@/context/EventContext";
 import StarryBackground from "@/components/StarryBackground";
 import AttractionCard from "@/components/AttractionCard";
 import { Attraction } from "@/types/Attraction";
+import EventCard from "@/components/EventCard";
 
 const FindEventsScreen = () => {
 	const [date, setDate] = useState<Date>();
@@ -29,7 +29,6 @@ const FindEventsScreen = () => {
 	const [showDatePicker, setShowDatePicker] = useState(false);
 	const [text, setText] = useState("");
 
-	const { addEvent } = useEventContext();
 	const today = new Date();
 
 	const [fontsLoaded] = useFonts({
@@ -131,7 +130,9 @@ const FindEventsScreen = () => {
 						renderItem={({ item }) =>
 							item.type === "attraction" ? (
 								<AttractionCard attraction={item} />
-							) : null
+							) : (
+								<EventCard event={item} />
+							)
 						}
 					/>
 				</View>

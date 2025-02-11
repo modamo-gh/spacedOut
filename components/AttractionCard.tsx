@@ -11,15 +11,7 @@ const AttractionCard: React.FC<AttractionCardProps> = ({ attraction }) => {
 			// 		getEventResults(attraction.id);
 			// 	} else {
 			// 		addEvent({
-			// 			date: DateTime.fromISO(
-			// 				attraction.dates.start.dateTime
-			// 			).toLocaleString(DateTime.DATETIME_MED_WITH_WEEKDAY),
-			// 			id: attraction.id,
-			// 			image: attraction.images?.[0]?.url,
-			// 			location: `${attraction._embedded?.venues?.[0].city?.name}, ${
-			// 				attraction._embedded?.venues?.[0].state?.stateCode ||
-			// 				attraction._embedded?.venues?.[0].country?.countryCode
-			// 			}`,
+
 			// 			name: attraction.name
 			// 		});
 			// 		setEvents([]);
