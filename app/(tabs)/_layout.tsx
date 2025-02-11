@@ -28,21 +28,21 @@ export default function TabLayout() {
 			}}
 		>
 			<Tabs.Screen
-				name="index"
+				name="myEvents"
 				options={{
 					header: () => null,
 					tabBarIcon: ({ color }) => (
-						<TabBarIcon name="code" color={color} />
+						<TabBarIcon name="calendar" color={color} />
 					),
 					title: "My Events"
 				}}
 			/>
 			<Tabs.Screen
-				name="two"
+				name="findEvents"
 				options={{
 					header: () => null,
 					tabBarIcon: ({ color }) => (
-						<TabBarIcon name="code" color={color} />
+						<TabBarIcon name="search" color={color} />
 					),
 					title: "Find Events"
 				}}

@@ -3,6 +3,7 @@ import * as Notifications from "expo-notifications";
 import React from "react";
 import { Image, SafeAreaView, Text, View } from "react-native";
 import { useEventContext } from "@/context/EventContext";
+import StarryBackground from "@/components/StarryBackground";
 
 const MyEventsScreen = () => {
 	const { savedEvents } = useEventContext();
@@ -59,50 +60,53 @@ const MyEventsScreen = () => {
 	};
 
 	return (
-		<SafeAreaView style={{ flex: 1 }}>
-			<FlashList
-				data={savedEvents}
-				renderItem={({ item }) => (
-					<View
-						style={{
-							backgroundColor: "#6600CC",
-							borderRadius: 8,
-							display: "flex",
-							flexDirection: "row",
-							height: 96,
-							alignItems: "center",
-							margin: 8,
-							padding: 8
-						}}
-					>
-						<Image
-							source={{ uri: item.image }}
+		<View style={{ flex: 1 }}>
+			<StarryBackground />
+			<View style={{ flex: 1 }}>
+				<FlashList
+					data={savedEvents}
+					renderItem={({ item }) => (
+						<View
 							style={{
+								backgroundColor: "#6600CC",
 								borderRadius: 8,
-								height: 72,
-								width: 72
+								display: "flex",
+								flexDirection: "row",
+								height: 96,
+								alignItems: "center",
+								margin: 8,
+								padding: 8
 							}}
-						/>
-						<View style={{ paddingLeft: 8 }}>
-							<Text style={{ color: "white", width: "80%" }}>
-								{item.name}
-							</Text>
-							<Text
+						>
+							<Image
+								source={{ uri: item.image }}
 								style={{
-									color: "white",
-									flexWrap: "wrap"
+									borderRadius: 8,
+									height: 72,
+									width: 72
 								}}
-							>
-								{item.date}
-							</Text>
-							<Text style={{ color: "white" }}>
-								{item.location}
-							</Text>
+							/>
+							<View style={{ paddingLeft: 8 }}>
+								<Text style={{ color: "white", width: "80%" }}>
+									{item.name}
+								</Text>
+								<Text
+									style={{
+										color: "white",
+										flexWrap: "wrap"
+									}}
+								>
+									{item.date}
+								</Text>
+								<Text style={{ color: "white" }}>
+									{item.location}
+								</Text>
+							</View>
 						</View>
-					</View>
-				)}
-			/>
-		</SafeAreaView>
+					)}
+				/>
+			</View>
+		</View>
 	);
 };
 

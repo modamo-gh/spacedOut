@@ -1,10 +1,8 @@
 import { FlashList } from "@shopify/flash-list";
-import { Canvas, Circle, Rect } from "@shopify/react-native-skia";
 import { useFonts } from "expo-font";
 import { DateTime } from "luxon";
 import React, { useState } from "react";
 import {
-	Dimensions,
 	FlatList,
 	Image,
 	SafeAreaView,
@@ -17,6 +15,7 @@ import {
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { findArtist, getEvents } from "../../services/ticketmaster";
 import { useEventContext } from "@/context/EventContext";
+import StarryBackground from "@/components/StarryBackground";
 
 const FindEventsScreen = () => {
 	const [date, setDate] = useState<Date>();
@@ -30,20 +29,6 @@ const FindEventsScreen = () => {
 
 	const { addEvent } = useEventContext();
 	const today = new Date();
-
-	const screenHeight = Dimensions.get("screen").height;
-	const screenWidth = Dimensions.get("screen").width;
-	const [stars, setStars] = useState(() =>
-		Array.from({ length: 25 }).map((_, i) => (
-			<Circle
-				cx={Math.random() * screenWidth}
-				cy={Math.random() * screenHeight}
-				key={i}
-				r={Math.random() * 5}
-				color="white"
-			/>
-		))
-	);
 
 	const [fontsLoaded] = useFonts({
 		Orbitron: require("../../assets/fonts/Orbitron-VariableFont_wght.ttf")
@@ -136,16 +121,7 @@ const FindEventsScreen = () => {
 
 	return (
 		<View style={{ flex: 1 }}>
-			<Canvas style={styles.canvas}>
-				<Rect
-					height={screenHeight}
-					width={screenWidth}
-					x={0}
-					y={0}
-					color="#330099"
-				/>
-				{stars}
-			</Canvas>
+			<StarryBackground />
 			<SafeAreaView
 				style={{
 					display: "flex",
