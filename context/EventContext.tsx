@@ -1,7 +1,36 @@
 import { Event } from "@/types/Event";
 import { EventContextType } from "@/types/EventContext";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { DateTime } from "luxon";
-import React, { createContext, useContext, useState } from "react";
+import React, {
+	createContext,
+	useCallback,
+	useContext,
+	useEffect,
+	useState
+} from "react";
+
+const STORAGE_KEY = "savedEvents";
+
+const loadEventsFromStorage = async (): Promise<Event[]> => {
+	try {
+		const storedEvents = await AsyncStorage.getItem(STORAGE_KEY);
+
+		return storedEvents ? JSON.parse(storedEvents) : [];
+	} catch (error) {
+		console.log("Error loading events from storage:", error);
+
+		return [];
+	}
+};
+
+const saveEventsToStorage = async (events: Event[]) => {
+	try {
+		await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(events));
+	} catch (error) {
+		console.log("Error saving events to storage:", error);
+	}
+};
 
 const EventContext = createContext<EventContextType | undefined>(undefined);
 
@@ -38,22 +67,42 @@ export const EventProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
 	const [savedEvents, setSavedEvents] = useState<Event[]>([]);
 
-	const addEvent = (event: Event) => {
-		setSavedEvents((prev) =>
-			[
+	useEffect(() => {
+		const fetchStoredEvents = async () => {
+			const storedEvents = await loadEventsFromStorage();
+
+			setSavedEvents(storedEvents);
+		};
+
+		fetchStoredEvents();
+	}, []);
+
+	const addEvent = useCallback((event: Event) => {
+		setSavedEvents((prev) => {
+			const updatedEvents = [
 				...prev,
 				{ ...event, milestones: generateMilestones(event.dateTime) }
 			].sort(
 				(a, b) =>
 					DateTime.fromISO(a.milestones[0]).toMillis() -
 					DateTime.fromISO(b.milestones[0]).toMillis()
-			)
-		);
-	};
+			);
 
-	const removeEvent = (id: string) => {
-		setSavedEvents((prev) => prev.filter((event) => event.id !== id));
-	};
+			saveEventsToStorage(updatedEvents);
+
+			return updatedEvents;
+		});
+	}, []);
+
+	const removeEvent = useCallback((id: string) => {
+		setSavedEvents((prev) => {
+			const updatedEvents = prev.filter((event) => event.id !== id);
+
+			saveEventsToStorage(updatedEvents);
+
+			return updatedEvents;
+		});
+	}, []);
 
 	return (
 		<EventContext.Provider value={{ addEvent, removeEvent, savedEvents }}>
