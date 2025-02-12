@@ -1,14 +1,22 @@
+import { MapboxMapProps } from "@/types/MapboxMapProps";
 import MapboxGL from "@rnmapbox/maps";
 import React from "react";
 import { View } from "react-native";
 
 MapboxGL.setAccessToken(process.env.EXPO_PUBLIC_MAPBOX_API_KEY);
 
-const MapboxMap = ({ latitude, longitude }) => {
+const MapboxMap: React.FC<MapboxMapProps> = ({ latitude, longitude }) => {
 	if (!latitude || !longitude) return null;
 
 	return (
-		<View style={{ borderRadius: 8, flex: 1, height: 300, overflow:"hidden" }}>
+		<View
+			style={{
+				borderRadius: 8,
+				flex: 1,
+				height: 300,
+				overflow: "hidden"
+			}}
+		>
 			<MapboxGL.MapView style={{ flex: 1 }}>
 				<MapboxGL.Camera
 					centerCoordinate={[longitude, latitude]}
@@ -16,7 +24,7 @@ const MapboxMap = ({ latitude, longitude }) => {
 				/>
 				<MapboxGL.PointAnnotation
 					coordinate={[longitude, latitude]}
-					id={`${latitude}, ${longitude}`}
+					id={`${longitude}, ${latitude}`}
 				>
 					<View
 						style={{
