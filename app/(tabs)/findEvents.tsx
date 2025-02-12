@@ -2,12 +2,13 @@ import AttractionCard from "@/components/AttractionCard";
 import EventCard from "@/components/EventCard";
 import StarryBackground from "@/components/StarryBackground";
 import { Attraction } from "@/types/Attraction";
+import Feather from "@expo/vector-icons/Feather";
 import { FlashList } from "@shopify/flash-list";
 import { useFonts } from "expo-font";
+import * as Haptics from "expo-haptics";
 import React, { useState } from "react";
 import { SafeAreaView, StyleSheet, Text, TextInput, View } from "react-native";
 import { getEvents, getSuggestions } from "../../services/ticketmaster";
-import Feather from "@expo/vector-icons/Feather";
 
 const FindEventsScreen = () => {
 	const [events, setEvents] = useState<any[]>([]);
@@ -72,7 +73,7 @@ const FindEventsScreen = () => {
 						backgroundColor: "#22015E",
 						borderColor: "#6600CC",
 						borderWidth: 1,
-						borderRadius: 5,
+						borderRadius: 10,
 						flexDirection: "row",
 						height: 48,
 						marginBottom: 12,
@@ -82,7 +83,7 @@ const FindEventsScreen = () => {
 					<Feather
 						color="#9287AB"
 						name="search"
-						style={{ fontSize: 20, paddingLeft: 16 }}
+						style={{ fontSize: 20, paddingHorizontal: 16 }}
 					/>
 					<TextInput
 						autoCapitalize="none"
@@ -97,6 +98,19 @@ const FindEventsScreen = () => {
 						style={styles.textInput}
 						value={text}
 					/>
+					{text.length ? (
+						<Feather
+							color="#9287AB"
+							name="x"
+							onPress={() => {
+								Haptics.impactAsync(
+									Haptics.ImpactFeedbackStyle.Medium
+								);
+								setText("");
+							}}
+							style={{ fontSize: 20, marginRight: 16 }}
+						/>
+					) : null}
 				</View>
 				<View style={{ flex: 1 }}>
 					<FlashList
@@ -147,8 +161,7 @@ const styles = StyleSheet.create({
 		color: "#FFFFFF",
 		flex: 1,
 		fontSize: 16,
-		height: "100%",
-		paddingLeft: 8
+		height: "100%"
 	}
 });
 
