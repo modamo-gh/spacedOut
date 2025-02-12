@@ -7,6 +7,7 @@ import { useFonts } from "expo-font";
 import React, { useState } from "react";
 import { SafeAreaView, StyleSheet, Text, TextInput, View } from "react-native";
 import { getEvents, getSuggestions } from "../../services/ticketmaster";
+import Feather from "@expo/vector-icons/Feather";
 
 const FindEventsScreen = () => {
 	const [events, setEvents] = useState<any[]>([]);
@@ -65,17 +66,38 @@ const FindEventsScreen = () => {
 				}}
 			>
 				<Text style={styles.text}>SPACEDOUT</Text>
-				<TextInput
-					autoCapitalize="none"
-					autoCorrect={false}
-					onChangeText={setText}
-					onSubmitEditing={() => {
-						setEvents([]);
-						getSearchResults(text.trim());
+				<View
+					style={{
+						alignItems: "center",
+						backgroundColor: "#22015E",
+						borderColor: "#6600CC",
+						borderWidth: 1,
+						borderRadius: 5,
+						flexDirection: "row",
+						height: 48,
+						marginBottom: 12,
+						marginHorizontal: 20
 					}}
-					style={styles.textInput}
-					value={text}
-				/>
+				>
+					<Feather
+						color="#9287AB"
+						name="search"
+						style={{ fontSize: 20, paddingLeft: 16 }}
+					/>
+					<TextInput
+						autoCapitalize="none"
+						autoCorrect={false}
+						onChangeText={setText}
+						onSubmitEditing={() => {
+							setEvents([]);
+							getSearchResults(text.trim());
+						}}
+						placeholder="Search for Attraction"
+						placeholderTextColor="#9287AB"
+						style={styles.textInput}
+						value={text}
+					/>
+				</View>
 				<View style={{ flex: 1 }}>
 					<FlashList
 						data={events.length ? events : searchResults}
@@ -122,14 +144,11 @@ const styles = StyleSheet.create({
 		marginBottom: 12
 	},
 	textInput: {
-		backgroundColor: "#22015E",
-		borderColor: " #6600CC",
-		borderRadius: 5,
-		borderWidth: 1,
-		color: "#220066",
-		height: 48,
-		marginHorizontal: 20,
-		padding: 8
+		color: "#FFFFFF",
+		flex: 1,
+		fontSize: 16,
+		height: "100%",
+		paddingLeft: 8
 	}
 });
 
