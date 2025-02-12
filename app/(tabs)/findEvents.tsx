@@ -19,6 +19,7 @@ const FindEventsScreen = () => {
 	const [text, setText] = useState("");
 
 	const [fontsLoaded] = useFonts({
+		Geist: require("../../assets/fonts/Geist-VariableFont_wght.ttf"),
 		Orbitron: require("../../assets/fonts/Orbitron-VariableFont_wght.ttf")
 	});
 
@@ -62,11 +63,7 @@ const FindEventsScreen = () => {
 			<SafeAreaView style={styles.contentContainer}>
 				<Text style={styles.appName}>SPACEDOUT</Text>
 				<View style={styles.searchContainer}>
-					<Feather
-						color="#9287AB"
-						name="search"
-						style={styles.icon}
-					/>
+					<Feather name="search" style={styles.icon} />
 					<TextInput
 						autoCapitalize="none"
 						autoCorrect={false}
@@ -82,7 +79,6 @@ const FindEventsScreen = () => {
 					/>
 					{text.length ? (
 						<Feather
-							color="#9287AB"
 							name="x"
 							onPress={() => {
 								Haptics.impactAsync(
@@ -95,10 +91,10 @@ const FindEventsScreen = () => {
 						/>
 					) : null}
 				</View>
-				<View style={styles.container}>
+				<View style={styles.listContainer}>
 					<FlashList
 						data={events.length ? events : searchResults}
-						estimatedItemSize={10}
+						estimatedItemSize={20}
 						keyExtractor={(item) => item.id}
 						renderItem={({ item }) =>
 							item.type === "attraction" ? (
@@ -127,13 +123,16 @@ const styles = StyleSheet.create({
 		marginHorizontal: 20,
 		marginBottom: 12
 	},
-	container: { flex: 1 },
+	container: { flex: 1},
 	contentContainer: {
+		backgroundColor: "transparent",
 		display: "flex",
 		flex: 1,
-		flexDirection: "column"
+		flexDirection: "column",
+		fontFamily: ""
 	},
-	icon: { fontSize: 20, marginHorizontal: 16 },
+	icon: { color: "#9287AB", fontSize: 20, marginHorizontal: 16 },
+	listContainer: { flex: 1, marginHorizontal: 20 },
 	searchContainer: {
 		alignItems: "center",
 		backgroundColor: "#22015E",
@@ -142,12 +141,13 @@ const styles = StyleSheet.create({
 		borderRadius: 10,
 		flexDirection: "row",
 		height: 48,
-		marginBottom: 12,
+		marginBottom: 16,
 		marginHorizontal: 20
 	},
 	textInput: {
 		color: "#FFFFFF",
 		flex: 1,
+		fontFamily: "Geist",
 		fontSize: 16,
 		height: "100%"
 	}

@@ -1,4 +1,6 @@
 import { AttractionCardProps } from "@/types/AttractionCardProps";
+import Feather from "@expo/vector-icons/Feather";
+import * as Haptics from "expo-haptics";
 import React from "react";
 import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 
@@ -14,6 +16,14 @@ const AttractionCard: React.FC<AttractionCardProps> = ({
 			<Image source={{ uri: attraction.imageURL }} style={styles.image} />
 			<View style={styles.textContainer}>
 				<Text style={styles.text}>{attraction.name}</Text>
+				<Feather
+					color="#9287AB"
+					name="chevron-right"
+					onPress={() => {
+						Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+					}}
+					style={styles.icon}
+				/>
 			</View>
 		</Pressable>
 	);
@@ -22,22 +32,32 @@ const AttractionCard: React.FC<AttractionCardProps> = ({
 const styles = StyleSheet.create({
 	card: {
 		alignItems: "center",
-		backgroundColor: "#6600CC",
+		backgroundColor: "#2F0091",
 		borderRadius: 8,
 		display: "flex",
 		flexDirection: "row",
-		height: 96,
 		justifyContent: "space-between",
-		margin: 8,
-		padding: 8
+		marginBottom: 32
 	},
+	icon: { color: "#FFFFFF", fontSize: 20, marginHorizontal: 16 },
 	image: {
-		borderRadius: 8,
+		borderRadius: 50,
 		height: 72,
 		width: 72
 	},
-	text: { color: "white", flexWrap: "wrap" },
-	textContainer: { flex: 1, paddingLeft: 8 }
+	text: {
+		color: "#FFFFFF",
+		flex: 1,
+		flexWrap: "wrap",
+		fontFamily: "Geist",
+		fontSize: 16
+	},
+	textContainer: {
+		alignItems: "center",
+		flex: 1,
+		flexDirection: "row",
+		paddingLeft: 20
+	}
 });
 
 export default AttractionCard;
