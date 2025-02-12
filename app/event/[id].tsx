@@ -63,7 +63,10 @@ const EventDetailScreen = () => {
 							DateTime.DATETIME_MED_WITH_WEEKDAY
 						)}
 					</Text>
-					<MapboxMap latitude={40.758896} longitude={-73.98513} />
+					<MapboxMap
+						latitude={event.latitude}
+						longitude={event.longitude}
+					/>
 					<View>
 						<Text style={styles.text}>Next Milestone:</Text>
 						<Text style={styles.text}>
@@ -77,12 +80,12 @@ const EventDetailScreen = () => {
 					<View>
 						<Text style={styles.text}>Remaining Milestone:</Text>
 						{event.milestones.map((milestone, index) => (
-						<Text key={index} style={styles.text}>
-							{DateTime.fromISO(milestone).toLocaleString(
-								DateTime.DATETIME_MED_WITH_WEEKDAY
-							)}
-						</Text>
-					))}
+							<Text key={index} style={styles.text}>
+								{DateTime.fromISO(milestone).toLocaleString(
+									DateTime.DATETIME_MED_WITH_WEEKDAY
+								)}
+							</Text>
+						))}
 					</View>
 				</View>
 			</Animated.ScrollView>
