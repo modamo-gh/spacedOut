@@ -2,20 +2,18 @@ import AttractionCard from "@/components/AttractionCard";
 import EventCard from "@/components/EventCard";
 import StarryBackground from "@/components/StarryBackground";
 import { Attraction } from "@/types/Attraction";
-import Feather from "@expo/vector-icons/Feather";
 import { FlashList } from "@shopify/flash-list";
 import { useFonts } from "expo-font";
-import * as Haptics from "expo-haptics";
 import React, { useState } from "react";
-import { SafeAreaView, StyleSheet, Text, TextInput, View } from "react-native";
-import { fetchAttractions, getEvents } from "../../services/ticketmaster";
+import { SafeAreaView, StyleSheet, Text, View } from "react-native";
+import { fetchAttractions } from "../../services/ticketmaster";
+import SearchBar from "@/components/SearchBar";
 
 const FindEventsScreen = () => {
-	const [events, setEvents] = useState<any[]>([]);
+	const [attractions, setAttractions] = useState<Attraction[]>([]);
+	const [events, setEvents] = useState<Event[]>([]);
 	const [ids, setIDs] = useState<Set<string>>(new Set());
-	const [searchResults, setSearchResults] = useState<(Attraction | Event)[]>(
-		[]
-	);
+	const [searchResults, setSearchResults] = useState<Attraction[]>([]);
 	const [text, setText] = useState("");
 
 	const [fontsLoaded] = useFonts({
@@ -24,33 +22,14 @@ const FindEventsScreen = () => {
 	});
 
 	const getAttractions = async (searchTerm: string) => {
-		const searchResults = await fetchAttractions(searchTerm);
+		const attractions = await fetchAttractions(searchTerm);
 
-		if (!searchResults) {
+		if (!attractions) {
 			return;
 		}
 
-		setSearchResults(searchResults);
-	};
-
-	const getEventResults = async (id: string) => {
-		const e = await getEvents(id);
-
-		setEvents((prev) => {
-			const newResults = [];
-			const updatedIDs = new Set<string>();
-
-			for (const ev of e) {
-				if (!updatedIDs.has(ev.id)) {
-					updatedIDs.add(ev.id);
-					newResults.push(ev);
-				}
-			}
-
-			setIDs(new Set(updatedIDs));
-
-			return [...prev, ...newResults];
-		});
+		setSearchResults(attractions);
+		setAttractions(attractions);
 	};
 
 	if (!fontsLoaded) {
@@ -62,50 +41,20 @@ const FindEventsScreen = () => {
 			<StarryBackground />
 			<SafeAreaView style={styles.contentContainer}>
 				<Text style={styles.appName}>SPACEDOUT</Text>
-				<View style={styles.searchContainer}>
-					<Feather name="search" style={styles.icon} />
-					<TextInput
-						autoCapitalize="none"
-						autoCorrect={false}
-						onChangeText={setText}
-						onSubmitEditing={() => {
-							setEvents([]);
-							getAttractions(text.trim());
-						}}
-						placeholder="Search for Attraction"
-						placeholderTextColor="#9287AB"
-						style={styles.textInput}
-						value={text}
-					/>
-					{text.length ? (
-						<Feather
-							name="x"
-							onPress={() => {
-								Haptics.impactAsync(
-									Haptics.ImpactFeedbackStyle.Medium
-								);
-								setText("");
-								setSearchResults([]);
-							}}
-							style={styles.icon}
-						/>
-					) : null}
-				</View>
+				<SearchBar
+					getAttractions={getAttractions}
+					setSearchResults={setSearchResults}
+					setText={setText}
+					text={text}
+				/>
 				<View style={styles.listContainer}>
 					<FlashList
-						data={events.length ? events : searchResults}
+						data={searchResults}
 						estimatedItemSize={20}
 						keyExtractor={(item) => item.id}
-						renderItem={({ item }) =>
-							item.type === "attraction" ? (
-								<AttractionCard
-									attraction={item}
-									getEventResults={getEventResults}
-								/>
-							) : (
-								<EventCard event={item} />
-							)
-						}
+						renderItem={({ item }) => (
+							<AttractionCard attraction={item} />
+						)}
 					/>
 				</View>
 			</SafeAreaView>
@@ -123,7 +72,7 @@ const styles = StyleSheet.create({
 		marginHorizontal: 20,
 		marginBottom: 12
 	},
-	container: { flex: 1},
+	container: { flex: 1 },
 	contentContainer: {
 		backgroundColor: "transparent",
 		display: "flex",
