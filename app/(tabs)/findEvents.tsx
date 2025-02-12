@@ -11,7 +11,9 @@ import { getEvents, getSuggestions } from "../../services/ticketmaster";
 const FindEventsScreen = () => {
 	const [events, setEvents] = useState<any[]>([]);
 	const [ids, setIDs] = useState<Set<string>>(new Set());
-	const [searchResults, setSearchResults] = useState<Attraction[]>([]);
+	const [searchResults, setSearchResults] = useState<(Attraction | Event)[]>(
+		[]
+	);
 	const [text, setText] = useState("");
 
 	const [fontsLoaded] = useFonts({
@@ -41,6 +43,10 @@ const FindEventsScreen = () => {
 	const getSearchResults = async (searchTerm: string) => {
 		const searchResults = await getSuggestions(searchTerm);
 
+		if (!searchResults) {
+			return;
+		}
+
 		setSearchResults(searchResults);
 	};
 
@@ -55,8 +61,7 @@ const FindEventsScreen = () => {
 				style={{
 					display: "flex",
 					flex: 1,
-					flexDirection: "column",
-					
+					flexDirection: "column"
 				}}
 			>
 				<Text style={styles.text}>SPACEDOUT</Text>
