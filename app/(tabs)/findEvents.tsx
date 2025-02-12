@@ -1,23 +1,12 @@
+import AttractionCard from "@/components/AttractionCard";
+import EventCard from "@/components/EventCard";
+import StarryBackground from "@/components/StarryBackground";
+import { Attraction } from "@/types/Attraction";
 import { FlashList } from "@shopify/flash-list";
 import { useFonts } from "expo-font";
-import { DateTime } from "luxon";
 import React, { useState } from "react";
-import {
-	FlatList,
-	Image,
-	SafeAreaView,
-	StyleSheet,
-	Text,
-	TextInput,
-	TouchableOpacity,
-	View
-} from "react-native";
-import DateTimePickerModal from "react-native-modal-datetime-picker";
+import { SafeAreaView, StyleSheet, Text, TextInput, View } from "react-native";
 import { getEvents, getSuggestions } from "../../services/ticketmaster";
-import StarryBackground from "@/components/StarryBackground";
-import AttractionCard from "@/components/AttractionCard";
-import { Attraction } from "@/types/Attraction";
-import EventCard from "@/components/EventCard";
 
 const FindEventsScreen = () => {
 	const [events, setEvents] = useState<any[]>([]);
@@ -66,9 +55,11 @@ const FindEventsScreen = () => {
 				style={{
 					display: "flex",
 					flex: 1,
-					flexDirection: "column"
+					flexDirection: "column",
+					
 				}}
 			>
+				<Text style={styles.text}>SPACEDOUT</Text>
 				<TextInput
 					autoCapitalize="none"
 					autoCorrect={false}
@@ -97,106 +88,6 @@ const FindEventsScreen = () => {
 						}
 					/>
 				</View>
-				{/* <View
-					style={{
-						flex: 4,
-						alignItems: "stretch",
-						justifyContent: "center"
-					}}
-				>
-					<View
-						style={{
-							flex: 1,
-							alignItems: "center",
-							justifyContent: "center"
-						}}
-					>
-						<Text style={[styles.text, styles.labelText]}>
-							Today
-						</Text>
-						<Text style={[styles.text, styles.labelText]}>
-							{today.toDateString()}
-						</Text>
-					</View>
-					<View style={{ flex: 8 }}>
-						<FlatList
-							contentContainerStyle={{
-								flex: 3,
-								justifyContent: "space-around",
-								alignItems: "center",
-								width: screenWidth
-							}}
-							data={milestones}
-							keyExtractor={(item) => item}
-							renderItem={(item) => (
-								<Text style={[styles.text, styles.dateText]}>
-									{item.item}
-								</Text>
-							)}
-							style={{ flex: 4 }}
-						/>
-					</View>
-					<View
-						style={{
-							flex: 1,
-							alignItems: "center",
-							justifyContent: "center"
-						}}
-					>
-						<Text style={[styles.text, styles.labelText]}>
-							Target
-						</Text>
-						{date ? (
-							<Text style={[styles.text, styles.labelText]}>
-								{date.toDateString()}
-							</Text>
-						) : null}
-					</View>
-				</View>
-				<View
-					style={{
-						flex: 1,
-						alignItems: "center",
-						justifyContent: "space-around",
-						flexDirection: "row",
-						width: "100%"
-					}}
-				>
-					<TouchableOpacity
-						style={{
-							backgroundColor: "white",
-							borderRadius: 5,
-							width: 100,
-							height: 48
-						}}
-						onPress={() => setShowDatePicker(true)}
-					>
-						<Text style={[styles.text, styles.buttonText]}>
-							Choose Date
-						</Text>
-					</TouchableOpacity>
-					{milestones.length ? (
-						<TouchableOpacity
-							style={{
-								backgroundColor: "white",
-								borderRadius: 5,
-								width: 100,
-								height: 48
-							}}
-							onPress={() => setShowDatePicker(true)}
-						>
-							<Text style={[styles.text, styles.buttonText]}>
-								Save Dates
-							</Text>
-						</TouchableOpacity>
-					) : null}
-				</View>
-				<DateTimePickerModal
-					isVisible={showDatePicker}
-					mode="date"
-					onCancel={() => setShowDatePicker(false)}
-					onConfirm={handleConfirm}
-				/> */}
 			</SafeAreaView>
 		</View>
 	);
@@ -216,13 +107,23 @@ const styles = StyleSheet.create({
 	},
 	dateText: { fontSize: 37 },
 	labelText: { fontSize: 18 },
-	text: { color: "white", fontWeight: "bold", fontFamily: "Orbitron" },
+	text: {
+		color: "white",
+		fontFamily: "Orbitron",
+		fontSize: 24,
+		fontWeight: "700",
+		letterSpacing: 4,
+		marginHorizontal: 20,
+		marginBottom: 12
+	},
 	textInput: {
-		backgroundColor: "#E0E0E0",
+		backgroundColor: "#22015E",
+		borderColor: " #6600CC",
 		borderRadius: 5,
+		borderWidth: 1,
 		color: "#220066",
 		height: 48,
-		marginHorizontal: 8,
+		marginHorizontal: 20,
 		padding: 8
 	}
 });
