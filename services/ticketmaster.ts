@@ -4,45 +4,28 @@ import { DateTime } from "luxon";
 
 const BASE_URL = "https://app.ticketmaster.com/discovery/v2";
 
-export const getSuggestions = async (artistName: string) => {
+export const fetchAttractions = async (artistName: string) => {
 	try {
 		const response = await fetch(
-			`${BASE_URL}/suggest.json?apikey=${
+			`${BASE_URL}/attractions.json?apikey=${
 				process.env.EXPO_PUBLIC_API_KEY
 			}&keyword=${encodeURIComponent(artistName)}`
 		);
 		const data = await response.json();
-		const suggestions: (Attraction | Event)[] = [];
+		const attractions: Attraction[] = [];
 
-		for (const suggestion of data._embedded.attractions) {
-			suggestions.push({
-				id: suggestion.id,
-				imageURL: suggestion.images?.[0]?.url,
-				name: suggestion.name,
-				type: suggestion.type
+		for (const attraction of data._embedded.attractions) {
+			attractions.push({
+				id: attraction.id,
+				imageURL: attraction.images?.[0]?.url,
+				name: attraction.name,
+				type: attraction.type
 			});
 		}
 
-		for (const suggestion of data._embedded.events) {
-			suggestions.push({
-				dateTime: DateTime.fromISO(
-					suggestion.dates.start.dateTime
-				).toLocaleString(DateTime.DATETIME_MED_WITH_WEEKDAY),
-				id: suggestion.id,
-				imageURL: suggestion.images?.[0]?.url,
-				location: `${suggestion._embedded?.venues?.[0].city?.name}, ${
-					suggestion._embedded?.venues?.[0].state?.stateCode ||
-					suggestion._embedded?.venues?.[0].country?.countryCode
-				}`,
-				milestones: [],
-				name: suggestion.name,
-				type: suggestion.type
-			});
-		}
-
-		return suggestions;
+		return attractions;
 	} catch (error) {
-		console.error("Error fetching artist:", error);
+		console.error("Error fetching attractions:", error);
 	}
 };
 

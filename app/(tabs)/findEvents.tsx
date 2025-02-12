@@ -8,7 +8,7 @@ import { useFonts } from "expo-font";
 import * as Haptics from "expo-haptics";
 import React, { useState } from "react";
 import { SafeAreaView, StyleSheet, Text, TextInput, View } from "react-native";
-import { getEvents, getSuggestions } from "../../services/ticketmaster";
+import { fetchAttractions, getEvents } from "../../services/ticketmaster";
 
 const FindEventsScreen = () => {
 	const [events, setEvents] = useState<any[]>([]);
@@ -21,6 +21,16 @@ const FindEventsScreen = () => {
 	const [fontsLoaded] = useFonts({
 		Orbitron: require("../../assets/fonts/Orbitron-VariableFont_wght.ttf")
 	});
+
+	const getAttractions = async (searchTerm: string) => {
+		const searchResults = await fetchAttractions(searchTerm);
+
+		if (!searchResults) {
+			return;
+		}
+
+		setSearchResults(searchResults);
+	};
 
 	const getEventResults = async (id: string) => {
 		const e = await getEvents(id);
@@ -42,48 +52,20 @@ const FindEventsScreen = () => {
 		});
 	};
 
-	const getSearchResults = async (searchTerm: string) => {
-		const searchResults = await getSuggestions(searchTerm);
-
-		if (!searchResults) {
-			return;
-		}
-
-		setSearchResults(searchResults);
-	};
-
 	if (!fontsLoaded) {
 		return null;
 	}
 
 	return (
-		<View style={{ flex: 1 }}>
+		<View style={styles.container}>
 			<StarryBackground />
-			<SafeAreaView
-				style={{
-					display: "flex",
-					flex: 1,
-					flexDirection: "column"
-				}}
-			>
-				<Text style={styles.text}>SPACEDOUT</Text>
-				<View
-					style={{
-						alignItems: "center",
-						backgroundColor: "#22015E",
-						borderColor: "#6600CC",
-						borderWidth: 1,
-						borderRadius: 10,
-						flexDirection: "row",
-						height: 48,
-						marginBottom: 12,
-						marginHorizontal: 20
-					}}
-				>
+			<SafeAreaView style={styles.contentContainer}>
+				<Text style={styles.appName}>SPACEDOUT</Text>
+				<View style={styles.searchContainer}>
 					<Feather
 						color="#9287AB"
 						name="search"
-						style={{ fontSize: 20, paddingHorizontal: 16 }}
+						style={styles.icon}
 					/>
 					<TextInput
 						autoCapitalize="none"
@@ -91,7 +73,7 @@ const FindEventsScreen = () => {
 						onChangeText={setText}
 						onSubmitEditing={() => {
 							setEvents([]);
-							getSearchResults(text.trim());
+							getAttractions(text.trim());
 						}}
 						placeholder="Search for Attraction"
 						placeholderTextColor="#9287AB"
@@ -107,12 +89,13 @@ const FindEventsScreen = () => {
 									Haptics.ImpactFeedbackStyle.Medium
 								);
 								setText("");
+								setSearchResults([]);
 							}}
-							style={{ fontSize: 20, marginRight: 16 }}
+							style={styles.icon}
 						/>
 					) : null}
 				</View>
-				<View style={{ flex: 1 }}>
+				<View style={styles.container}>
 					<FlashList
 						data={events.length ? events : searchResults}
 						estimatedItemSize={10}
@@ -135,20 +118,7 @@ const FindEventsScreen = () => {
 };
 
 const styles = StyleSheet.create({
-	buttonText: {
-		flex: 1,
-		fontSize: 18,
-		textAlign: "center",
-		color: "#330099"
-	},
-	canvas: {
-		height: "100%",
-		position: "absolute",
-		width: "100%"
-	},
-	dateText: { fontSize: 37 },
-	labelText: { fontSize: 18 },
-	text: {
+	appName: {
 		color: "white",
 		fontFamily: "Orbitron",
 		fontSize: 24,
@@ -156,6 +126,24 @@ const styles = StyleSheet.create({
 		letterSpacing: 4,
 		marginHorizontal: 20,
 		marginBottom: 12
+	},
+	container: { flex: 1 },
+	contentContainer: {
+		display: "flex",
+		flex: 1,
+		flexDirection: "column"
+	},
+	icon: { fontSize: 20, marginHorizontal: 16 },
+	searchContainer: {
+		alignItems: "center",
+		backgroundColor: "#22015E",
+		borderColor: "#6600CC",
+		borderWidth: 1,
+		borderRadius: 10,
+		flexDirection: "row",
+		height: 48,
+		marginBottom: 12,
+		marginHorizontal: 20
 	},
 	textInput: {
 		color: "#FFFFFF",
