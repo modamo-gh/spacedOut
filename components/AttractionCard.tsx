@@ -45,7 +45,6 @@ const AttractionCard: React.FC<AttractionCardProps> = ({ attraction }) => {
 const styles = StyleSheet.create({
 	card: {
 		alignItems: "center",
-		backgroundColor: "#2F0091",
 		borderRadius: 8,
 		display: "flex",
 		flexDirection: "row",

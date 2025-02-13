@@ -7,7 +7,7 @@ const screenWidth = Dimensions.get("screen").width;
 
 const stars = Array.from({ length: 25 }).map((_, i) => (
 	<Circle
-		color="white"
+		color="rgba(255, 255, 255, 0.20)"
 		cx={Math.random() * screenWidth}
 		cy={Math.random() * screenHeight}
 		key={i}

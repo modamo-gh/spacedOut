@@ -105,7 +105,7 @@ const Attraction = () => {
 							estimatedItemSize={20}
 							keyExtractor={(item) => item.id}
 							renderItem={({ item }) => (
-								<EventCard event={item} />
+								<EventCard event={item} isFeatured={false} />
 							)}
 						/>
 					) : (
