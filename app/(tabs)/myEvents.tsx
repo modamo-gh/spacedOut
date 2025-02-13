@@ -28,7 +28,7 @@ const MyEventsScreen = () => {
 				>
 					Next Milestone
 				</Text>
-				<EventCard event={savedEvents[0]} isFeatured={true}/>
+				<EventCard event={savedEvents[0]} isFeatured={true} />
 				<Text
 					style={{
 						fontSize: 20,
@@ -41,7 +41,9 @@ const MyEventsScreen = () => {
 				</Text>
 				<FlashList
 					data={savedEvents.slice(1)}
-					renderItem={({ item, index }) => <EventCard event={item} />}
+					renderItem={({ item, index }) => (
+						<EventCard event={item} isFeatured={false} />
+					)}
 				/>
 			</SafeAreaView>
 		</View>

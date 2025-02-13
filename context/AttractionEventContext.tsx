@@ -196,7 +196,8 @@ export const AttractionEventProvider: React.FC<{
 				getAttractions,
 				getEvents,
 				removeEvent,
-				savedEvents
+				savedEvents,
+				setAttractions
 			}}
 		>
 			{children}

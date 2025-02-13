@@ -12,7 +12,7 @@ const FindEventsScreen = () => {
 	const [searchResults, setSearchResults] = useState<Attraction[]>([]);
 	const [text, setText] = useState("");
 	
-	const {attractions, getAttractions} = useAttractionEventContext();
+	const {attractions, getAttractions, setAttractions} = useAttractionEventContext();
 
 	const [fontsLoaded] = useFonts({
 		Geist: require("../../assets/fonts/Geist-VariableFont_wght.ttf"),
@@ -30,6 +30,7 @@ const FindEventsScreen = () => {
 				<Text style={styles.appName}>SPACEDOUT</Text>
 				<SearchBar
 					getAttractions={getAttractions}
+					setAttractions={setAttractions}
 					setText={setText}
 					text={text}
 				/>

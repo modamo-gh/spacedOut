@@ -1,3 +1,4 @@
+import { Dispatch, SetStateAction } from "react";
 import { Attraction } from "./Attraction";
 import { Event } from "./Event";
 
@@ -8,4 +9,5 @@ export type AttractionEventContextType = {
 	getEvents: (id: string) => Promise<Event[]>;
 	savedEvents: Event[];
 	removeEvent: (id: string) => void;
+	setAttractions: Dispatch<SetStateAction<Attraction[]>>
 };
