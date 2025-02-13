@@ -23,13 +23,15 @@ const EventDetailScreen = () => {
 	const { savedEvents } = useAttractionEventContext();
 	const [event, setEvent] = useState<Event | undefined>(undefined);
 
+	const eventID = Array.isArray(id) ? id[0] : id;
+
 	useEffect(() => {
 		const loadEvent = async () => {
-			let foundEvent = savedEvents.find((e) => e.id === id);
+			let foundEvent = savedEvents.find((e) => e.id === eventID);
 
 			if (!foundEvent) {
 				try {
-					foundEvent = await fetchEventDetails(id);
+					foundEvent = await fetchEventDetails(eventID);
 				} catch (error) {
 					console.error("Error fetching event:", error);
 				}
@@ -38,10 +40,10 @@ const EventDetailScreen = () => {
 			setEvent(foundEvent);
 		};
 
-		if (id) {
+		if (eventID) {
 			loadEvent();
 		}
-	}, [id, savedEvents]);
+	}, [eventID, savedEvents]);
 
 	const scrollY = useSharedValue(0);
 
@@ -141,26 +143,31 @@ const EventDetailScreen = () => {
 								marginBottom: 8
 							}}
 						>
-							{event.milestones.slice(1).map((milestone, index) => (
-								<Text
-									key={index}
-									style={{
-										borderBottomColor: "#7459A6",
-										borderBottomWidth:
-											index !== event.milestones.length - 1
-												? 1
-												: 0,
-										color: "white",
-										fontSize: 16,
-										fontWeight: "semibold",
-										padding: 20
-									}}
-								>
-									{DateTime.fromISO(milestone).toLocaleString(
-										DateTime.DATETIME_MED_WITH_WEEKDAY
-									)}
-								</Text>
-							))}
+							{event.milestones
+								.slice(1)
+								.map((milestone, index) => (
+									<Text
+										key={index}
+										style={{
+											borderBottomColor: "#7459A6",
+											borderBottomWidth:
+												index !==
+												event.milestones.length - 1
+													? 1
+													: 0,
+											color: "white",
+											fontSize: 16,
+											fontWeight: "semibold",
+											padding: 20
+										}}
+									>
+										{DateTime.fromISO(
+											milestone
+										).toLocaleString(
+											DateTime.DATETIME_MED_WITH_WEEKDAY
+										)}
+									</Text>
+								))}
 						</View>
 					</View>
 				</View>
