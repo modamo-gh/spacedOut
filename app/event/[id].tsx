@@ -5,6 +5,7 @@ import {
 } from "@/context/AttractionEventContext";
 import { fetchEventDetails } from "@/services/ticketmaster";
 import { Event } from "@/types/Event";
+import AntDesign from "@expo/vector-icons/AntDesign";
 import { Image } from "expo-image";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { DateTime } from "luxon";
@@ -25,16 +26,19 @@ import Animated, {
 	useAnimatedStyle,
 	useSharedValue
 } from "react-native-reanimated";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const { height: screenHeight, width: screenWidth } = Dimensions.get("window");
 const HEADER_HEIGHT = screenHeight * 0.4;
 
 const EventDetailScreen = () => {
 	const { id } = useLocalSearchParams();
-	const { savedEvents } = useAttractionEventContext();
+	const { addEvent, removeEvent, savedEvents } = useAttractionEventContext();
 	const [event, setEvent] = useState<Event | undefined>(undefined);
 
 	const eventID = Array.isArray(id) ? id[0] : id;
+
+	const insets = useSafeAreaInsets();
 
 	useEffect(() => {
 		const loadEvent = async () => {
@@ -85,6 +89,10 @@ const EventDetailScreen = () => {
 		return <Text>Event Not Found</Text>;
 	}
 
+	const isSaved = savedEvents.some(
+		(savedEvent) => savedEvent.id === event.id
+	);
+
 	const openMaps = () => {
 		const { latitude, longitude } = event;
 		const url = Platform.select({
@@ -102,12 +110,26 @@ const EventDetailScreen = () => {
 	return (
 		<View style={{ backgroundColor: "#220066", flex: 1 }}>
 			<BackButton />
+			<AntDesign
+				name={isSaved ? "heart" : "hearto"}
+				onPress={() =>
+					isSaved ? removeEvent(event.id) : addEvent(event)
+				}
+				style={{
+					color: "#F48FB1",
+					fontSize: 48,
+					position: "absolute",
+					right: 16,
+					top: insets.top - 8,
+					zIndex: 1
+				}}
+			/>
 			<Animated.View style={[styles.image, animatedImageStyle]}>
 				<Image
 					cachePolicy="memory-disk"
 					source={{ uri: event?.imageURL }}
 					style={{ width: "100%", height: "100%" }}
-				></Image>
+				/>
 			</Animated.View>
 			<Animated.ScrollView
 				onScroll={scrollHandler}
