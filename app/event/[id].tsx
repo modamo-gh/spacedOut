@@ -1,6 +1,9 @@
 import BackButton from "@/components/BackButton";
 import MapboxMap from "@/components/MapboxMap";
-import { useAttractionEventContext } from "@/context/AttractionEventContext";
+import {
+	generateMilestones,
+	useAttractionEventContext
+} from "@/context/AttractionEventContext";
 import { fetchEventDetails } from "@/services/ticketmaster";
 import { Event } from "@/types/Event";
 import { useLocalSearchParams, useRouter } from "expo-router";
@@ -32,6 +35,12 @@ const EventDetailScreen = () => {
 			if (!foundEvent) {
 				try {
 					foundEvent = await fetchEventDetails(eventID);
+					if (foundEvent) {
+						foundEvent = {
+							...foundEvent,
+							milestones: generateMilestones(foundEvent.dateTime)
+						};
+					}
 				} catch (error) {
 					console.error("Error fetching event:", error);
 				}
