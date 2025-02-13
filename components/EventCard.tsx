@@ -3,11 +3,10 @@ import { EventCardProps } from "@/types/EventCardProps";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { useRouter } from "expo-router";
 import { DateTime } from "luxon";
-import React, { useState } from "react";
+import React from "react";
 import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 
-const EventCard: React.FC<EventCardProps> = ({ event }) => {
-	console.log("Here", event);
+const EventCard: React.FC<EventCardProps> = ({ event, isFeatured }) => {
 	const router = useRouter();
 	const { addEvent, removeEvent, savedEvents } = useAttractionEventContext();
 
@@ -18,10 +17,19 @@ const EventCard: React.FC<EventCardProps> = ({ event }) => {
 	return (
 		<Pressable
 			onPress={() => router.push(`/event/${event.id}`)}
-			style={styles.card}
+			style={[styles.card, isFeatured && styles.featuredCard]}
 		>
-			<Image source={{ uri: event.imageURL }} style={styles.image} />
-			<View style={styles.textContainer}>
+			<Image
+				source={{ uri: event.imageURL }}
+				style={[styles.image, isFeatured && styles.featuredImage]}
+			/>
+			<View
+				style={
+					isFeatured
+						? styles.featuredTextContainer
+						: styles.textContainer
+				}
+			>
 				<Text numberOfLines={1} style={styles.nameText}>
 					{event.name}
 				</Text>
@@ -37,7 +45,7 @@ const EventCard: React.FC<EventCardProps> = ({ event }) => {
 				onPress={() =>
 					isSaved ? removeEvent(event.id) : addEvent(event)
 				}
-				style={styles.icon}
+				style={[styles.icon, isFeatured && styles.featuredIcon]}
 			/>
 		</Pressable>
 	);
@@ -54,7 +62,27 @@ const styles = StyleSheet.create({
 		marginBottom: 14
 	},
 	dateText: { color: "#F1F54F", flex: 1 },
-	icon: { color: "#FFFFFF", fontSize: 24 },
+	featuredCard: {
+		display: "flex",
+		height: 200,
+		alignItems: "flex-end",
+		overflow: "hidden",
+		position: "relative"
+	},
+	featuredIcon: {padding: 8, position: "absolute", top: 0, right: 0 },
+	featuredImage: {
+		height: "100%",
+		position: "absolute",
+		width: "100%"
+	},
+	featuredTextContainer: {
+		backgroundColor: "rgba(0,0,0,0.5)",
+		gap: 4,
+		padding: 12,
+		position: "absolute",
+		width: "100%"
+	},
+	icon: { color: "#F48FB1", fontSize: 24 },
 	image: {
 		borderRadius: 8,
 		height: 72,

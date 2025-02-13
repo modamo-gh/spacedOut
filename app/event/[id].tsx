@@ -127,13 +127,7 @@ const EventDetailScreen = () => {
 					<Pressable onPress={openMaps}>
 						<Image
 							source={{
-								uri: `https://api.mapbox.com/styles/v1/mapbox/streets-v12/static/pin-s+2e0191(${
-									event.longitude
-								},${event.latitude})/${event.longitude},${
-									event.latitude
-								},14,0/300x200?access_token=${[
-									process.env.EXPO_PUBLIC_MAPBOX_API_KEY
-								]}`
+								uri: `https://api.mapbox.com/styles/v1/mapbox/streets-v12/static/pin-s+2e0191(${event.longitude},${event.latitude})/${event.longitude},${event.latitude},14,0/300x200?access_token=${process.env.EXPO_PUBLIC_MAPBOX_API_KEY}`
 							}}
 							style={{
 								width: "100%",

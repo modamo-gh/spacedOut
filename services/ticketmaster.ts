@@ -67,10 +67,6 @@ export const fetchEvents = async (id: string) => {
 					name: event.name,
 					type: event.type
 				});
-
-				console.log(
-					[...event.images]?.sort((a, b) => b.width - a.width)[0]?.url
-				);
 			}
 
 			totalPages = data.page.totalPages || 1;

@@ -155,11 +155,7 @@ export const AttractionEventProvider: React.FC<{
 	};
 
 	const getEvents = async (id: string) => {
-		console.log("Fetching events for attraction ID:", id);
-
 		const events = await fetchEvents(id);
-
-		console.log("Fetched Events:", events);
 
 		return events;
 	};
