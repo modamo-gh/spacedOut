@@ -81,7 +81,12 @@ const EventDetailScreen = () => {
 				<View style={{ height: HEADER_HEIGHT }} />
 				<View style={{ gap: 8, padding: 16 }}>
 					<Text style={styles.name}>{event.name}</Text>
-					<Text style={styles.text}>
+					<Text
+						style={[
+							styles.text,
+							{ color: "#F1F54F", marginBottom: 8 }
+						]}
+					>
 						{DateTime.fromISO(event.dateTime).toLocaleString(
 							DateTime.DATETIME_MED_WITH_WEEKDAY
 						)}
@@ -91,24 +96,72 @@ const EventDetailScreen = () => {
 						longitude={event.longitude}
 					/>
 					<View>
-						<Text style={styles.text}>Next Milestone:</Text>
-						<Text style={styles.text}>
-							{DateTime.fromISO(
-								event.milestones[0]
-							).toLocaleString(
-								DateTime.DATETIME_MED_WITH_WEEKDAY
-							)}
+						<Text
+							style={{
+								fontSize: 20,
+								fontWeight: "semibold",
+								color: "white",
+								marginBottom: 8
+							}}
+						>
+							Next Milestone
 						</Text>
-					</View>
-					<View>
-						<Text style={styles.text}>Remaining Milestone:</Text>
-						{event.milestones.map((milestone, index) => (
-							<Text key={index} style={styles.text}>
-								{DateTime.fromISO(milestone).toLocaleString(
+						<View
+							style={{
+								backgroundColor: "#6600CC",
+								borderRadius: 10,
+								padding: 20,
+								marginBottom: 8
+							}}
+						>
+							<Text style={styles.text}>
+								{DateTime.fromISO(
+									event.milestones[0]
+								).toLocaleString(
 									DateTime.DATETIME_MED_WITH_WEEKDAY
 								)}
 							</Text>
-						))}
+						</View>
+					</View>
+					<View>
+						<Text
+							style={{
+								fontSize: 20,
+								fontWeight: "semibold",
+								color: "white",
+								marginBottom: 8
+							}}
+						>
+							Remaining Milestones
+						</Text>
+						<View
+							style={{
+								backgroundColor: "#6600CC",
+								borderRadius: 10,
+								marginBottom: 8
+							}}
+						>
+							{event.milestones.slice(1).map((milestone, index) => (
+								<Text
+									key={index}
+									style={{
+										borderBottomColor: "#7459A6",
+										borderBottomWidth:
+											index !== event.milestones.length - 1
+												? 1
+												: 0,
+										color: "white",
+										fontSize: 16,
+										fontWeight: "semibold",
+										padding: 20
+									}}
+								>
+									{DateTime.fromISO(milestone).toLocaleString(
+										DateTime.DATETIME_MED_WITH_WEEKDAY
+									)}
+								</Text>
+							))}
+						</View>
 					</View>
 				</View>
 			</Animated.ScrollView>
@@ -126,7 +179,8 @@ const styles = StyleSheet.create({
 	name: {
 		fontSize: 24,
 		fontWeight: "bold",
-		color: "white"
+		color: "white",
+		marginBottom: 8
 	},
 	text: {
 		fontSize: 16,

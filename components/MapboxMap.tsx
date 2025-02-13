@@ -13,8 +13,8 @@ const MapboxMap: React.FC<MapboxMapProps> = ({ latitude, longitude }) => {
 			style={{
 				borderRadius: 8,
 				flex: 1,
-				height: 300,
-				overflow: "hidden"
+				height: 224,
+				overflow: "hidden", marginBottom: 8
 			}}
 		>
 			<MapboxGL.MapView style={{ flex: 1 }}>
