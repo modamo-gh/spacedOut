@@ -20,6 +20,7 @@ export default function TabLayout() {
 
 	return (
 		<Tabs
+			initialRouteName="findEvents"
 			screenOptions={{
 				tabBarActiveTintColor: "white",
 				tabBarInactiveTintColor: "#BBBBBB",
@@ -39,16 +40,6 @@ export default function TabLayout() {
 			}}
 		>
 			<Tabs.Screen
-				name="myEvents"
-				options={{
-					header: () => null,
-					tabBarIcon: ({ color }) => (
-						<TabBarIcon name="calendar" color={color} />
-					),
-					title: "My Events"
-				}}
-			/>
-			<Tabs.Screen
 				name="findEvents"
 				options={{
 					header: () => null,
@@ -56,6 +47,16 @@ export default function TabLayout() {
 						<TabBarIcon name="search" color={color} />
 					),
 					title: "Find Events"
+				}}
+			/>
+			<Tabs.Screen
+				name="myEvents"
+				options={{
+					header: () => null,
+					tabBarIcon: ({ color }) => (
+						<TabBarIcon name="calendar" color={color} />
+					),
+					title: "My Events"
 				}}
 			/>
 		</Tabs>
