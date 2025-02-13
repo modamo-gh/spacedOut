@@ -1,5 +1,4 @@
 import BackButton from "@/components/BackButton";
-import MapboxMap from "@/components/MapboxMap";
 import {
 	generateMilestones,
 	useAttractionEventContext
@@ -9,7 +8,7 @@ import { Event } from "@/types/Event";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { DateTime } from "luxon";
 import React, { useEffect, useState } from "react";
-import { Dimensions, StyleSheet, Text, View } from "react-native";
+import { Dimensions, Image, StyleSheet, Text, View } from "react-native";
 import Animated, {
 	Extrapolation,
 	interpolate,
@@ -18,7 +17,7 @@ import Animated, {
 	useSharedValue
 } from "react-native-reanimated";
 
-const { height: screenHeight } = Dimensions.get("window");
+const { height: screenHeight, width: screenWidth } = Dimensions.get("window");
 const HEADER_HEIGHT = screenHeight * 0.4;
 
 const EventDetailScreen = () => {
@@ -102,9 +101,17 @@ const EventDetailScreen = () => {
 							DateTime.DATETIME_MED_WITH_WEEKDAY
 						)}
 					</Text>
-					<MapboxMap
-						latitude={event.latitude}
-						longitude={event.longitude}
+					<Image
+						source={{
+							uri: `https://api.mapbox.com/styles/v1/mapbox/streets-v12/static/pin-s+2e0191(${
+								event.longitude
+							},${event.latitude})/${event.longitude},${
+								event.latitude
+							},14,0/300x200?access_token=${[
+								process.env.EXPO_PUBLIC_MAPBOX_API_KEY
+							]}`
+						}}
+						style={{ width: "100%", height: 200, borderRadius: 10 }}
 					/>
 					<View>
 						<Text
