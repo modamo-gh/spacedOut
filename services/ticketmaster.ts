@@ -111,6 +111,6 @@ export const fetchEventDetails = async (id: string) => {
 	} catch (error) {
 		console.error("Error fetching events:", error);
 
-		return null;
+		return undefined;
 	}
 };

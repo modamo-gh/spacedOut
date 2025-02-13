@@ -21,7 +21,7 @@ const HEADER_HEIGHT = screenHeight * 0.4;
 const EventDetailScreen = () => {
 	const { id } = useLocalSearchParams();
 	const { savedEvents } = useAttractionEventContext();
-	const [event, setEvent] = useState<Event | null>(null);
+	const [event, setEvent] = useState<Event | undefined>(undefined);
 
 	useEffect(() => {
 		const loadEvent = async () => {
