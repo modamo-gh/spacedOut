@@ -8,7 +8,16 @@ import { Event } from "@/types/Event";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { DateTime } from "luxon";
 import React, { useEffect, useState } from "react";
-import { Dimensions, Image, StyleSheet, Text, View } from "react-native";
+import {
+	Dimensions,
+	Image,
+	Linking,
+	Platform,
+	Pressable,
+	StyleSheet,
+	Text,
+	View
+} from "react-native";
 import Animated, {
 	Extrapolation,
 	interpolate,
@@ -76,6 +85,20 @@ const EventDetailScreen = () => {
 		return <Text>Event Not Found</Text>;
 	}
 
+	const openMaps = () => {
+		const { latitude, longitude } = event;
+		const url = Platform.select({
+			android: `geo:${latitude},${longitude}?q=${latitude},${longitude}`,
+			ios: `maps://app?saddr=&daddr=${latitude},${longitude}`
+		});
+
+		if (url) {
+			Linking.openURL(url).catch((error) =>
+				console.error("Error opening maps:", error)
+			);
+		}
+	};
+
 	return (
 		<View style={{ backgroundColor: "#220066", flex: 1 }}>
 			<BackButton />
@@ -101,18 +124,24 @@ const EventDetailScreen = () => {
 							DateTime.DATETIME_MED_WITH_WEEKDAY
 						)}
 					</Text>
-					<Image
-						source={{
-							uri: `https://api.mapbox.com/styles/v1/mapbox/streets-v12/static/pin-s+2e0191(${
-								event.longitude
-							},${event.latitude})/${event.longitude},${
-								event.latitude
-							},14,0/300x200?access_token=${[
-								process.env.EXPO_PUBLIC_MAPBOX_API_KEY
-							]}`
-						}}
-						style={{ width: "100%", height: 200, borderRadius: 10 }}
-					/>
+					<Pressable onPress={openMaps}>
+						<Image
+							source={{
+								uri: `https://api.mapbox.com/styles/v1/mapbox/streets-v12/static/pin-s+2e0191(${
+									event.longitude
+								},${event.latitude})/${event.longitude},${
+									event.latitude
+								},14,0/300x200?access_token=${[
+									process.env.EXPO_PUBLIC_MAPBOX_API_KEY
+								]}`
+							}}
+							style={{
+								width: "100%",
+								height: 200,
+								borderRadius: 10
+							}}
+						/>
+					</Pressable>
 					<View>
 						<Text
 							style={{
