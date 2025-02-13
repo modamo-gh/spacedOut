@@ -1,8 +1,9 @@
-import MapboxMap from "@/components/MapboxMap";
+import EventCard from "@/components/EventCard";
 import { useAttractionEventContext } from "@/context/AttractionEventContext";
+import { Event } from "@/types/Event";
+import { FlashList } from "@shopify/flash-list";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { DateTime } from "luxon";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Dimensions, StyleSheet, Text, View } from "react-native";
 import Animated, {
 	Extrapolation,
@@ -15,15 +16,22 @@ import Animated, {
 const { height: screenHeight } = Dimensions.get("window");
 const HEADER_HEIGHT = screenHeight * 0.4;
 
-const EventDetailScreen = () => {
+const Attraction = () => {
+	const [events, setEvents] = useState<Event[]>([]);
+	const { attractions, getEvents } = useAttractionEventContext();
 	const { id } = useLocalSearchParams();
-	const { savedEvents } = useAttractionEventContext();
 
-	const event = savedEvents.find((e) => e.id === id);
+	const attraction = attractions.find((a) => a.id === id);
 
-	if (!event) {
-		return <Text>Event Not Found</Text>;
+	if (!attraction) {
+		return <Text>Attraction Not Found</Text>;
 	}
+
+	useEffect(() => {
+		if (attraction) {
+			getEvents(attraction.id).then(setEvents);
+		}
+	}, [attraction, getEvents]);
 
 	const scrollY = useSharedValue(0);
 
@@ -47,7 +55,9 @@ const EventDetailScreen = () => {
 	return (
 		<View style={{ backgroundColor: "#220066", flex: 1 }}>
 			<Animated.Image
-				source={{ uri: event.imageURL }}
+				source={{
+					uri: attraction.imageURL
+				}}
 				style={[styles.image, animatedImageStyle]}
 			/>
 			<Animated.ScrollView
@@ -57,36 +67,20 @@ const EventDetailScreen = () => {
 			>
 				<View style={{ height: HEADER_HEIGHT }} />
 				<View style={{ gap: 8, padding: 16 }}>
-					<Text style={styles.name}>{event.name}</Text>
-					<Text style={styles.text}>
-						{DateTime.fromISO(event.dateTime).toLocaleString(
-							DateTime.DATETIME_MED_WITH_WEEKDAY
-						)}
-					</Text>
-					<MapboxMap
-						latitude={event.latitude}
-						longitude={event.longitude}
-					/>
-					<View>
-						<Text style={styles.text}>Next Milestone:</Text>
-						<Text style={styles.text}>
-							{DateTime.fromISO(
-								event.milestones[0]
-							).toLocaleString(
-								DateTime.DATETIME_MED_WITH_WEEKDAY
+					<Text style={styles.name}>{attraction.name}</Text>
+					<Text style={styles.name}>Upcoming Events</Text>
+					{events.length ? (
+						<FlashList
+							data={events}
+							estimatedItemSize={20}
+							keyExtractor={(item) => item.id}
+							renderItem={({ item }) => (
+								<EventCard event={item} />
 							)}
-						</Text>
-					</View>
-					<View>
-						<Text style={styles.text}>Remaining Milestone:</Text>
-						{event.milestones.map((milestone, index) => (
-							<Text key={index} style={styles.text}>
-								{DateTime.fromISO(milestone).toLocaleString(
-									DateTime.DATETIME_MED_WITH_WEEKDAY
-								)}
-							</Text>
-						))}
-					</View>
+						/>
+					) : (
+						<Text> No Upcoming Events</Text>
+					)}
 				</View>
 			</Animated.ScrollView>
 		</View>
@@ -111,4 +105,4 @@ const styles = StyleSheet.create({
 		color: "white"
 	}
 });
-export default EventDetailScreen;
+export default Attraction;

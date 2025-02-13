@@ -1,5 +1,7 @@
+import { fetchAttractions, fetchEvents } from "@/services/ticketmaster";
+import { Attraction } from "@/types/Attraction";
 import { Event } from "@/types/Event";
-import { EventContextType } from "@/types/EventContext";
+import { AttractionEventContextType } from "@/types/AttractionEventContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Notifications from "expo-notifications";
 import { DateTime } from "luxon";
@@ -87,7 +89,9 @@ const scheduleEventNotification = async (event: Event) => {
 	});
 };
 
-const EventContext = createContext<EventContextType | undefined>(undefined);
+const AttractionEventContext = createContext<
+	AttractionEventContextType | undefined
+>(undefined);
 
 export const generateMilestones = (eventDate: string): string[] => {
 	const today = DateTime.now();
@@ -123,9 +127,10 @@ export const generateMilestones = (eventDate: string): string[] => {
 	return milestoneDates.reverse();
 };
 
-export const EventProvider: React.FC<{ children: React.ReactNode }> = ({
-	children
-}) => {
+export const AttractionEventProvider: React.FC<{
+	children: React.ReactNode;
+}> = ({ children }) => {
+	const [attractions, setAttractions] = useState<Attraction[]>([]);
 	const [savedEvents, setSavedEvents] = useState<Event[]>([]);
 
 	useEffect(() => {
@@ -138,6 +143,26 @@ export const EventProvider: React.FC<{ children: React.ReactNode }> = ({
 		fetchStoredEvents();
 		registerForPushNotifications();
 	}, []);
+
+	const getAttractions = async (searchTerm: string) => {
+		const attractions = await fetchAttractions(searchTerm);
+
+		if (!attractions) {
+			return;
+		}
+
+		setAttractions(attractions);
+	};
+
+	const getEvents = async (id: string) => {
+		console.log("Fetching events for attraction ID:", id);
+
+		const events = await fetchEvents(id);
+
+		console.log("Fetched Events:", events);
+
+		return events;
+	};
 
 	const addEvent = useCallback((event: Event) => {
 		setSavedEvents((prev) => {
@@ -168,17 +193,28 @@ export const EventProvider: React.FC<{ children: React.ReactNode }> = ({
 	}, []);
 
 	return (
-		<EventContext.Provider value={{ addEvent, removeEvent, savedEvents }}>
+		<AttractionEventContext.Provider
+			value={{
+				addEvent,
+				attractions,
+				getAttractions,
+				getEvents,
+				removeEvent,
+				savedEvents
+			}}
+		>
 			{children}
-		</EventContext.Provider>
+		</AttractionEventContext.Provider>
 	);
 };
 
-export const useEventContext = () => {
-	const context = useContext(EventContext);
+export const useAttractionEventContext = () => {
+	const context = useContext(AttractionEventContext);
 
 	if (!context) {
-		throw new Error("useEventContext must be used within an EventProvider");
+		throw new Error(
+			"useAttractionEventContext must be used within an EventProvider"
+		);
 	}
 	return context;
 };

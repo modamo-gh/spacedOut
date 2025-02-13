@@ -29,7 +29,7 @@ export const fetchAttractions = async (artistName: string) => {
 	}
 };
 
-export const getEvents = async (id: string) => {
+export const fetchEvents = async (id: string) => {
 	try {
 		let allEvents: Event[] = [];
 		let page = 0;

@@ -6,7 +6,6 @@ import { StyleSheet, TextInput, View } from "react-native";
 
 const SearchBar: React.FC<SearchBarProps> = ({
 	getAttractions,
-	setSearchResults,
 	setText,
 	text
 }) => {
@@ -31,7 +30,6 @@ const SearchBar: React.FC<SearchBarProps> = ({
 					onPress={() => {
 						Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
 						setText("");
-						setSearchResults([]);
 					}}
 					style={styles.icon}
 				/>

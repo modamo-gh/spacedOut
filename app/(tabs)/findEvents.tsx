@@ -1,36 +1,23 @@
 import AttractionCard from "@/components/AttractionCard";
-import EventCard from "@/components/EventCard";
 import StarryBackground from "@/components/StarryBackground";
 import { Attraction } from "@/types/Attraction";
 import { FlashList } from "@shopify/flash-list";
 import { useFonts } from "expo-font";
 import React, { useState } from "react";
 import { SafeAreaView, StyleSheet, Text, View } from "react-native";
-import { fetchAttractions } from "../../services/ticketmaster";
 import SearchBar from "@/components/SearchBar";
+import { useAttractionEventContext } from "@/context/AttractionEventContext";
 
 const FindEventsScreen = () => {
-	const [attractions, setAttractions] = useState<Attraction[]>([]);
-	const [events, setEvents] = useState<Event[]>([]);
-	const [ids, setIDs] = useState<Set<string>>(new Set());
 	const [searchResults, setSearchResults] = useState<Attraction[]>([]);
 	const [text, setText] = useState("");
+	
+	const {attractions, getAttractions} = useAttractionEventContext();
 
 	const [fontsLoaded] = useFonts({
 		Geist: require("../../assets/fonts/Geist-VariableFont_wght.ttf"),
 		Orbitron: require("../../assets/fonts/Orbitron-VariableFont_wght.ttf")
 	});
-
-	const getAttractions = async (searchTerm: string) => {
-		const attractions = await fetchAttractions(searchTerm);
-
-		if (!attractions) {
-			return;
-		}
-
-		setSearchResults(attractions);
-		setAttractions(attractions);
-	};
 
 	if (!fontsLoaded) {
 		return null;
@@ -43,13 +30,12 @@ const FindEventsScreen = () => {
 				<Text style={styles.appName}>SPACEDOUT</Text>
 				<SearchBar
 					getAttractions={getAttractions}
-					setSearchResults={setSearchResults}
 					setText={setText}
 					text={text}
 				/>
 				<View style={styles.listContainer}>
 					<FlashList
-						data={searchResults}
+						data={attractions}
 						estimatedItemSize={20}
 						keyExtractor={(item) => item.id}
 						renderItem={({ item }) => (

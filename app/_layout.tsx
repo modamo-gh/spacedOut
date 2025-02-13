@@ -12,7 +12,7 @@ import "react-native-reanimated";
 
 import { useColorScheme } from "@/components/useColorScheme";
 import React from "react";
-import { EventProvider } from "@/context/EventContext";
+import { AttractionEventProvider } from "@/context/AttractionEventContext";
 
 export {
 	// Catch any errors thrown by the Layout component.
@@ -55,7 +55,7 @@ function RootLayoutNav() {
 	const colorScheme = useColorScheme();
 
 	return (
-		<EventProvider>
+		<AttractionEventProvider>
 			<ThemeProvider
 				value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
 			>
@@ -64,12 +64,8 @@ function RootLayoutNav() {
 						name="(tabs)"
 						options={{ headerShown: false }}
 					/>
-					<Stack.Screen
-						name="modal"
-						options={{ presentation: "modal" }}
-					/>
 				</Stack>
 			</ThemeProvider>
-		</EventProvider>
+		</AttractionEventProvider>
 	);
 }

@@ -1,4 +1,4 @@
-import { useEventContext } from "@/context/EventContext";
+import { useAttractionEventContext } from "@/context/AttractionEventContext";
 import { EventCardProps } from "@/types/EventCardProps";
 import { useRouter } from "expo-router";
 import { DateTime } from "luxon";
@@ -8,7 +8,7 @@ import Feather from "@expo/vector-icons/Feather";
 
 const EventCard: React.FC<EventCardProps> = ({ event }) => {
 	const router = useRouter();
-	const { addEvent } = useEventContext();
+	const { addEvent } = useAttractionEventContext();
 
 	return (
 		<Pressable
