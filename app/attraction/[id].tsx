@@ -6,6 +6,7 @@ import { FlashList } from "@shopify/flash-list";
 import { useLocalSearchParams } from "expo-router";
 import React, { useEffect, useState } from "react";
 import {
+	ActivityIndicator,
 	Dimensions,
 	StyleSheet,
 	Text,
@@ -19,13 +20,14 @@ import Animated, {
 	useSharedValue
 } from "react-native-reanimated";
 
-const { height: screenHeight } = Dimensions.get("window");
+const { height: screenHeight, width: screenWidth } = Dimensions.get("window");
 const HEADER_HEIGHT = screenHeight * 0.35;
 
 const Attraction = () => {
 	const [events, setEvents] = useState<Event[]>([]);
 	const { attractions, getEvents } = useAttractionEventContext();
 	const { id } = useLocalSearchParams();
+	const [isLoading, setIsLoading] = useState(true);
 
 	const attraction = attractions.find((a) => a.id === id);
 
@@ -34,8 +36,17 @@ const Attraction = () => {
 	}
 
 	useEffect(() => {
+		const fetchEvents = async () => {
+			setIsLoading(true);
+
+			const fetchedEvents = await getEvents(attraction.id);
+
+			setEvents(fetchedEvents || []);
+			setIsLoading(false);
+		};
+
 		if (attraction) {
-			getEvents(attraction.id).then(setEvents);
+			fetchEvents();
 		}
 	}, [attraction, getEvents]);
 
@@ -73,8 +84,22 @@ const Attraction = () => {
 				style={{ flex: 1 }}
 			>
 				<View style={{ height: HEADER_HEIGHT }} />
-				<View style={{ gap: 8, padding: 20 }}>
-					{events.length ? (
+				<View
+					style={{
+						alignItems: isLoading ? "center" : undefined,
+						height: screenHeight - HEADER_HEIGHT,
+						gap: 8,
+						justifyContent:
+							isLoading || !events.length
+								? "center"
+								: "flex-start",
+						padding: 20,
+						width: screenWidth
+					}}
+				>
+					{isLoading ? (
+						<ActivityIndicator size="large" color="#FFFFFF" />
+					) : events.length ? (
 						<FlashList
 							data={events}
 							estimatedItemSize={20}
@@ -84,7 +109,16 @@ const Attraction = () => {
 							)}
 						/>
 					) : (
-						<Text>No Upcoming Events</Text>
+						<Text
+							style={{
+								color: "white",
+								fontSize: 16,
+								fontWeight: "semibold",
+								textAlign: "center"
+							}}
+						>
+							Sorry, No Upcoming Events Found :/
+						</Text>
 					)}
 				</View>
 			</Animated.ScrollView>

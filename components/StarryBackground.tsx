@@ -19,7 +19,7 @@ const StarryBackground = () => {
 	return (
 		<Canvas style={styles.canvas}>
 			<Rect
-				color="#2F0091"
+				color="#2E0191"
 				height={screenHeight}
 				width={screenWidth}
 				x={0}

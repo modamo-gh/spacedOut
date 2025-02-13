@@ -7,6 +7,7 @@ import React, { useState } from "react";
 import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 
 const EventCard: React.FC<EventCardProps> = ({ event }) => {
+	console.log("Here",event);
 	const router = useRouter();
 	const { addEvent, removeEvent, savedEvents } = useAttractionEventContext();
 

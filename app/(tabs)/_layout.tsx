@@ -1,18 +1,16 @@
 import React from "react";
-import FontAwesome from "@expo/vector-icons/FontAwesome";
+import Feather from "@expo/vector-icons/Feather";
 import { Link, Tabs } from "expo-router";
-import { Pressable } from "react-native";
 
-import Colors from "@/constants/Colors";
 import { useColorScheme } from "@/components/useColorScheme";
 import { useClientOnlyValue } from "@/components/useClientOnlyValue";
 
 // You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
 function TabBarIcon(props: {
-	name: React.ComponentProps<typeof FontAwesome>["name"];
+	name: React.ComponentProps<typeof Feather>["name"];
 	color: string;
 }) {
-	return <FontAwesome size={28} style={{ marginBottom: -3 }} {...props} />;
+	return <Feather size={28} style={{ marginBottom: -16 }} {...props} />;
 }
 
 export default function TabLayout() {
@@ -27,12 +25,11 @@ export default function TabLayout() {
 				tabBarLabelStyle: {
 					color: "white",
 					fontSize: 14,
-					padding: 8
+					padding: 16
 				},
 				tabBarStyle: {
-					backgroundColor: "#220066",
-					borderTopWidth: 0,
-					height: 96
+					backgroundColor: "#22015E",
+					height: 108
 				},
 				// Disable the static render of the header on web
 				// to prevent a hydration error in React Navigation v6.
