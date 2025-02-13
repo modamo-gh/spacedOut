@@ -5,12 +5,12 @@ import {
 } from "@/context/AttractionEventContext";
 import { fetchEventDetails } from "@/services/ticketmaster";
 import { Event } from "@/types/Event";
+import { Image } from "expo-image";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { DateTime } from "luxon";
 import React, { useEffect, useState } from "react";
 import {
 	Dimensions,
-	Image,
 	Linking,
 	Platform,
 	Pressable,
@@ -102,10 +102,13 @@ const EventDetailScreen = () => {
 	return (
 		<View style={{ backgroundColor: "#220066", flex: 1 }}>
 			<BackButton />
-			<Animated.Image
-				source={{ uri: event?.imageURL }}
-				style={[styles.image, animatedImageStyle]}
-			/>
+			<Animated.View style={[styles.image, animatedImageStyle]}>
+				<Image
+					cachePolicy="memory-disk"
+					source={{ uri: event?.imageURL }}
+					style={{ width: "100%", height: "100%" }}
+				></Image>
+			</Animated.View>
 			<Animated.ScrollView
 				onScroll={scrollHandler}
 				scrollEventThrottle={16}
@@ -126,6 +129,7 @@ const EventDetailScreen = () => {
 					</Text>
 					<Pressable onPress={openMaps}>
 						<Image
+							cachePolicy="memory-disk"
 							source={{
 								uri: `https://api.mapbox.com/styles/v1/mapbox/streets-v12/static/pin-s+2e0191(${event.longitude},${event.latitude})/${event.longitude},${event.latitude},14,0/300x200?access_token=${process.env.EXPO_PUBLIC_MAPBOX_API_KEY}`
 							}}

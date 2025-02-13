@@ -1,10 +1,10 @@
-import { useAttractionEventContext } from "@/context/AttractionEventContext";
 import { AttractionCardProps } from "@/types/AttractionCardProps";
 import Feather from "@expo/vector-icons/Feather";
 import * as Haptics from "expo-haptics";
+import { Image } from "expo-image";
 import { useRouter } from "expo-router";
-import React, { useState } from "react";
-import { Image, Pressable, StyleSheet, Text, View } from "react-native";
+import React from "react";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 
 const AttractionCard: React.FC<AttractionCardProps> = ({ attraction }) => {
 	const router = useRouter();
@@ -16,7 +16,11 @@ const AttractionCard: React.FC<AttractionCardProps> = ({ attraction }) => {
 			}}
 			style={styles.card}
 		>
-			<Image source={{ uri: attraction.imageURL }} style={styles.image} />
+			<Image
+				cachePolicy="memory-disk"
+				source={{ uri: attraction.imageURL }}
+				style={styles.image}
+			/>
 			<View style={styles.textContainer}>
 				<Text style={styles.text}>{attraction.name}</Text>
 				<Pressable

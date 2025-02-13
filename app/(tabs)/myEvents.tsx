@@ -4,7 +4,7 @@ import { useAttractionEventContext } from "@/context/AttractionEventContext";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { FlashList } from "@shopify/flash-list";
 import React from "react";
-import { Image, SafeAreaView, Text, View } from "react-native";
+import { SafeAreaView, Text, View } from "react-native";
 
 const MyEventsScreen = () => {
 	const { savedEvents } = useAttractionEventContext();

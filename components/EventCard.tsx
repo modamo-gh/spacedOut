@@ -1,10 +1,11 @@
 import { useAttractionEventContext } from "@/context/AttractionEventContext";
 import { EventCardProps } from "@/types/EventCardProps";
 import AntDesign from "@expo/vector-icons/AntDesign";
+import { Image } from "expo-image";
 import { useRouter } from "expo-router";
 import { DateTime } from "luxon";
 import React from "react";
-import { Image, Pressable, StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 
 const EventCard: React.FC<EventCardProps> = ({ event, isFeatured }) => {
 	const router = useRouter();
@@ -20,6 +21,7 @@ const EventCard: React.FC<EventCardProps> = ({ event, isFeatured }) => {
 			style={[styles.card, isFeatured && styles.featuredCard]}
 		>
 			<Image
+				cachePolicy="memory-disk"
 				source={{ uri: event.imageURL }}
 				style={[styles.image, isFeatured && styles.featuredImage]}
 			/>
@@ -69,7 +71,7 @@ const styles = StyleSheet.create({
 		overflow: "hidden",
 		position: "relative"
 	},
-	featuredIcon: {padding: 8, position: "absolute", top: 0, right: 0 },
+	featuredIcon: { padding: 8, position: "absolute", top: 0, right: 0 },
 	featuredImage: {
 		height: "100%",
 		position: "absolute",

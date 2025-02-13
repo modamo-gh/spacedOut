@@ -38,7 +38,8 @@
     "react-native-web": "~0.19.13",
     "recyclerlistview": "^4.2.1",
     "expo-dev-client": "~5.0.12",
-    "expo-haptics": "~14.0.1"
+    "expo-haptics": "~14.0.1",
+    "expo-image": "~2.0.5"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",

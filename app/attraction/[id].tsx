@@ -3,6 +3,7 @@ import EventCard from "@/components/EventCard";
 import { useAttractionEventContext } from "@/context/AttractionEventContext";
 import { Event } from "@/types/Event";
 import { FlashList } from "@shopify/flash-list";
+import { Image } from "expo-image";
 import { useLocalSearchParams } from "expo-router";
 import React, { useEffect, useState } from "react";
 import {
@@ -72,12 +73,15 @@ const Attraction = () => {
 	return (
 		<View style={{ backgroundColor: "#220066", flex: 1 }}>
 			<BackButton />
-			<Animated.Image
-				source={{
-					uri: attraction.imageURL
-				}}
-				style={[styles.image, animatedImageStyle]}
-			/>
+			<Animated.View style={[styles.image, animatedImageStyle]}>
+				<Image
+					cachePolicy="memory-disk"
+					source={{
+						uri: attraction.imageURL
+					}}
+					style={{width: "100%", height: "100%"}}
+				/>
+			</Animated.View>
 			<Animated.ScrollView
 				onScroll={scrollHandler}
 				scrollEventThrottle={16}
@@ -144,4 +148,5 @@ const styles = StyleSheet.create({
 		color: "white"
 	}
 });
+
 export default Attraction;
