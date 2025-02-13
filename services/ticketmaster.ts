@@ -17,7 +17,9 @@ export const fetchAttractions = async (artistName: string) => {
 		for (const attraction of data._embedded.attractions) {
 			attractions.push({
 				id: attraction.id,
-				imageURL: attraction.images?.[0]?.url,
+				imageURL: [...attraction.images]?.sort(
+					(a, b) => b.width - a.width
+				)[0]?.url,
 				name: attraction.name,
 				type: attraction.type
 			});
@@ -47,7 +49,10 @@ export const fetchEvents = async (id: string) => {
 				allEvents.push({
 					dateTime: event.dates.start.dateTime,
 					id: event.id,
-					imageURL: event.images?.[0]?.url,
+					imageURL: [...event.images]?.sort(
+						(a, b) => b.width - a.width
+					)[0]?.url,
+					isSaved: false,
 					latitude: Number(
 						event._embedded?.venues?.[0].location.latitude
 					),
@@ -62,6 +67,10 @@ export const fetchEvents = async (id: string) => {
 					name: event.name,
 					type: event.type
 				});
+
+				console.log(
+					[...event.images]?.sort((a, b) => b.width - a.width)[0]?.url
+				);
 			}
 
 			totalPages = data.page.totalPages || 1;
