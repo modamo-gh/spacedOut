@@ -5,7 +5,7 @@ import { Event } from "@/types/Event";
 import { FlashList } from "@shopify/flash-list";
 import { Image } from "expo-image";
 import { useLocalSearchParams } from "expo-router";
-import React, { useEffect, useState } from "react";
+import React, { memo, useEffect, useState } from "react";
 import {
 	ActivityIndicator,
 	Dimensions,
@@ -37,16 +37,16 @@ const Attraction = () => {
 	}
 
 	useEffect(() => {
-		const fetchEvents = async () => {
-			setIsLoading(true);
+		if (!events.length) {
+			const fetchEvents = async () => {
+				setIsLoading(true);
 
-			const fetchedEvents = await getEvents(attraction.id);
+				const fetchedEvents = await getEvents(attraction.id);
 
-			setEvents(fetchedEvents || []);
-			setIsLoading(false);
-		};
+				setEvents(fetchedEvents || []);
+				setIsLoading(false);
+			};
 
-		if (attraction) {
 			fetchEvents();
 		}
 	}, [attraction, getEvents]);
@@ -79,7 +79,7 @@ const Attraction = () => {
 					source={{
 						uri: attraction.imageURL
 					}}
-					style={{width: "100%", height: "100%"}}
+					style={{ width: "100%", height: "100%" }}
 				/>
 			</Animated.View>
 			<Animated.ScrollView

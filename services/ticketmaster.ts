@@ -45,28 +45,32 @@ export const fetchEvents = async (id: string) => {
 			);
 			const data = await response.json();
 
-			for (const event of data._embedded?.events) {
-				allEvents.push({
-					dateTime: event.dates.start.dateTime,
-					id: event.id,
-					imageURL: [...event.images]?.sort(
-						(a, b) => b.width - a.width
-					)[0]?.url,
-					isSaved: false,
-					latitude: Number(
-						event._embedded?.venues?.[0].location.latitude
-					),
-					location: `${event._embedded?.venues?.[0].city?.name}, ${
-						event._embedded?.venues?.[0].state?.stateCode ||
-						event._embedded?.venues?.[0].country?.countryCode
-					}`,
-					longitude: Number(
-						event._embedded?.venues?.[0].location.longitude
-					),
-					milestones: [],
-					name: event.name,
-					type: event.type
-				});
+			if (data._embedded?.events) {
+				for (const event of data._embedded?.events) {
+					allEvents.push({
+						dateTime: event.dates.start.dateTime,
+						id: event.id,
+						imageURL: [...event.images]?.sort(
+							(a, b) => b.width - a.width
+						)[0]?.url,
+						isSaved: false,
+						latitude: Number(
+							event._embedded?.venues?.[0].location.latitude
+						),
+						location: `${
+							event._embedded?.venues?.[0].city?.name
+						}, ${
+							event._embedded?.venues?.[0].state?.stateCode ||
+							event._embedded?.venues?.[0].country?.countryCode
+						}`,
+						longitude: Number(
+							event._embedded?.venues?.[0].location.longitude
+						),
+						milestones: [],
+						name: event.name,
+						type: event.type
+					});
+				}
 			}
 
 			totalPages = data.page.totalPages || 1;
