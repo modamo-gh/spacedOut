@@ -1,14 +1,12 @@
+import BackButton from "@/components/BackButton";
 import EventCard from "@/components/EventCard";
 import { useAttractionEventContext } from "@/context/AttractionEventContext";
 import { Event } from "@/types/Event";
-import Feather from "@expo/vector-icons/Feather";
 import { FlashList } from "@shopify/flash-list";
-import { useLocalSearchParams, useRouter } from "expo-router";
+import { useLocalSearchParams } from "expo-router";
 import React, { useEffect, useState } from "react";
 import {
 	Dimensions,
-	Pressable,
-	SafeAreaView,
 	StyleSheet,
 	Text,
 	View
@@ -28,7 +26,6 @@ const Attraction = () => {
 	const [events, setEvents] = useState<Event[]>([]);
 	const { attractions, getEvents } = useAttractionEventContext();
 	const { id } = useLocalSearchParams();
-	const router = useRouter();
 
 	const attraction = attractions.find((a) => a.id === id);
 
@@ -63,29 +60,7 @@ const Attraction = () => {
 
 	return (
 		<View style={{ backgroundColor: "#220066", flex: 1 }}>
-			<Pressable
-				onPress={() => router.back()}
-				style={{
-					alignItems: "center",
-					borderRadius: 50,
-					height: 48,
-					width:48,
-					justifyContent: "center",
-					position: "absolute",
-					top: 50,
-					left: 20,
-					backgroundColor: "rgba(34, 0, 102, 0.8)",
-					zIndex: 10
-				}}
-			>
-				<Feather
-					name="chevron-left"
-					style={{
-						color: "white",
-						fontSize: 30
-					}}
-				/>
-			</Pressable>
+			<BackButton />
 			<Animated.Image
 				source={{
 					uri: attraction.imageURL

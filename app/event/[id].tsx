@@ -1,3 +1,4 @@
+import BackButton from "@/components/BackButton";
 import MapboxMap from "@/components/MapboxMap";
 import { useAttractionEventContext } from "@/context/AttractionEventContext";
 import { useLocalSearchParams, useRouter } from "expo-router";
@@ -46,6 +47,7 @@ const EventDetailScreen = () => {
 
 	return (
 		<View style={{ backgroundColor: "#220066", flex: 1 }}>
+			<BackButton />
 			<Animated.Image
 				source={{ uri: event.imageURL }}
 				style={[styles.image, animatedImageStyle]}
