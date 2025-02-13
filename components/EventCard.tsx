@@ -8,8 +8,11 @@ import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 
 const EventCard: React.FC<EventCardProps> = ({ event }) => {
 	const router = useRouter();
-	const { addEvent } = useAttractionEventContext();
-	const [isSaved, setIsSaved] = useState(false);
+	const { addEvent, removeEvent, savedEvents } = useAttractionEventContext();
+
+	const isSaved = savedEvents.some(
+		(savedEvent) => savedEvent.id === event.id
+	);
 
 	return (
 		<Pressable
@@ -30,15 +33,9 @@ const EventCard: React.FC<EventCardProps> = ({ event }) => {
 			</View>
 			<AntDesign
 				name={isSaved ? "heart" : "hearto"}
-				onPress={() => {
-					setIsSaved((prev) => {
-						if(!prev){
-							addEvent(event);
-						}
-
-						return !prev;
-					});
-				}}
+				onPress={() =>
+					isSaved ? removeEvent(event.id) : addEvent(event)
+				}
 				style={styles.icon}
 			/>
 		</Pressable>
