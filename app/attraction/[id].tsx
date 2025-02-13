@@ -14,7 +14,7 @@ import Animated, {
 } from "react-native-reanimated";
 
 const { height: screenHeight } = Dimensions.get("window");
-const HEADER_HEIGHT = screenHeight * 0.4;
+const HEADER_HEIGHT = screenHeight * 0.35;
 
 const Attraction = () => {
 	const [events, setEvents] = useState<Event[]>([]);
@@ -66,9 +66,7 @@ const Attraction = () => {
 				style={{ flex: 1 }}
 			>
 				<View style={{ height: HEADER_HEIGHT }} />
-				<View style={{ gap: 8, padding: 16 }}>
-					<Text style={styles.name}>{attraction.name}</Text>
-					<Text style={styles.name}>Upcoming Events</Text>
+				<View style={{ gap: 8, padding: 20 }}>
 					{events.length ? (
 						<FlashList
 							data={events}
@@ -79,7 +77,7 @@ const Attraction = () => {
 							)}
 						/>
 					) : (
-						<Text> No Upcoming Events</Text>
+						<Text>No Upcoming Events</Text>
 					)}
 				</View>
 			</Animated.ScrollView>
