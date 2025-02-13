@@ -1,9 +1,11 @@
 import BackButton from "@/components/BackButton";
 import MapboxMap from "@/components/MapboxMap";
 import { useAttractionEventContext } from "@/context/AttractionEventContext";
+import { fetchEventDetails } from "@/services/ticketmaster";
+import { Event } from "@/types/Event";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { DateTime } from "luxon";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Dimensions, StyleSheet, Text, View } from "react-native";
 import Animated, {
 	Extrapolation,
@@ -19,12 +21,27 @@ const HEADER_HEIGHT = screenHeight * 0.4;
 const EventDetailScreen = () => {
 	const { id } = useLocalSearchParams();
 	const { savedEvents } = useAttractionEventContext();
+	const [event, setEvent] = useState<Event | null>(null);
 
-	const event = savedEvents.find((e) => e.id === id);
+	useEffect(() => {
+		const loadEvent = async () => {
+			let foundEvent = savedEvents.find((e) => e.id === id);
 
-	if (!event) {
-		return <Text>Event Not Found</Text>;
-	}
+			if (!foundEvent) {
+				try {
+					foundEvent = await fetchEventDetails(id);
+				} catch (error) {
+					console.error("Error fetching event:", error);
+				}
+			}
+
+			setEvent(foundEvent);
+		};
+
+		if (id) {
+			loadEvent();
+		}
+	}, [id, savedEvents]);
 
 	const scrollY = useSharedValue(0);
 
@@ -45,11 +62,15 @@ const EventDetailScreen = () => {
 		};
 	});
 
+	if (!event) {
+		return <Text>Event Not Found</Text>;
+	}
+
 	return (
 		<View style={{ backgroundColor: "#220066", flex: 1 }}>
 			<BackButton />
 			<Animated.Image
-				source={{ uri: event.imageURL }}
+				source={{ uri: event?.imageURL }}
 				style={[styles.image, animatedImageStyle]}
 			/>
 			<Animated.ScrollView
