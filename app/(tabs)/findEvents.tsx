@@ -7,13 +7,16 @@ import { useFonts } from "expo-font";
 import React, { useEffect, useState } from "react";
 import { SafeAreaView, ScrollView, StyleSheet, Text, View } from "react-native";
 import { useUserLocation } from "../hooks/useUserLocation";
-import { fetchNearbyEvents } from "@/services/ticketmaster";
+import { fetchNearbyEvents, fetchWeeksEvents } from "@/services/ticketmaster";
 import { Event } from "@/types/Event";
 import EventCard from "@/components/EventCard";
 
 const FindEventsScreen = () => {
 	const [text, setText] = useState("");
 	const [nearbyEvents, setNearbyEvents] = useState<Event[] | undefined>(
+		undefined
+	);
+	const [weeksEvents, setWeeksEvents] = useState<Event[] | undefined>(
 		undefined
 	);
 
@@ -34,7 +37,14 @@ const FindEventsScreen = () => {
 			}
 		};
 
+		const getWeeksEvents = async () => {
+			const wes = await fetchWeeksEvents();
+
+			setWeeksEvents(wes);
+		};
+
 		getNearbyEvents();
+		getWeeksEvents();
 	}, [location]);
 
 	const [fontsLoaded] = useFonts({
@@ -122,9 +132,9 @@ const FindEventsScreen = () => {
 								height: 200
 							}}
 						>
-							{nearbyEvents?.length ? (
+							{weeksEvents?.length ? (
 								<FlashList
-									data={nearbyEvents}
+									data={weeksEvents}
 									estimatedItemSize={20}
 									horizontal
 									keyExtractor={({ id }) => id}

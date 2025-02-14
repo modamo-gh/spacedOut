@@ -1,5 +1,6 @@
 import { Attraction } from "@/types/Attraction";
 import { Event } from "@/types/Event";
+import { DateTime } from "luxon";
 import Geohash from "ngeohash";
 
 const BASE_URL = "https://app.ticketmaster.com/discovery/v2";
@@ -123,8 +124,6 @@ export const fetchNearbyEvents = async (
 	const radius = 25;
 	const url = `${BASE_URL}/events?apikey=${process.env.EXPO_PUBLIC_API_KEY}&radius=${radius}&&sort=distance,asc&geoPoint=${geohash}`;
 
-	console.log(url);
-
 	const response = await fetch(url);
 	const data = await response.json();
 
@@ -156,6 +155,59 @@ export const fetchNearbyEvents = async (
 		}
 	}
 
-	console.log(nearbyEvents)
 	return nearbyEvents;
+};
+
+export const fetchWeeksEvents = async () => {
+	const today = DateTime.now();
+	const oneWeekLater = today.plus({ week: 1 });
+
+	const url = `${BASE_URL}/events?apikey=${
+		process.env.EXPO_PUBLIC_API_KEY
+	}&locale=*&startDateTime=${today
+		.toISO({ includeOffset: false })
+		.slice(0, -4)}Z&endDateTime=${oneWeekLater
+		.toISO({ includeOffset: false })
+		.slice(0, -4)}Z`;
+
+	console.log(url);
+
+	const response = await fetch(url);
+	const data = await response.json();
+
+	const weeksEvents: Event[] = [];
+
+	if (data._embedded?.events) {
+		for (const event of data._embedded?.events) {
+			weeksEvents.push({
+				dateTime: event.dates.start.dateTime,
+				id: event.id,
+				imageURL: [...event.images]?.sort(
+					(a, b) => b.width - a.width
+				)[0]?.url,
+				isSaved: false,
+				latitude: Number(
+					event._embedded?.venues?.[0].location.latitude
+				),
+				location: `${event._embedded?.venues?.[0].city?.name}, ${
+					event._embedded?.venues?.[0].state?.stateCode ||
+					event._embedded?.venues?.[0].country?.countryCode
+				}`,
+				longitude: Number(
+					event._embedded?.venues?.[0].location.longitude
+				),
+				milestones: [],
+				name: event.name,
+				type: event.type
+			});
+		}
+	}
+
+	console.log(weeksEvents);
+
+	return weeksEvents.sort(
+		(a, b) =>
+			DateTime.fromISO(a.dateTime).toMillis() -
+			DateTime.fromISO(b.dateTime).toMillis()
+	);
 };

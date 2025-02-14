@@ -32,7 +32,11 @@ const MyEventsScreen = () => {
 						>
 							Next Milestone
 						</Text>
-						<EventCard event={savedEvents[0]} isFeatured={true} />
+						<EventCard
+							event={savedEvents[0]}
+							isFeatured={true}
+							horizontalScroll={false}
+						/>
 						<Text
 							style={{
 								fontSize: 20,
@@ -46,7 +50,11 @@ const MyEventsScreen = () => {
 						<FlashList
 							data={savedEvents.slice(1)}
 							renderItem={({ item, index }) => (
-								<EventCard event={item} isFeatured={false} />
+								<EventCard
+									event={item}
+									isFeatured={false}
+									horizontalScroll={false}
+								/>
 							)}
 						/>
 					</>

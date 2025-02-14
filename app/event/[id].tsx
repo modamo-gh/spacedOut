@@ -216,8 +216,8 @@ const EventDetailScreen = () => {
 										style={{
 											borderBottomColor: "#7459A6",
 											borderBottomWidth:
-												index !==
-												event.milestones.length - 1
+												index <
+												event.milestones.length - 2
 													? 1
 													: 0,
 											color: "white",
