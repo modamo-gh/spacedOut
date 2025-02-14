@@ -120,39 +120,32 @@ export const fetchNearbyEvents = async (
 	latitude: number,
 	longitude: number
 ) => {
-	const geohash = Geohash.encode(latitude, longitude, 7);
-	const radius = 25;
-	const url = `${BASE_URL}/events?apikey=${process.env.EXPO_PUBLIC_API_KEY}&radius=${radius}&&sort=distance,asc&geoPoint=${geohash}`;
+	const url = `https://api.spacedout.modamo.xyz/nearby-events?latitude=${latitude}&longitude=${longitude}&radius=25`;
 
 	const response = await fetch(url);
 	const data = await response.json();
 
+	console.log(data)
+
 	const nearbyEvents: Event[] = [];
 
-	if (data._embedded?.events) {
-		for (const event of data._embedded?.events) {
-			nearbyEvents.push({
-				dateTime: event.dates.start.dateTime,
-				id: event.id,
-				imageURL: [...event.images]?.sort(
-					(a, b) => b.width - a.width
-				)[0]?.url,
-				isSaved: false,
-				latitude: Number(
-					event._embedded?.venues?.[0].location.latitude
-				),
-				location: `${event._embedded?.venues?.[0].city?.name}, ${
-					event._embedded?.venues?.[0].state?.stateCode ||
-					event._embedded?.venues?.[0].country?.countryCode
-				}`,
-				longitude: Number(
-					event._embedded?.venues?.[0].location.longitude
-				),
-				milestones: [],
-				name: event.name,
-				type: event.type
-			});
-		}
+	for (const event of data) {
+		nearbyEvents.push({
+			dateTime: event.dates.start.dateTime,
+			id: event.id,
+			imageURL: [...event.images]?.sort((a, b) => b.width - a.width)[0]
+				?.url,
+			isSaved: false,
+			latitude: Number(event._embedded?.venues?.[0].location.latitude),
+			location: `${event._embedded?.venues?.[0].city?.name}, ${
+				event._embedded?.venues?.[0].state?.stateCode ||
+				event._embedded?.venues?.[0].country?.countryCode
+			}`,
+			longitude: Number(event._embedded?.venues?.[0].location.longitude),
+			milestones: [],
+			name: event.name,
+			type: event.type
+		});
 	}
 
 	return nearbyEvents;
@@ -169,8 +162,6 @@ export const fetchWeeksEvents = async () => {
 		.slice(0, -4)}Z&endDateTime=${oneWeekLater
 		.toISO({ includeOffset: false })
 		.slice(0, -4)}Z`;
-
-	console.log(url);
 
 	const response = await fetch(url);
 	const data = await response.json();
@@ -202,8 +193,6 @@ export const fetchWeeksEvents = async () => {
 			});
 		}
 	}
-
-	console.log(weeksEvents);
 
 	return weeksEvents.sort(
 		(a, b) =>
