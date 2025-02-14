@@ -6,6 +6,7 @@ import { useRouter } from "expo-router";
 import { DateTime } from "luxon";
 import React from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
+import { usePathname } from "expo-router";
 
 const EventCard: React.FC<EventCardProps> = ({
 	event,
@@ -19,13 +20,15 @@ const EventCard: React.FC<EventCardProps> = ({
 		(savedEvent) => savedEvent.id === event.id
 	);
 
+	const pathname = usePathname();
+	const isMyEvents = pathname === "/myEvents"
 	return (
 		<Pressable
 			onPress={() => router.push(`/event/${event.id}`)}
 			style={
 				horizontalScroll
 					? {
-							backgroundColor: "blue",
+							backgroundColor: "#6600CC",
 							borderRadius: 8,
 							height: "100%",
 							width: 180,
@@ -96,11 +99,26 @@ const EventCard: React.FC<EventCardProps> = ({
 								DateTime.DATETIME_MED_WITH_WEEKDAY
 						  )}
 				</Text>
+				{isSaved && isMyEvents && (
+					<Text
+						style={{
+							color: "#FFFFFF",
+							flex: 1
+						}}
+					>{`Next Milestone: ${isFeatured
+							? DateTime.fromISO(event.milestones[0]).toLocaleString(
+									DateTime.DATETIME_MED_WITH_WEEKDAY
+							  )
+							: DateTime.fromISO(event.milestones[0]).toLocaleString(
+									DateTime.DATE_MED_WITH_WEEKDAY
+							  )}`}
+					</Text>
+				)}
 				<Text
 					style={
 						horizontalScroll
 							? { color: "#F1F54F", textAlign: "center", flex: 1 }
-							: styles.locationText
+							: { color: "#F1F54F", flex: 1 }
 					}
 				>
 					{event.location}

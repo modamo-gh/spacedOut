@@ -97,7 +97,7 @@ const FindEventsScreen = () => {
 						</Text>
 						<View
 							style={{
-								height: 200
+								flex: 1
 							}}
 						>
 							{nearbyEvents?.length ? (
@@ -129,7 +129,7 @@ const FindEventsScreen = () => {
 						</Text>
 						<View
 							style={{
-								height: 200
+								flex: 1
 							}}
 						>
 							{weeksEvents?.length ? (
@@ -173,10 +173,14 @@ const styles = StyleSheet.create({
 		display: "flex",
 		flex: 1,
 		flexDirection: "column",
-		fontFamily: ""
+		fontFamily: "",
+		marginBottom: 16,
 	},
 	icon: { color: "#9287AB", fontSize: 20, marginHorizontal: 16 },
-	listContainer: { flex: 1, marginHorizontal: 20 },
+	listContainer: {
+		flex: 1,
+		marginHorizontal: 20,
+	},
 	searchContainer: {
 		alignItems: "center",
 		backgroundColor: "#22015E",
