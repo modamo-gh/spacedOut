@@ -71,7 +71,7 @@ const Attraction = () => {
 	});
 
 	return (
-		<View style={{ backgroundColor: "#220066", flex: 1 }}>
+		<View style={{ backgroundColor: "#2E0191", flex: 1 }}>
 			<BackButton />
 			<Animated.View style={[styles.image, animatedImageStyle]}>
 				<Image
@@ -109,7 +109,7 @@ const Attraction = () => {
 							estimatedItemSize={20}
 							keyExtractor={(item) => item.id}
 							renderItem={({ item }) => (
-								<EventCard event={item} isFeatured={false} />
+								<EventCard event={item} isFeatured={false} horizontalScroll={false} />
 							)}
 						/>
 					) : (

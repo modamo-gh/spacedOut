@@ -108,7 +108,7 @@ const EventDetailScreen = () => {
 	};
 
 	return (
-		<View style={{ backgroundColor: "#220066", flex: 1 }}>
+		<View style={{ backgroundColor: "#2E0191", flex: 1 }}>
 			<BackButton />
 			<AntDesign
 				name={isSaved ? "heart" : "hearto"}

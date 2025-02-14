@@ -1,41 +1,54 @@
-import { Canvas, Circle, Rect } from "@shopify/react-native-skia";
-import React from "react";
-import { Dimensions, StyleSheet } from "react-native";
+import React, { useMemo } from "react";
+import { Dimensions, Text, View } from "react-native";
+
+const notes = [".", "·", "•"];
 
 const screenHeight = Dimensions.get("screen").height;
 const screenWidth = Dimensions.get("screen").width;
 
-const stars = Array.from({ length: 25 }).map((_, i) => (
-	<Circle
-		color="rgba(255, 255, 255, 0.20)"
-		cx={Math.random() * screenWidth}
-		cy={Math.random() * screenHeight}
-		key={i}
-		r={Math.random() * 5}
-	/>
-));
+const generateStars = () => {
+	const stars = [];
 
-const StarryBackground = () => {
-	return (
-		<Canvas style={styles.canvas}>
-			<Rect
-				color="#2E0191"
-				height={screenHeight}
-				width={screenWidth}
-				x={0}
-				y={0}
-			/>
-			{stars}
-		</Canvas>
-	);
+	for (let i = 0; i < 25; i++) {
+		stars.push({
+			id: i,
+			left: Math.random() * screenWidth,
+			size: Math.random() * 80,
+			top: Math.random() * screenHeight
+		});
+	}
+
+	return stars;
 };
 
-const styles = StyleSheet.create({
-	canvas: {
-		height: "100%",
-		position: "absolute",
-		width: "100%"
-	}
+const StarryBackground = React.memo(() => {
+	const stars = useMemo(() => generateStars(), []);
+
+	return (
+		<View
+			style={{
+				backgroundColor: "#2E0191",
+				height: "100%",
+				position: "absolute",
+				width: "100%"
+			}}
+		>
+			{stars.map((star) => (
+				<Text
+					style={{
+						color: "#FFFFFF",
+						fontSize: star.size,
+						left: star.left,
+						opacity: 0.2 + Math.random() * 0.15,
+						position: "absolute",
+						top: star.top
+					}}
+				>
+					{notes[Math.floor(Math.random() * notes.length)]}
+				</Text>
+			))}
+		</View>
+	);
 });
 
 export default StarryBackground;
