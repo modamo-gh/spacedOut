@@ -21,7 +21,7 @@ const loadEventsFromStorage = async (): Promise<Event[]> => {
 
 		return storedEvents ? JSON.parse(storedEvents) : [];
 	} catch (error) {
-		console.log("Error loading events from storage:", error);
+		console.error("Error loading events from storage:", error);
 
 		return [];
 	}
@@ -31,7 +31,7 @@ const saveEventsToStorage = async (events: Event[]) => {
 	try {
 		await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(events));
 	} catch (error) {
-		console.log("Error saving events to storage:", error);
+		console.error("Error saving events to storage:", error);
 	}
 };
 

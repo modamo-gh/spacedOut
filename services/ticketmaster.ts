@@ -2,19 +2,18 @@ import { Attraction } from "@/types/Attraction";
 import { Event } from "@/types/Event";
 import { DateTime } from "luxon";
 
-const BASE_URL = "https://app.ticketmaster.com/discovery/v2";
+const BASE_URL = "https://api.spacedout.modamo.xyz";
 
 export const fetchAttractions = async (artistName: string) => {
 	try {
-		const response = await fetch(
-			`${BASE_URL}/attractions.json?apikey=${
-				process.env.EXPO_PUBLIC_API_KEY
-			}&keyword=${encodeURIComponent(artistName)}`
-		);
+		const url = `${BASE_URL}/attractions?keyword=${encodeURIComponent(
+			artistName
+		)}`;
+		const response = await fetch(url);
 		const data = await response.json();
 		const attractions: Attraction[] = [];
 
-		for (const attraction of data._embedded.attractions) {
+		for (const attraction of data) {
 			attractions.push({
 				id: attraction.id,
 				imageURL: [...attraction.images]?.sort(
@@ -38,11 +37,10 @@ export const fetchEvents = async (id: string) => {
 		let totalPages = 1;
 
 		while (page < totalPages) {
-			const response = await fetch(
-				`${BASE_URL}/events.json?apikey=${
-					process.env.EXPO_PUBLIC_API_KEY
-				}&attractionId=${encodeURIComponent(id)}&page=${page}`
-			);
+			const url = `${BASE_URL}/events?attractionId=${encodeURIComponent(
+				id
+			)}&page=${page}`;
+			const response = await fetch(url);
 			const data = await response.json();
 
 			if (data._embedded?.events) {
@@ -87,9 +85,10 @@ export const fetchEvents = async (id: string) => {
 
 export const fetchEventDetails = async (id: string) => {
 	try {
-		const response = await fetch(
-			`${BASE_URL}/events/${id}?apikey=${process.env.EXPO_PUBLIC_API_KEY}`
-		);
+		const url = `${BASE_URL}/events/${id}`;
+
+		console.log(url);
+		const response = await fetch(url);
 		const data = await response.json();
 
 		return {
@@ -109,7 +108,7 @@ export const fetchEventDetails = async (id: string) => {
 			type: data.type
 		};
 	} catch (error) {
-		console.error("Error fetching events:", error);
+		console.error("Error fetching event:", error);
 
 		return undefined;
 	}
@@ -119,12 +118,10 @@ export const fetchNearbyEvents = async (
 	latitude: number,
 	longitude: number
 ) => {
-	const url = `https://api.spacedout.modamo.xyz/nearby-events?latitude=${latitude}&longitude=${longitude}&radius=25`;
+	const url = `${BASE_URL}/nearby-events?latitude=${latitude}&longitude=${longitude}&radius=25`;
 
 	const response = await fetch(url);
 	const data = await response.json();
-
-	console.log(data);
 
 	const nearbyEvents: Event[] = [];
 
@@ -154,7 +151,7 @@ export const fetchWeeksEvents = async () => {
 	const today = DateTime.now();
 	const oneWeekLater = today.plus({ week: 1 });
 
-	const url = `https://api.spacedout.modamo.xyz/events-this-week?startDateTime=${today
+	const url = `${BASE_URL}/events-this-week?startDateTime=${today
 		.toISO({ includeOffset: false })
 		.slice(0, -4)}&endDateTime=${oneWeekLater
 		.toISO({ includeOffset: false })

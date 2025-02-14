@@ -23,7 +23,7 @@ export const useUserLocation = () => {
 					longitude: locationData.coords.longitude
 				});
 			} catch (error) {
-				console.log("Failed to get location", error);
+				console.error("Failed to get location", error);
 			}
 		};
 
