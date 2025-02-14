@@ -1,7 +1,6 @@
 import { Attraction } from "@/types/Attraction";
 import { Event } from "@/types/Event";
 import { DateTime } from "luxon";
-import Geohash from "ngeohash";
 
 const BASE_URL = "https://app.ticketmaster.com/discovery/v2";
 
@@ -125,7 +124,7 @@ export const fetchNearbyEvents = async (
 	const response = await fetch(url);
 	const data = await response.json();
 
-	console.log(data)
+	console.log(data);
 
 	const nearbyEvents: Event[] = [];
 
@@ -155,43 +154,34 @@ export const fetchWeeksEvents = async () => {
 	const today = DateTime.now();
 	const oneWeekLater = today.plus({ week: 1 });
 
-	const url = `${BASE_URL}/events?apikey=${
-		process.env.EXPO_PUBLIC_API_KEY
-	}&locale=*&startDateTime=${today
+	const url = `https://api.spacedout.modamo.xyz/events-this-week?startDateTime=${today
 		.toISO({ includeOffset: false })
-		.slice(0, -4)}Z&endDateTime=${oneWeekLater
+		.slice(0, -4)}&endDateTime=${oneWeekLater
 		.toISO({ includeOffset: false })
-		.slice(0, -4)}Z`;
+		.slice(0, -4)}`;
 
 	const response = await fetch(url);
 	const data = await response.json();
 
 	const weeksEvents: Event[] = [];
 
-	if (data._embedded?.events) {
-		for (const event of data._embedded?.events) {
-			weeksEvents.push({
-				dateTime: event.dates.start.dateTime,
-				id: event.id,
-				imageURL: [...event.images]?.sort(
-					(a, b) => b.width - a.width
-				)[0]?.url,
-				isSaved: false,
-				latitude: Number(
-					event._embedded?.venues?.[0].location.latitude
-				),
-				location: `${event._embedded?.venues?.[0].city?.name}, ${
-					event._embedded?.venues?.[0].state?.stateCode ||
-					event._embedded?.venues?.[0].country?.countryCode
-				}`,
-				longitude: Number(
-					event._embedded?.venues?.[0].location.longitude
-				),
-				milestones: [],
-				name: event.name,
-				type: event.type
-			});
-		}
+	for (const event of data) {
+		weeksEvents.push({
+			dateTime: event.dates.start.dateTime,
+			id: event.id,
+			imageURL: [...event.images]?.sort((a, b) => b.width - a.width)[0]
+				?.url,
+			isSaved: false,
+			latitude: Number(event._embedded?.venues?.[0].location.latitude),
+			location: `${event._embedded?.venues?.[0].city?.name}, ${
+				event._embedded?.venues?.[0].state?.stateCode ||
+				event._embedded?.venues?.[0].country?.countryCode
+			}`,
+			longitude: Number(event._embedded?.venues?.[0].location.longitude),
+			milestones: [],
+			name: event.name,
+			type: event.type
+		});
 	}
 
 	return weeksEvents.sort(
