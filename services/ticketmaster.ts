@@ -87,7 +87,6 @@ export const fetchEventDetails = async (id: string) => {
 	try {
 		const url = `${BASE_URL}/events/${id}`;
 
-		console.log(url);
 		const response = await fetch(url);
 		const data = await response.json();
 

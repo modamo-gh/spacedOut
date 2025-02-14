@@ -153,7 +153,7 @@ const EventDetailScreen = () => {
 						<Image
 							cachePolicy="memory-disk"
 							source={{
-								uri: `https://api.mapbox.com/styles/v1/mapbox/streets-v12/static/pin-s+2e0191(${event.longitude},${event.latitude})/${event.longitude},${event.latitude},14,0/300x200?access_token=${process.env.EXPO_PUBLIC_MAPBOX_API_KEY}`
+								uri: `https://api.spacedout.modamo.xyz/venue?latitude=${event.latitude}&longitude=${event.longitude}`
 							}}
 							style={{
 								width: "100%",
