@@ -7,7 +7,11 @@ import { DateTime } from "luxon";
 import React from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
-const EventCard: React.FC<EventCardProps> = ({ event, isFeatured }) => {
+const EventCard: React.FC<EventCardProps> = ({
+	event,
+	isFeatured,
+	horizontalScroll
+}) => {
 	const router = useRouter();
 	const { addEvent, removeEvent, savedEvents } = useAttractionEventContext();
 
@@ -18,36 +22,107 @@ const EventCard: React.FC<EventCardProps> = ({ event, isFeatured }) => {
 	return (
 		<Pressable
 			onPress={() => router.push(`/event/${event.id}`)}
-			style={[styles.card, isFeatured && styles.featuredCard]}
+			style={
+				horizontalScroll
+					? {
+							backgroundColor: "blue",
+							borderRadius: 8,
+							height: "100%",
+							width: 180,
+							marginRight: 12,
+							alignItems: "center",
+							padding: 8
+					  }
+					: [styles.card, isFeatured && styles.featuredCard]
+			}
 		>
 			<Image
 				cachePolicy="memory-disk"
 				source={{ uri: event.imageURL }}
-				style={[styles.image, isFeatured && styles.featuredImage]}
+				style={
+					horizontalScroll
+						? {
+								borderRadius: 50,
+								height: 80,
+								width: 80,
+								margin: 20
+						  }
+						: [styles.image, isFeatured && styles.featuredImage]
+				}
 			/>
 			<View
 				style={
-					isFeatured
-						? styles.featuredTextContainer
-						: styles.textContainer
+					horizontalScroll
+						? {
+								padding: 0,
+								display: "flex",
+								flexDirection: "column",
+								flex: 1
+						  }
+						: [
+								isFeatured
+									? styles.featuredTextContainer
+									: styles.textContainer
+						  ]
 				}
 			>
-				<Text numberOfLines={1} style={styles.nameText}>
+				<Text
+					numberOfLines={horizontalScroll ? 2 : 1}
+					style={
+						horizontalScroll
+							? {
+									textAlign: "center",
+									color: "#FFFFFF",
+									fontSize: 16,
+									flex: 1
+							  }
+							: styles.nameText
+					}
+				>
 					{event.name}
 				</Text>
-				<Text style={styles.dateText}>
-					{DateTime.fromISO(event.dateTime).toLocaleString(
-						DateTime.DATETIME_MED_WITH_WEEKDAY
-					)}
+				<Text
+					style={
+						horizontalScroll
+							? { color: "#F1F54F", textAlign: "center", flex: 1 }
+							: styles.dateText
+					}
+				>
+					{horizontalScroll
+						? DateTime.fromISO(event.dateTime).toLocaleString(
+								DateTime.DATE_MED_WITH_WEEKDAY
+						  )
+						: DateTime.fromISO(event.dateTime).toLocaleString(
+								DateTime.DATETIME_MED_WITH_WEEKDAY
+						  )}
 				</Text>
-				<Text style={styles.locationText}>{event.location}</Text>
+				<Text
+					style={
+						horizontalScroll
+							? { color: "#F1F54F", textAlign: "center", flex: 1 }
+							: styles.locationText
+					}
+				>
+					{event.location}
+				</Text>
 			</View>
 			<AntDesign
 				name={isSaved ? "heart" : "hearto"}
 				onPress={() =>
 					isSaved ? removeEvent(event.id) : addEvent(event)
 				}
-				style={[styles.icon, isFeatured && styles.featuredIcon]}
+				style={
+					horizontalScroll
+						? {
+								position: "absolute",
+								top: 0,
+								right: 0,
+								padding: 8,
+								color: "#F48FB1",
+								fontSize: 24
+						  }
+						: [styles.icon, isFeatured && styles.featuredIcon]
+				}
 			/>
 		</Pressable>
 	);

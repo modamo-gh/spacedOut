@@ -1,68 +1,63 @@
 {
-  "expo": {
-    "name": "spacedOut",
-    "slug": "spacedOut",
-    "version": "1.0.0",
-    "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
-    "scheme": "myapp",
-    "userInterfaceStyle": "automatic",
-    "newArchEnabled": true,
-    "splash": {
-      "image": "./assets/images/splash-icon.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
-    },
-    "ios": {
-      "supportsTablet": true,
-      "infoPlist": {
-        "NSUserNotificationUsageDescription": "We need notifications to remind you about important dates.",
-        "UIBackgroundModes": [
-          "fetch",
-          "remote-notification"
-        ]
-      },
-      "bundleIdentifier": "xyz.modamo.spacedOut"
-    },
-    "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "supportsTablet": true,
-        "bundleIdentifier": "xyz.modamo.spacedOut"
-      },
-      "android": {
-        "adaptiveIcon": {
-          "foregroundImage": "./assets/images/adaptive-icon.png",
-          "backgroundColor": "#ffffff"
-        }
-      },
-      "web": {
-        "favicon": "./assets/favicon.png"
-      },
-      "newArchEnabled": true,
-      "plugins": [
-        "expo-font",
-        "expo-router"
-      ],
-      "extra": {
-        "eas": {
-          "projectId": "2092cbd8-7139-433f-8487-2be7a115387f"
-        },
-        "bundler": "metro",
-        "output": "static",
-        "favicon": "./assets/images/favicon.png",
-        "router": {
-          "origin": false
-        }
-      },
-      "experiments": {
-        "typedRoutes": true
-      }
-    },
-    "extra": {
-      "eas": {
-        "projectId": "2092cbd8-7139-433f-8487-2be7a115387f"
-      }
-    }
-  }
+	"expo": {
+		"name": "spacedOut",
+		"slug": "spacedOut",
+		"version": "1.0.0",
+		"orientation": "portrait",
+		"icon": "./assets/images/icon.png",
+		"scheme": "myapp",
+		"userInterfaceStyle": "automatic",
+		"newArchEnabled": true,
+		"splash": {
+			"image": "./assets/images/splash-icon.png",
+			"resizeMode": "contain",
+			"backgroundColor": "#ffffff"
+		},
+		"ios": {
+			"supportsTablet": true,
+			"infoPlist": {
+				"NSLocationWhenInUseUsageDescription": "We need your location to show events near you.",
+				"NSUserNotificationUsageDescription": "We need notifications to remind you about important dates.",
+				"UIBackgroundModes": ["fetch", "remote-notification"]
+			},
+			"bundleIdentifier": "xyz.modamo.spacedOut"
+		},
+		"android": {
+			"adaptiveIcon": {
+				"foregroundImage": "./assets/adaptive-icon.png",
+				"supportsTablet": true,
+				"bundleIdentifier": "xyz.modamo.spacedOut"
+			},
+			"android": {
+				"adaptiveIcon": {
+					"foregroundImage": "./assets/images/adaptive-icon.png",
+					"backgroundColor": "#ffffff"
+				}
+			},
+			"web": {
+				"favicon": "./assets/favicon.png"
+			},
+			"newArchEnabled": true,
+			"plugins": ["expo-font", "expo-router"],
+			"extra": {
+				"eas": {
+					"projectId": "2092cbd8-7139-433f-8487-2be7a115387f"
+				},
+				"bundler": "metro",
+				"output": "static",
+				"favicon": "./assets/images/favicon.png",
+				"router": {
+					"origin": false
+				}
+			},
+			"experiments": {
+				"typedRoutes": true
+			}
+		},
+		"extra": {
+			"eas": {
+				"projectId": "2092cbd8-7139-433f-8487-2be7a115387f"
+			}
+		}
+	}
 }
