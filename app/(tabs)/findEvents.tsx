@@ -39,26 +39,30 @@ const FindEventsScreen = () => {
 
 	useEffect(() => {
 		const getNearbyEvents = async () => {
-			setIsLoadingNearbyEvents(true);
-
 			if (location) {
-				const nes = await fetchNearbyEvents(
-					location.latitude,
-					location.longitude
-				);
+				setIsLoadingNearbyEvents(true);
 
-				setNearbyEvents(nes);
-				setIsLoadingNearbyEvents(false);
+				try {
+					const nes = await fetchNearbyEvents(
+						location.latitude,
+						location.longitude
+					);
+					setNearbyEvents(nes);
+				} finally {
+					setIsLoadingNearbyEvents(false);
+				}
 			}
 		};
 
 		const getWeeksEvents = async () => {
 			setIsLoadingNearbyEvents(true);
 
-			const wes = await fetchWeeksEvents();
-
-			setWeeksEvents(wes);
-			setIsLoadingEventsThisWeek(false);
+			try {
+				const wes = await fetchWeeksEvents();
+				setWeeksEvents(wes);
+			} finally {
+				setIsLoadingEventsThisWeek(false);
+			}
 		};
 
 		getNearbyEvents();
