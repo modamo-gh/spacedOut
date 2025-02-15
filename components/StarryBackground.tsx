@@ -1,3 +1,4 @@
+import colors from "@/constants/Colors";
 import React, { useMemo } from "react";
 import { Dimensions, Text, View } from "react-native";
 
@@ -27,7 +28,7 @@ const StarryBackground = React.memo(() => {
 	return (
 		<View
 			style={{
-				backgroundColor: "#2E0191",
+				backgroundColor: colors.primary,
 				height: "100%",
 				position: "absolute",
 				width: "100%"
@@ -36,7 +37,7 @@ const StarryBackground = React.memo(() => {
 			{stars.map((star) => (
 				<Text
 					style={{
-						color: "#FFFFFF",
+						color: colors.stars,
 						fontSize: star.size,
 						left: star.left,
 						opacity: 0.2 + Math.random() * 0.15,

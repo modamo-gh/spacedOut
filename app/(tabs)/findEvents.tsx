@@ -10,6 +10,7 @@ import { useUserLocation } from "../hooks/useUserLocation";
 import { fetchNearbyEvents, fetchWeeksEvents } from "@/services/ticketmaster";
 import { Event } from "@/types/Event";
 import EventCard from "@/components/EventCard";
+import colors from "@/constants/Colors";
 
 const FindEventsScreen = () => {
 	const [text, setText] = useState("");
@@ -90,7 +91,7 @@ const FindEventsScreen = () => {
 							style={{
 								fontSize: 20,
 								fontWeight: "semibold",
-								color: "white"
+								color: colors.textPrimary
 							}}
 						>
 							NEAR YOU
@@ -122,7 +123,7 @@ const FindEventsScreen = () => {
 							style={{
 								fontSize: 20,
 								fontWeight: "semibold",
-								color: "white"
+								color: colors.textPrimary
 							}}
 						>
 							NEXT SEVEN DAYS
@@ -159,7 +160,7 @@ const FindEventsScreen = () => {
 
 const styles = StyleSheet.create({
 	appName: {
-		color: "white",
+		color: colors.textPrimary,
 		fontFamily: "Orbitron",
 		fontSize: 24,
 		fontWeight: "700",
@@ -174,12 +175,12 @@ const styles = StyleSheet.create({
 		flex: 1,
 		flexDirection: "column",
 		fontFamily: "",
-		marginBottom: 16,
+		marginBottom: 16
 	},
-	icon: { color: "#9287AB", fontSize: 20, marginHorizontal: 16 },
+	icon: { color: colors.interactiveIcon, fontSize: 20, marginHorizontal: 16 },
 	listContainer: {
 		flex: 1,
-		marginHorizontal: 20,
+		marginHorizontal: 20
 	},
 	searchContainer: {
 		alignItems: "center",

@@ -1,3 +1,4 @@
+import colors from "@/constants/Colors";
 import { AttractionCardProps } from "@/types/AttractionCardProps";
 import Feather from "@expo/vector-icons/Feather";
 import * as Haptics from "expo-haptics";
@@ -36,7 +37,7 @@ const AttractionCard: React.FC<AttractionCardProps> = ({ attraction }) => {
 					}}
 				>
 					<Feather
-						color="#9287AB"
+						color={colors.interactiveIcon}
 						name="chevron-right"
 						style={styles.icon}
 					/>
@@ -55,14 +56,14 @@ const styles = StyleSheet.create({
 		justifyContent: "space-between",
 		marginBottom: 32
 	},
-	icon: { color: "#FFFFFF", fontSize: 20, marginHorizontal: 16 },
+	icon: { color: colors.interactiveText, fontSize: 20, marginHorizontal: 16 },
 	image: {
 		borderRadius: 50,
 		height: 72,
 		width: 72
 	},
 	text: {
-		color: "#FFFFFF",
+		color: colors.textPrimary,
 		flex: 1,
 		flexWrap: "wrap",
 		fontFamily: "Geist",

@@ -1,3 +1,4 @@
+import colors from "@/constants/Colors";
 import { SearchBarProps } from "@/types/SearchBarProps";
 import Feather from "@expo/vector-icons/Feather";
 import * as Haptics from "expo-haptics";
@@ -41,11 +42,11 @@ const SearchBar: React.FC<SearchBarProps> = ({
 };
 
 const styles = StyleSheet.create({
-	icon: { color: "#9287AB", fontSize: 20, marginHorizontal: 16 },
+	icon: { color: colors.interactiveIcon, fontSize: 20, marginHorizontal: 16 },
 	searchContainer: {
 		alignItems: "center",
-		backgroundColor: "#22015E",
-		borderColor: "#6600CC",
+		backgroundColor: colors.interactiveBackground,
+		borderColor: colors.secondary,
 		borderWidth: 1,
 		borderRadius: 10,
 		flexDirection: "row",
@@ -54,7 +55,7 @@ const styles = StyleSheet.create({
 		marginHorizontal: 20
 	},
 	textInput: {
-		color: "#FFFFFF",
+		color: colors.textPrimary,
 		flex: 1,
 		fontFamily: "Geist",
 		fontSize: 16,

@@ -4,6 +4,7 @@ import { Link, Tabs } from "expo-router";
 
 import { useColorScheme } from "@/components/useColorScheme";
 import { useClientOnlyValue } from "@/components/useClientOnlyValue";
+import colors from "@/constants/Colors";
 
 // You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
 function TabBarIcon(props: {
@@ -20,15 +21,15 @@ export default function TabLayout() {
 		<Tabs
 			initialRouteName="findEvents"
 			screenOptions={{
-				tabBarActiveTintColor: "white",
-				tabBarInactiveTintColor: "#BBBBBB",
+				tabBarActiveTintColor: colors.interactiveText,
+				tabBarInactiveTintColor: colors.textSecondary,
 				tabBarLabelStyle: {
-					color: "white",
+					color: colors.interactiveText,
 					fontSize: 14,
 					padding: 16
 				},
 				tabBarStyle: {
-					backgroundColor: "#22015E",
+					backgroundColor: colors.interactiveBackground,
 					height: 108
 				},
 				// Disable the static render of the header on web

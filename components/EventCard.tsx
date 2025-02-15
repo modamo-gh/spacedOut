@@ -7,6 +7,7 @@ import { DateTime } from "luxon";
 import React from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { usePathname } from "expo-router";
+import colors from "@/constants/Colors";
 
 const EventCard: React.FC<EventCardProps> = ({
 	event,
@@ -21,14 +22,14 @@ const EventCard: React.FC<EventCardProps> = ({
 	);
 
 	const pathname = usePathname();
-	const isMyEvents = pathname === "/myEvents"
+	const isMyEvents = pathname === "/myEvents";
 	return (
 		<Pressable
 			onPress={() => router.push(`/event/${event.id}`)}
 			style={
 				horizontalScroll
 					? {
-							backgroundColor: "#6600CC",
+							backgroundColor: colors.secondary,
 							borderRadius: 8,
 							height: "100%",
 							width: 180,
@@ -75,7 +76,7 @@ const EventCard: React.FC<EventCardProps> = ({
 						horizontalScroll
 							? {
 									textAlign: "center",
-									color: "#FFFFFF",
+									color: colors.textPrimary,
 									fontSize: 16,
 									flex: 1
 							  }
@@ -87,7 +88,11 @@ const EventCard: React.FC<EventCardProps> = ({
 				<Text
 					style={
 						horizontalScroll
-							? { color: "#F1F54F", textAlign: "center", flex: 1 }
+							? {
+									color: colors.textHighlight,
+									textAlign: "center",
+									flex: 1
+							  }
 							: styles.dateText
 					}
 				>
@@ -102,23 +107,34 @@ const EventCard: React.FC<EventCardProps> = ({
 				{isSaved && isMyEvents && (
 					<Text
 						style={{
-							color: "#FFFFFF",
+							color: colors.textPrimary,
 							flex: 1
 						}}
-					>{`Next Milestone: ${isFeatured
-							? DateTime.fromISO(event.milestones[0]).toLocaleString(
-									DateTime.DATETIME_MED_WITH_WEEKDAY
-							  )
-							: DateTime.fromISO(event.milestones[0]).toLocaleString(
-									DateTime.DATE_MED_WITH_WEEKDAY
-							  )}`}
+					>
+						{`Next Milestone: ${
+							isFeatured
+								? DateTime.fromISO(
+										event.milestones[0]
+								  ).toLocaleString(
+										DateTime.DATETIME_MED_WITH_WEEKDAY
+								  )
+								: DateTime.fromISO(
+										event.milestones[0]
+								  ).toLocaleString(
+										DateTime.DATE_MED_WITH_WEEKDAY
+								  )
+						}`}
 					</Text>
 				)}
 				<Text
 					style={
 						horizontalScroll
-							? { color: "#F1F54F", textAlign: "center", flex: 1 }
-							: { color: "#F1F54F", flex: 1 }
+							? {
+									color: colors.textHighlight,
+									textAlign: "center",
+									flex: 1
+							  }
+							: { color: colors.textHighlight, flex: 1 }
 					}
 				>
 					{event.location}
@@ -136,7 +152,7 @@ const EventCard: React.FC<EventCardProps> = ({
 								top: 0,
 								right: 0,
 								padding: 8,
-								color: "#F48FB1",
+								color: colors.accent,
 								fontSize: 24
 						  }
 						: [styles.icon, isFeatured && styles.featuredIcon]
@@ -156,7 +172,7 @@ const styles = StyleSheet.create({
 		justifyContent: "space-between",
 		marginBottom: 14
 	},
-	dateText: { color: "#F1F54F", flex: 1 },
+	dateText: { color: colors.textHighlight, flex: 1 },
 	featuredCard: {
 		display: "flex",
 		height: 200,
@@ -177,14 +193,14 @@ const styles = StyleSheet.create({
 		position: "absolute",
 		width: "100%"
 	},
-	icon: { color: "#F48FB1", fontSize: 24 },
+	icon: { color: colors.accent, fontSize: 24 },
 	image: {
 		borderRadius: 8,
 		height: 72,
 		width: 72
 	},
 	locationText: { color: "#D5D5D5", flex: 1 },
-	nameText: { color: "#FFFFFF", flex: 1, fontSize: 16 },
+	nameText: { color: colors.textPrimary, flex: 1, fontSize: 16 },
 	textContainer: { display: "flex", flex: 1, height: "100%", paddingLeft: 12 }
 });
 

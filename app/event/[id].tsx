@@ -142,7 +142,7 @@ const EventDetailScreen = () => {
 					<Text
 						style={[
 							styles.text,
-							{ color: "#F1F54F", marginBottom: 8 }
+							{ color: "#E6D74F", marginBottom: 8 }
 						]}
 					>
 						{DateTime.fromISO(event.dateTime).toLocaleString(
@@ -175,7 +175,7 @@ const EventDetailScreen = () => {
 						</Text>
 						<View
 							style={{
-								backgroundColor: "#6600CC",
+								backgroundColor: "#5A00B5",
 								borderRadius: 10,
 								padding: 20,
 								marginBottom: 8
@@ -203,7 +203,7 @@ const EventDetailScreen = () => {
 						</Text>
 						<View
 							style={{
-								backgroundColor: "#6600CC",
+								backgroundColor: "#5A00B5",
 								borderRadius: 10,
 								marginBottom: 8
 							}}

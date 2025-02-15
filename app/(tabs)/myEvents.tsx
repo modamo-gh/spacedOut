@@ -1,5 +1,6 @@
 import EventCard from "@/components/EventCard";
 import StarryBackground from "@/components/StarryBackground";
+import colors from "@/constants/Colors";
 import { useAttractionEventContext } from "@/context/AttractionEventContext";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { FlashList } from "@shopify/flash-list";
@@ -26,7 +27,7 @@ const MyEventsScreen = () => {
 							style={{
 								fontSize: 20,
 								fontWeight: "semibold",
-								color: "white",
+								color: colors.textPrimary,
 								marginBottom: 8
 							}}
 						>
@@ -41,7 +42,7 @@ const MyEventsScreen = () => {
 							style={{
 								fontSize: 20,
 								fontWeight: "semibold",
-								color: "white",
+								color: colors.textPrimary,
 								marginBottom: 8
 							}}
 						>
@@ -64,7 +65,7 @@ const MyEventsScreen = () => {
 							style={{
 								fontSize: 20,
 								fontWeight: "semibold",
-								color: "white",
+								color: colors.textPrimary,
 								marginBottom: 8
 							}}
 						>
@@ -74,7 +75,7 @@ const MyEventsScreen = () => {
 							style={{
 								fontSize: 20,
 								fontWeight: "semibold",
-								color: "white",
+								color: colors.textPrimary,
 								marginBottom: 8,
 								textAlign: "center"
 							}}
@@ -83,7 +84,10 @@ const MyEventsScreen = () => {
 							{
 								<AntDesign
 									name="hearto"
-									style={{ color: "#F48FB1", fontSize: 20 }}
+									style={{
+										color: colors.accent,
+										fontSize: 20
+									}}
 								/>
 							}{" "}
 							to add them here.
