@@ -69,14 +69,6 @@ const FindEventsScreen = () => {
 		getWeeksEvents();
 	}, [location]);
 
-	const [fontsLoaded] = useFonts({
-		Geist: require("../../assets/fonts/Geist-VariableFont_wght.ttf"),
-		Orbitron: require("../../assets/fonts/Orbitron-VariableFont_wght.ttf")
-	});
-
-	if (!fontsLoaded) {
-		return null;
-	}
 	return (
 		<View style={styles.container}>
 			<StarryBackground />
