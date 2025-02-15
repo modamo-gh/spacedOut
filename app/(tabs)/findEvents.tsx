@@ -5,12 +5,20 @@ import { useAttractionEventContext } from "@/context/AttractionEventContext";
 import { FlashList } from "@shopify/flash-list";
 import { useFonts } from "expo-font";
 import React, { useEffect, useState } from "react";
-import { SafeAreaView, ScrollView, StyleSheet, Text, View } from "react-native";
+import {
+	ActivityIndicator,
+	SafeAreaView,
+	ScrollView,
+	StyleSheet,
+	Text,
+	View
+} from "react-native";
 import { useUserLocation } from "../hooks/useUserLocation";
 import { fetchNearbyEvents, fetchWeeksEvents } from "@/services/ticketmaster";
 import { Event } from "@/types/Event";
 import EventCard from "@/components/EventCard";
 import colors from "@/constants/Colors";
+import fontSizes from "@/constants/fontSizes";
 
 const FindEventsScreen = () => {
 	const [text, setText] = useState("");
@@ -20,6 +28,9 @@ const FindEventsScreen = () => {
 	const [weeksEvents, setWeeksEvents] = useState<Event[] | undefined>(
 		undefined
 	);
+	const [isLoadingNearbyEvents, setIsLoadingNearbyEvents] = useState(false);
+	const [isLoadingEventsThisWeek, setIsLoadingEventsThisWeek] =
+		useState(false);
 
 	const { attractions, getAttractions, setAttractions } =
 		useAttractionEventContext();
@@ -28,6 +39,8 @@ const FindEventsScreen = () => {
 
 	useEffect(() => {
 		const getNearbyEvents = async () => {
+			setIsLoadingNearbyEvents(true);
+
 			if (location) {
 				const nes = await fetchNearbyEvents(
 					location.latitude,
@@ -35,13 +48,17 @@ const FindEventsScreen = () => {
 				);
 
 				setNearbyEvents(nes);
+				setIsLoadingNearbyEvents(false);
 			}
 		};
 
 		const getWeeksEvents = async () => {
+			setIsLoadingNearbyEvents(true);
+
 			const wes = await fetchWeeksEvents();
 
 			setWeeksEvents(wes);
+			setIsLoadingEventsThisWeek(false);
 		};
 
 		getNearbyEvents();
@@ -89,7 +106,8 @@ const FindEventsScreen = () => {
 					>
 						<Text
 							style={{
-								fontSize: 20,
+								fontFamily: "Geist",
+								fontSize: fontSizes.large,
 								fontWeight: "semibold",
 								color: colors.textPrimary
 							}}
@@ -98,10 +116,17 @@ const FindEventsScreen = () => {
 						</Text>
 						<View
 							style={{
-								flex: 1
+								alignItems: "center",
+								flex: 1,
+								justifyContent: "center"
 							}}
 						>
-							{nearbyEvents?.length ? (
+							{isLoadingNearbyEvents ? (
+								<ActivityIndicator
+									size="large"
+									color="#FFFFFF"
+								/>
+							) : nearbyEvents?.length ? (
 								<FlashList
 									data={nearbyEvents}
 									estimatedItemSize={20}
@@ -116,12 +141,20 @@ const FindEventsScreen = () => {
 									)}
 								/>
 							) : (
-								<Text>No Nearby Events</Text>
+								<Text
+									style={{
+										color: colors.textPrimary,
+										fontSize: fontSizes.default
+									}}
+								>
+									No Nearby Events
+								</Text>
 							)}
 						</View>
 						<Text
 							style={{
-								fontSize: 20,
+								fontFamily: "Geist",
+								fontSize: fontSizes.large,
 								fontWeight: "semibold",
 								color: colors.textPrimary
 							}}
@@ -130,10 +163,17 @@ const FindEventsScreen = () => {
 						</Text>
 						<View
 							style={{
-								flex: 1
+								alignItems: "center",
+								flex: 1,
+								justifyContent: "center"
 							}}
 						>
-							{weeksEvents?.length ? (
+							{isLoadingEventsThisWeek ? (
+								<ActivityIndicator
+									size="large"
+									color={colors.textPrimary}
+								/>
+							) : weeksEvents?.length ? (
 								<FlashList
 									data={weeksEvents}
 									estimatedItemSize={20}
@@ -148,7 +188,14 @@ const FindEventsScreen = () => {
 									)}
 								/>
 							) : (
-								<Text>No Events in the next Seven Days</Text>
+								<Text
+									style={{
+										color: colors.textPrimary,
+										fontSize: fontSizes.default
+									}}
+								>
+									No Events in the next Seven Days
+								</Text>
 							)}
 						</View>
 					</View>
@@ -162,7 +209,7 @@ const styles = StyleSheet.create({
 	appName: {
 		color: colors.textPrimary,
 		fontFamily: "Orbitron",
-		fontSize: 24,
+		fontSize: fontSizes.title,
 		fontWeight: "700",
 		letterSpacing: 4,
 		marginHorizontal: 20,
