@@ -14,6 +14,7 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import { DateTime } from "luxon";
 import React, { useEffect, useState } from "react";
 import {
+	ActivityIndicator,
 	Dimensions,
 	Linking,
 	Platform,
@@ -90,7 +91,18 @@ const EventDetailScreen = () => {
 	});
 
 	if (!event) {
-		return <Text>Event Not Found</Text>;
+		return (
+			<View
+				style={{
+					alignItems: "center",
+					flex: 1,
+					justifyContent: "center"
+				}}
+			>
+				<StarryBackground />
+				<ActivityIndicator color={colors.textPrimary} size="large" />
+			</View>
+		);
 	}
 
 	const isSaved = savedEvents.some(
@@ -111,8 +123,8 @@ const EventDetailScreen = () => {
 		}
 	};
 
-	return (
-		<View style={{ backgroundColor: colors.primary, flex: 1 }}>
+	return event ? (
+		<View style={{ flex: 1 }}>
 			<BackButton />
 			<StarryBackground />
 			<AntDesign
@@ -254,6 +266,8 @@ const EventDetailScreen = () => {
 				</View>
 			</Animated.ScrollView>
 		</View>
+	) : (
+		<View style={{ flex: 1, backgroundColor: "red" }}></View>
 	);
 };
 
