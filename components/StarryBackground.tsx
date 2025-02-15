@@ -1,6 +1,6 @@
 import colors from "@/constants/Colors";
 import React, { useMemo } from "react";
-import { Dimensions, Text, View } from "react-native";
+import { Dimensions, StyleSheet, Text, View } from "react-native";
 
 const notes = [".", "·", "•"];
 
@@ -26,14 +26,7 @@ const StarryBackground = React.memo(() => {
 	const stars = useMemo(() => generateStars(), []);
 
 	return (
-		<View
-			style={{
-				backgroundColor: colors.primary,
-				height: "100%",
-				position: "absolute",
-				width: "100%"
-			}}
-		>
+		<View style={styles.space}>
 			{stars.map((star, index) => (
 				<Text
 					key={index}
@@ -51,6 +44,15 @@ const StarryBackground = React.memo(() => {
 			))}
 		</View>
 	);
+});
+
+const styles = StyleSheet.create({
+	space: {
+		backgroundColor: colors.primary,
+		height: "100%",
+		position: "absolute",
+		width: "100%"
+	}
 });
 
 export default StarryBackground;
