@@ -30,7 +30,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
 				style={styles.textInput}
 				value={text}
 			/>
-			{text.length && (
+			{text.length ? (
 				<Feather
 					name="x"
 					onPress={() => {
@@ -40,7 +40,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
 					}}
 					style={styles.icon}
 				/>
-			)}
+			) : null}
 		</View>
 	);
 };
