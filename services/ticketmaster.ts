@@ -165,28 +165,37 @@ export const fetchWeeksEvents = async () => {
 	const weeksEvents: Event[] = [];
 
 	for (const event of data) {
-		weeksEvents.push({
-			dateTime: event.dates.start.dateTime,
-			id: event.id,
-			imageURL: [...event.images]?.sort((a, b) => b.width - a.width)[0]
-				?.url,
-			isSaved: false,
-			latitude: Number(event._embedded?.venues?.[0].location.latitude),
-			location: `${event._embedded?.venues?.[0].city?.name}, ${
-				event._embedded?.venues?.[0].state?.stateCode ||
-				event._embedded?.venues?.[0].country?.countryCode
-			}`,
-			longitude: Number(event._embedded?.venues?.[0].location.longitude),
-			milestones: [],
-			name: event.name,
-			notificationID: "",
-			type: event.type
-		});
+		if (DateTime.fromISO(event.dates.start.dateTime) >= today) {
+			weeksEvents.push({
+				dateTime: event.dates.start.dateTime,
+				id: event.id,
+				imageURL: [...event.images]?.sort(
+					(a, b) => b.width - a.width
+				)[0]?.url,
+				isSaved: false,
+				latitude: Number(
+					event._embedded?.venues?.[0].location.latitude
+				),
+				location: `${event._embedded?.venues?.[0].city?.name}, ${
+					event._embedded?.venues?.[0].state?.stateCode ||
+					event._embedded?.venues?.[0].country?.countryCode
+				}`,
+				longitude: Number(
+					event._embedded?.venues?.[0].location.longitude
+				),
+				milestones: [],
+				name: event.name,
+				notificationID: "",
+				type: event.type
+			});
+		}
 	}
 
-	return weeksEvents.sort(
+	weeksEvents.sort(
 		(a, b) =>
 			DateTime.fromISO(a.dateTime).toMillis() -
 			DateTime.fromISO(b.dateTime).toMillis()
 	);
+
+	return weeksEvents;
 };
