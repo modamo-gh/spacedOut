@@ -1,5 +1,6 @@
 import BackButton from "@/components/BackButton";
 import EventCard from "@/components/EventCard";
+import StarryBackground from "@/components/StarryBackground";
 import colors from "@/constants/Colors";
 import { useAttractionEventContext } from "@/context/AttractionEventContext";
 import { Event } from "@/types/Event";
@@ -74,6 +75,7 @@ const Attraction = () => {
 	return (
 		<View style={{ backgroundColor: colors.primary, flex: 1 }}>
 			<BackButton />
+			<StarryBackground />
 			<Animated.View style={[styles.image, animatedImageStyle]}>
 				<Image
 					cachePolicy="memory-disk"

@@ -1,4 +1,5 @@
 import BackButton from "@/components/BackButton";
+import StarryBackground from "@/components/StarryBackground";
 import colors from "@/constants/Colors";
 import fontSizes from "@/constants/fontSizes";
 import {
@@ -112,6 +113,7 @@ const EventDetailScreen = () => {
 	return (
 		<View style={{ backgroundColor: colors.primary, flex: 1 }}>
 			<BackButton />
+			<StarryBackground />
 			<AntDesign
 				name={isSaved ? "heart" : "hearto"}
 				onPress={() =>
