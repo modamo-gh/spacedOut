@@ -6,22 +6,14 @@ import Feather from "@expo/vector-icons/Feather";
 import * as Haptics from "expo-haptics";
 import { Link, Tabs } from "expo-router";
 import React from "react";
+import { Pressable } from "react-native";
 
 // You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
 function TabBarIcon(props: {
 	name: React.ComponentProps<typeof Feather>["name"];
 	color: string;
 }) {
-	return (
-		<Feather
-			onPress={() =>
-				Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)
-			}
-			size={28}
-			style={{ marginBottom: -16 }}
-			{...props}
-		/>
-	);
+	return <Feather size={28} style={{ marginBottom: -16 }} {...props} />;
 }
 
 export default function TabLayout() {
@@ -51,6 +43,17 @@ export default function TabLayout() {
 				name="findEvents"
 				options={{
 					header: () => null,
+					tabBarButton: (props) => (
+						<Pressable
+							{...props}
+							onPress={(event) => {
+								Haptics.impactAsync(
+									Haptics.ImpactFeedbackStyle.Medium
+								);
+								props.onPress?.(event);
+							}}
+						/>
+					),
 					tabBarIcon: ({ color }) => (
 						<TabBarIcon name="search" color={color} />
 					),
@@ -61,6 +64,17 @@ export default function TabLayout() {
 				name="myEvents"
 				options={{
 					header: () => null,
+					tabBarButton: (props) => (
+						<Pressable
+							{...props}
+							onPress={(event) => {
+								Haptics.impactAsync(
+									Haptics.ImpactFeedbackStyle.Medium
+								);
+								props.onPress?.(event);
+							}}
+						/>
+					),
 					tabBarIcon: ({ color }) => (
 						<TabBarIcon name="calendar" color={color} />
 					),
