@@ -145,13 +145,15 @@ export const AttractionEventProvider: React.FC<{
 	}, []);
 
 	const getAttractions = async (searchTerm: string) => {
-		const attractions = await fetchAttractions(searchTerm);
+		if (searchTerm.length) {
+			const attractions = await fetchAttractions(searchTerm);
 
-		if (!attractions) {
-			return;
+			if (!attractions) {
+				return;
+			}
+
+			setAttractions(attractions);
 		}
-
-		setAttractions(attractions);
 	};
 
 	const getEvents = async (id: string) => {

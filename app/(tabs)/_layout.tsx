@@ -1,17 +1,27 @@
-import React from "react";
-import Feather from "@expo/vector-icons/Feather";
-import { Link, Tabs } from "expo-router";
-
-import { useColorScheme } from "@/components/useColorScheme";
 import { useClientOnlyValue } from "@/components/useClientOnlyValue";
+import { useColorScheme } from "@/components/useColorScheme";
 import colors from "@/constants/Colors";
+import fontSizes from "@/constants/fontSizes";
+import Feather from "@expo/vector-icons/Feather";
+import * as Haptics from "expo-haptics";
+import { Link, Tabs } from "expo-router";
+import React from "react";
 
 // You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
 function TabBarIcon(props: {
 	name: React.ComponentProps<typeof Feather>["name"];
 	color: string;
 }) {
-	return <Feather size={28} style={{ marginBottom: -16 }} {...props} />;
+	return (
+		<Feather
+			onPress={() =>
+				Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)
+			}
+			size={28}
+			style={{ marginBottom: -16 }}
+			{...props}
+		/>
+	);
 }
 
 export default function TabLayout() {
@@ -25,7 +35,7 @@ export default function TabLayout() {
 				tabBarInactiveTintColor: colors.textSecondary,
 				tabBarLabelStyle: {
 					color: colors.interactiveText,
-					fontSize: 14,
+					fontSize: fontSizes.small,
 					padding: 16
 				},
 				tabBarStyle: {

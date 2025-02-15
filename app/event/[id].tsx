@@ -98,8 +98,6 @@ const EventDetailScreen = () => {
 	);
 
 	const openMaps = () => {
-		Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-
 		const { latitude, longitude } = event;
 		const url = Platform.select({
 			android: `geo:${latitude},${longitude}?q=${latitude},${longitude}`,
@@ -131,6 +129,7 @@ const EventDetailScreen = () => {
 					top: insets.top - 8,
 					zIndex: 1
 				}}
+				suppressHighlighting
 			/>
 			<Animated.View style={[styles.image, animatedImageStyle]}>
 				<Image
@@ -157,7 +156,14 @@ const EventDetailScreen = () => {
 							DateTime.DATETIME_MED_WITH_WEEKDAY
 						)}
 					</Text>
-					<Pressable onPress={openMaps}>
+					<Pressable
+						onPress={() => {
+							Haptics.impactAsync(
+								Haptics.ImpactFeedbackStyle.Medium
+							);
+							openMaps();
+						}}
+					>
 						<Image
 							cachePolicy="memory-disk"
 							source={{
