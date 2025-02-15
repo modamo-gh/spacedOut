@@ -55,7 +55,7 @@ const FindEventsScreen = () => {
 		};
 
 		const getWeeksEvents = async () => {
-			setIsLoadingNearbyEvents(true);
+			setIsLoadingEventsThisWeek(true);
 
 			try {
 				const wes = await fetchWeeksEvents();
@@ -128,7 +128,7 @@ const FindEventsScreen = () => {
 							{isLoadingNearbyEvents ? (
 								<ActivityIndicator
 									size="large"
-									color="#FFFFFF"
+									color={colors.textPrimary}
 								/>
 							) : nearbyEvents?.length ? (
 								<FlashList
@@ -228,28 +228,9 @@ const styles = StyleSheet.create({
 		fontFamily: "",
 		marginBottom: 16
 	},
-	icon: { color: colors.interactiveIcon, fontSize: 20, marginHorizontal: 16 },
 	listContainer: {
 		flex: 1,
 		marginHorizontal: 20
-	},
-	searchContainer: {
-		alignItems: "center",
-		backgroundColor: "#22015E",
-		borderColor: "#6600CC",
-		borderWidth: 1,
-		borderRadius: 10,
-		flexDirection: "row",
-		height: 48,
-		marginBottom: 16,
-		marginHorizontal: 20
-	},
-	textInput: {
-		color: "#FFFFFF",
-		flex: 1,
-		fontFamily: "Geist",
-		fontSize: 16,
-		height: "100%"
 	}
 });
 
