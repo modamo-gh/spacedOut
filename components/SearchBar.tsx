@@ -1,4 +1,5 @@
 import colors from "@/constants/Colors";
+import fontSizes from "@/constants/fontSizes";
 import { SearchBarProps } from "@/types/SearchBarProps";
 import Feather from "@expo/vector-icons/Feather";
 import * as Haptics from "expo-haptics";
@@ -22,11 +23,11 @@ const SearchBar: React.FC<SearchBarProps> = ({
 					getAttractions(text.trim());
 				}}
 				placeholder="Search for Attraction"
-				placeholderTextColor="#9287AB"
+				placeholderTextColor={colors.interactiveIcon}
 				style={styles.textInput}
 				value={text}
 			/>
-			{text.length ? (
+			{text.length && (
 				<Feather
 					name="x"
 					onPress={() => {
@@ -36,13 +37,17 @@ const SearchBar: React.FC<SearchBarProps> = ({
 					}}
 					style={styles.icon}
 				/>
-			) : null}
+			)}
 		</View>
 	);
 };
 
 const styles = StyleSheet.create({
-	icon: { color: colors.interactiveIcon, fontSize: 20, marginHorizontal: 16 },
+	icon: {
+		color: colors.interactiveIcon,
+		fontSize: fontSizes.default,
+		marginHorizontal: 16
+	},
 	searchContainer: {
 		alignItems: "center",
 		backgroundColor: colors.interactiveBackground,
@@ -58,7 +63,7 @@ const styles = StyleSheet.create({
 		color: colors.textPrimary,
 		flex: 1,
 		fontFamily: "Geist",
-		fontSize: 16,
+		fontSize: fontSizes.default,
 		height: "100%"
 	}
 });

@@ -1,4 +1,6 @@
 import BackButton from "@/components/BackButton";
+import colors from "@/constants/Colors";
+import fontSizes from "@/constants/fontSizes";
 import {
 	generateMilestones,
 	useAttractionEventContext
@@ -108,7 +110,7 @@ const EventDetailScreen = () => {
 	};
 
 	return (
-		<View style={{ backgroundColor: "#2E0191", flex: 1 }}>
+		<View style={{ backgroundColor: colors.primary, flex: 1 }}>
 			<BackButton />
 			<AntDesign
 				name={isSaved ? "heart" : "hearto"}
@@ -116,7 +118,7 @@ const EventDetailScreen = () => {
 					isSaved ? removeEvent(event.id) : addEvent(event)
 				}
 				style={{
-					color: "#F48FB1",
+					color: colors.accent,
 					fontSize: 48,
 					position: "absolute",
 					right: 16,
@@ -142,7 +144,7 @@ const EventDetailScreen = () => {
 					<Text
 						style={[
 							styles.text,
-							{ color: "#E6D74F", marginBottom: 8 }
+							{ color: colors.textHighlight, marginBottom: 8 }
 						]}
 					>
 						{DateTime.fromISO(event.dateTime).toLocaleString(
@@ -165,9 +167,10 @@ const EventDetailScreen = () => {
 					<View>
 						<Text
 							style={{
-								fontSize: 20,
+								fontFamily: "Geist",
+								fontSize: fontSizes.large,
 								fontWeight: "semibold",
-								color: "white",
+								color: colors.textPrimary,
 								marginBottom: 8
 							}}
 						>
@@ -175,7 +178,7 @@ const EventDetailScreen = () => {
 						</Text>
 						<View
 							style={{
-								backgroundColor: "#5A00B5",
+								backgroundColor: colors.secondary,
 								borderRadius: 10,
 								padding: 20,
 								marginBottom: 8
@@ -193,9 +196,10 @@ const EventDetailScreen = () => {
 					<View>
 						<Text
 							style={{
-								fontSize: 20,
+								fontFamily: "Geist",
+								fontSize: fontSizes.large,
 								fontWeight: "semibold",
-								color: "white",
+								color: colors.textPrimary,
 								marginBottom: 8
 							}}
 						>
@@ -203,7 +207,7 @@ const EventDetailScreen = () => {
 						</Text>
 						<View
 							style={{
-								backgroundColor: "#5A00B5",
+								backgroundColor: colors.secondary,
 								borderRadius: 10,
 								marginBottom: 8
 							}}
@@ -214,14 +218,14 @@ const EventDetailScreen = () => {
 									<Text
 										key={index}
 										style={{
-											borderBottomColor: "#7459A6",
+											borderBottomColor: colors.border,
 											borderBottomWidth:
 												index <
 												event.milestones.length - 2
 													? 1
 													: 0,
-											color: "white",
-											fontSize: 16,
+											color: colors.textPrimary,
+											fontSize: fontSizes.default,
 											fontWeight: "semibold",
 											padding: 20
 										}}
@@ -249,15 +253,17 @@ const styles = StyleSheet.create({
 		width: "100%"
 	},
 	name: {
-		fontSize: 24,
+		fontFamily: "Geist",
+		fontSize: fontSizes.large,
 		fontWeight: "bold",
-		color: "white",
+		color: colors.textPrimary,
 		marginBottom: 8
 	},
 	text: {
-		fontSize: 16,
+		fontFamily: "Geist",
+		fontSize: fontSizes.default,
 		fontWeight: "semibold",
-		color: "white"
+		color: colors.textPrimary
 	}
 });
 export default EventDetailScreen;

@@ -12,6 +12,7 @@ const colors = {
 	interactiveText: "#FFFFFF",
 	interactiveIcon: "#9287AB",
 
+	border: "#7459A6",
 	overlay: "rgba(0, 0, 0, 0.5)",
 	stars: "#FFFFFF"
 };

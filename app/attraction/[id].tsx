@@ -1,5 +1,6 @@
 import BackButton from "@/components/BackButton";
 import EventCard from "@/components/EventCard";
+import colors from "@/constants/Colors";
 import { useAttractionEventContext } from "@/context/AttractionEventContext";
 import { Event } from "@/types/Event";
 import { FlashList } from "@shopify/flash-list";
@@ -71,7 +72,7 @@ const Attraction = () => {
 	});
 
 	return (
-		<View style={{ backgroundColor: "#2E0191", flex: 1 }}>
+		<View style={{ backgroundColor: colors.primary, flex: 1 }}>
 			<BackButton />
 			<Animated.View style={[styles.image, animatedImageStyle]}>
 				<Image
@@ -90,32 +91,38 @@ const Attraction = () => {
 				<View style={{ height: HEADER_HEIGHT }} />
 				<View
 					style={{
-						alignItems: isLoading ? "center" : undefined,
+						alignItems: !events.length ? "center" : undefined,
+						flex: 1,
 						height: screenHeight - HEADER_HEIGHT,
 						gap: 8,
-						justifyContent:
-							isLoading || !events.length
-								? "center"
-								: "flex-start",
+						justifyContent: "center",
 						padding: 20,
 						width: screenWidth
 					}}
 				>
 					{isLoading ? (
-						<ActivityIndicator size="large" color="#FFFFFF" />
+						<ActivityIndicator
+							size="large"
+							color={colors.textPrimary}
+						/>
 					) : events.length ? (
 						<FlashList
 							data={events}
 							estimatedItemSize={20}
 							keyExtractor={(item) => item.id}
 							renderItem={({ item }) => (
-								<EventCard event={item} isFeatured={false} horizontalScroll={false} />
+								<EventCard
+									event={item}
+									isFeatured={false}
+									horizontalScroll={false}
+								/>
 							)}
 						/>
 					) : (
 						<Text
 							style={{
-								color: "white",
+								color: colors.textPrimary,
+								fontFamily: "Geist",
 								fontSize: 16,
 								fontWeight: "semibold",
 								textAlign: "center"
@@ -136,16 +143,6 @@ const styles = StyleSheet.create({
 		position: "absolute",
 		resizeMode: "cover",
 		width: "100%"
-	},
-	name: {
-		fontSize: 24,
-		fontWeight: "bold",
-		color: "white"
-	},
-	text: {
-		fontSize: 16,
-		fontWeight: "semibold",
-		color: "white"
 	}
 });
 

@@ -8,6 +8,7 @@ import React from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { usePathname } from "expo-router";
 import colors from "@/constants/Colors";
+import fontSizes from "@/constants/fontSizes";
 
 const EventCard: React.FC<EventCardProps> = ({
 	event,
@@ -77,6 +78,7 @@ const EventCard: React.FC<EventCardProps> = ({
 							? {
 									textAlign: "center",
 									color: colors.textPrimary,
+									fontFamily: "Geist",
 									fontSize: 16,
 									flex: 1
 							  }
@@ -90,6 +92,8 @@ const EventCard: React.FC<EventCardProps> = ({
 						horizontalScroll
 							? {
 									color: colors.textHighlight,
+									fontFamily: "Geist",
+									fontSize: fontSizes.small,
 									textAlign: "center",
 									flex: 1
 							  }
@@ -108,6 +112,8 @@ const EventCard: React.FC<EventCardProps> = ({
 					<Text
 						style={{
 							color: colors.textPrimary,
+							fontFamily: "Geist",
+							fontSize: fontSizes.small,
 							flex: 1
 						}}
 					>
@@ -132,9 +138,16 @@ const EventCard: React.FC<EventCardProps> = ({
 							? {
 									color: colors.textHighlight,
 									textAlign: "center",
+									fontFamily: "Geist",
+									fontSize: fontSizes.small,
 									flex: 1
 							  }
-							: { color: colors.textHighlight, flex: 1 }
+							: {
+									color: colors.textHighlight,
+									flex: 1,
+									fontFamily: "Geist",
+									fontSize: fontSizes.small
+							  }
 					}
 				>
 					{event.location}
@@ -172,7 +185,12 @@ const styles = StyleSheet.create({
 		justifyContent: "space-between",
 		marginBottom: 14
 	},
-	dateText: { color: colors.textHighlight, flex: 1 },
+	dateText: {
+		color: colors.textHighlight,
+		flex: 1,
+		fontFamily: "Geist",
+		fontSize: fontSizes.small
+	},
 	featuredCard: {
 		display: "flex",
 		height: 200,
@@ -200,7 +218,12 @@ const styles = StyleSheet.create({
 		width: 72
 	},
 	locationText: { color: "#D5D5D5", flex: 1 },
-	nameText: { color: colors.textPrimary, flex: 1, fontSize: 16 },
+	nameText: {
+		color: colors.textPrimary,
+		flex: 1,
+		fontFamily: "Geist",
+		fontSize: 16
+	},
 	textContainer: { display: "flex", flex: 1, height: "100%", paddingLeft: 12 }
 });
 
