@@ -75,7 +75,7 @@ const scheduleEventNotification = async (event: Event) => {
 		return;
 	}
 
-	await Notifications.scheduleNotificationAsync({
+	const notificationID = await Notifications.scheduleNotificationAsync({
 		content: {
 			title: `Upcoming Event: ${event.name}`,
 			body: "Your event is coming up!",
@@ -87,6 +87,8 @@ const scheduleEventNotification = async (event: Event) => {
 			type: Notifications.SchedulableTriggerInputTypes.DATE
 		}
 	});
+
+	return notificationID;
 };
 
 const AttractionEventContext = createContext<
@@ -162,11 +164,17 @@ export const AttractionEventProvider: React.FC<{
 		return events;
 	};
 
-	const addEvent = useCallback((event: Event) => {
+	const addEvent = useCallback(async (event: Event) => {
+		const notificationID = (await scheduleEventNotification(event)) || "";
+
 		setSavedEvents((prev) => {
-			const updatedEvents = [
+			const updatedEvents: Event[] = [
 				...prev,
-				{ ...event, milestones: generateMilestones(event.dateTime) }
+				{
+					...event,
+					milestones: generateMilestones(event.dateTime),
+					notificationID
+				}
 			].sort(
 				(a, b) =>
 					DateTime.fromISO(a.milestones[0]).toMillis() -
@@ -174,20 +182,28 @@ export const AttractionEventProvider: React.FC<{
 			);
 
 			saveEventsToStorage(updatedEvents);
-			scheduleEventNotification(event);
 
 			return updatedEvents;
 		});
 	}, []);
 
-	const removeEvent = useCallback((id: string) => {
+	const removeEvent = useCallback(async (id: string) => {
+		let eventToRemove: Event | undefined;
+
 		setSavedEvents((prev) => {
+			eventToRemove = prev.find((event) => event.id === id);
 			const updatedEvents = prev.filter((event) => event.id !== id);
 
 			saveEventsToStorage(updatedEvents);
 
 			return updatedEvents;
 		});
+
+		if (eventToRemove?.notificationID) {
+			await Notifications.cancelScheduledNotificationAsync(
+				eventToRemove.notificationID
+			);
+		}
 	}, []);
 
 	return (

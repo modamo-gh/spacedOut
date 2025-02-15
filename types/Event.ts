@@ -7,6 +7,7 @@ export type Event = {
 	location: string;
 	longitude: number;
 	milestones: string[];
+	notificationID: string;
 	name: string;
 	type: string;
 };

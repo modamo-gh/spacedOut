@@ -66,6 +66,7 @@ export const fetchEvents = async (id: string) => {
 						),
 						milestones: [],
 						name: event.name,
+						notificationID: "",
 						type: event.type
 					});
 				}
@@ -104,6 +105,7 @@ export const fetchEventDetails = async (id: string) => {
 			longitude: Number(data._embedded?.venues?.[0].location.longitude),
 			milestones: [],
 			name: data.name,
+			notificationID: "",
 			type: data.type
 		};
 	} catch (error) {
@@ -139,6 +141,7 @@ export const fetchNearbyEvents = async (
 			longitude: Number(event._embedded?.venues?.[0].location.longitude),
 			milestones: [],
 			name: event.name,
+			notificationID: "",
 			type: event.type
 		});
 	}
@@ -176,6 +179,7 @@ export const fetchWeeksEvents = async () => {
 			longitude: Number(event._embedded?.venues?.[0].location.longitude),
 			milestones: [],
 			name: event.name,
+			notificationID: "",
 			type: event.type
 		});
 	}

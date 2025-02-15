@@ -174,6 +174,7 @@ const EventCard: React.FC<EventCardProps> = ({
 						  }
 						: [styles.icon, isFeatured && styles.featuredIcon]
 				}
+				suppressHighlighting
 			/>
 		</Pressable>
 	);
