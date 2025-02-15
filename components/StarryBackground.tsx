@@ -34,8 +34,9 @@ const StarryBackground = React.memo(() => {
 				width: "100%"
 			}}
 		>
-			{stars.map((star) => (
+			{stars.map((star, index) => (
 				<Text
+					key={index}
 					style={{
 						color: colors.stars,
 						fontSize: star.size,
