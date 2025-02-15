@@ -63,7 +63,7 @@ checkPermissions();
 
 const debugScheduledNotifications = async () => {
 	const scheduled = await Notifications.getAllScheduledNotificationsAsync();
-	console.log("Scheduled Notifications:", scheduled);
+	console.log("Scheduled Notifications:", scheduled);	
 };
 
 debugScheduledNotifications();
@@ -165,15 +165,18 @@ export const AttractionEventProvider: React.FC<{
 	};
 
 	const addEvent = useCallback(async (event: Event) => {
-		const notificationID = (await scheduleEventNotification(event)) || "";
+		const eventWithMilestones = {
+			...event,
+			milestones: generateMilestones(event.dateTime),
+		}
+		const notificationID = await scheduleEventNotification(eventWithMilestones);
 
 		setSavedEvents((prev) => {
 			const updatedEvents: Event[] = [
 				...prev,
 				{
 					...event,
-					milestones: generateMilestones(event.dateTime),
-					notificationID
+					notificationID: notificationID || ""
 				}
 			].sort(
 				(a, b) =>

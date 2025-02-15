@@ -123,7 +123,7 @@ const EventDetailScreen = () => {
 		}
 	};
 
-	return event ? (
+	return (
 		<View style={{ flex: 1 }}>
 			<BackButton />
 			<StarryBackground />
@@ -266,8 +266,6 @@ const EventDetailScreen = () => {
 				</View>
 			</Animated.ScrollView>
 		</View>
-	) : (
-		<View style={{ flex: 1, backgroundColor: "red" }}></View>
 	);
 };
 
