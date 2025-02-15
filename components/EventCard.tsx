@@ -1,14 +1,14 @@
+import colors from "@/constants/Colors";
+import fontSizes from "@/constants/fontSizes";
 import { useAttractionEventContext } from "@/context/AttractionEventContext";
 import { EventCardProps } from "@/types/EventCardProps";
 import AntDesign from "@expo/vector-icons/AntDesign";
+import * as Haptics from "expo-haptics";
 import { Image } from "expo-image";
-import { useRouter } from "expo-router";
+import { usePathname, useRouter } from "expo-router";
 import { DateTime } from "luxon";
 import React from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
-import { usePathname } from "expo-router";
-import colors from "@/constants/Colors";
-import fontSizes from "@/constants/fontSizes";
 
 const EventCard: React.FC<EventCardProps> = ({
 	event,
@@ -26,7 +26,10 @@ const EventCard: React.FC<EventCardProps> = ({
 	const isMyEvents = pathname === "/myEvents";
 	return (
 		<Pressable
-			onPress={() => router.push(`/event/${event.id}`)}
+			onPress={() => {
+				Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+				router.push(`/event/${event.id}`);
+			}}
 			style={
 				horizontalScroll
 					? {
@@ -155,9 +158,10 @@ const EventCard: React.FC<EventCardProps> = ({
 			</View>
 			<AntDesign
 				name={isSaved ? "heart" : "hearto"}
-				onPress={() =>
-					isSaved ? removeEvent(event.id) : addEvent(event)
-				}
+				onPress={() => {
+					Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+					isSaved ? removeEvent(event.id) : addEvent(event);
+				}}
 				style={
 					horizontalScroll
 						? {

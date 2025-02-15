@@ -19,6 +19,9 @@ const SearchBar: React.FC<SearchBarProps> = ({
 				autoCapitalize="none"
 				autoCorrect={false}
 				onChangeText={setText}
+				onPress={() =>
+					Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)
+				}
 				onSubmitEditing={() => {
 					getAttractions(text.trim());
 				}}

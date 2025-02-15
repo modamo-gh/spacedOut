@@ -30,6 +30,7 @@ import Animated, {
 	useSharedValue
 } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import * as Haptics from "expo-haptics";
 
 const { height: screenHeight, width: screenWidth } = Dimensions.get("window");
 const HEADER_HEIGHT = screenHeight * 0.4;
@@ -97,6 +98,8 @@ const EventDetailScreen = () => {
 	);
 
 	const openMaps = () => {
+		Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+
 		const { latitude, longitude } = event;
 		const url = Platform.select({
 			android: `geo:${latitude},${longitude}?q=${latitude},${longitude}`,
@@ -116,9 +119,10 @@ const EventDetailScreen = () => {
 			<StarryBackground />
 			<AntDesign
 				name={isSaved ? "heart" : "hearto"}
-				onPress={() =>
-					isSaved ? removeEvent(event.id) : addEvent(event)
-				}
+				onPress={() => {
+					Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+					isSaved ? removeEvent(event.id) : addEvent(event);
+				}}
 				style={{
 					color: colors.accent,
 					fontSize: 48,

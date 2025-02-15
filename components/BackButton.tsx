@@ -1,5 +1,6 @@
 import colors from "@/constants/Colors";
 import Feather from "@expo/vector-icons/Feather";
+import * as Haptics from "expo-haptics";
 import { useRouter } from "expo-router";
 import React from "react";
 import { Pressable, StyleSheet } from "react-native";
@@ -8,7 +9,13 @@ const BackButton = () => {
 	const router = useRouter();
 
 	return (
-		<Pressable onPress={() => router.back()} style={styles.button}>
+		<Pressable
+			onPress={() => {
+				Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+				router.back();
+			}}
+			style={styles.button}
+		>
 			<Feather name="chevron-left" style={styles.icon} />
 		</Pressable>
 	);
