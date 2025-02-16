@@ -1,3 +1,5 @@
+import { useColorScheme } from "@/components/useColorScheme";
+import { AttractionEventProvider } from "@/context/AttractionEventContext";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import {
 	DarkTheme,
@@ -5,14 +7,11 @@ import {
 	ThemeProvider
 } from "@react-navigation/native";
 import { useFonts } from "expo-font";
-import { Stack } from "expo-router";
+import * as Notifications from "expo-notifications";
+import { Stack, useRouter } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import "react-native-reanimated";
-
-import { useColorScheme } from "@/components/useColorScheme";
-import React from "react";
-import { AttractionEventProvider } from "@/context/AttractionEventContext";
 
 export {
 	// Catch any errors thrown by the Layout component.
@@ -28,6 +27,8 @@ export const unstable_settings = {
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
+	const router = useRouter();
+
 	const [loaded, error] = useFonts({
 		Geist: require("../assets/fonts/Geist-VariableFont_wght.ttf"),
 		Orbitron: require("../assets/fonts/Orbitron-VariableFont_wght.ttf")
@@ -37,6 +38,21 @@ export default function RootLayout() {
 	useEffect(() => {
 		if (error) throw error;
 	}, [error]);
+
+	useEffect(() => {
+		const subscription =
+			Notifications.addNotificationResponseReceivedListener(
+				(response) => {
+					const url = response.notification.request.content.data?.url;
+
+					if (url) {
+						router.push(url);
+					}
+				}
+			);
+
+		return () => subscription.remove();
+	}, [router]);
 
 	useEffect(() => {
 		if (loaded) {
@@ -59,7 +75,7 @@ function RootLayoutNav() {
 			<ThemeProvider
 				value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
 			>
-				<Stack screenOptions={{headerShown: false}}>
+				<Stack screenOptions={{ headerShown: false }}>
 					<Stack.Screen
 						name="(tabs)"
 						options={{ headerShown: false }}

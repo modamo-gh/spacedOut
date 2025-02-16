@@ -80,7 +80,7 @@ const scheduleEventNotification = async (event: Event) => {
 			content: {
 				title: `Upcoming Event: ${event.name}`,
 				body: "Your event is coming up!",
-				data: { eventID: event.id },
+				data: {url: `/event/${event.id}`},
 				interruptionLevel: "active"
 			},
 			trigger: {
