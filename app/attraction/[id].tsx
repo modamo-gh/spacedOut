@@ -79,16 +79,23 @@ const Attraction = () => {
 		<View style={styles.container}>
 			<BackButton />
 			<StarryBackground />
-			<Animated.View style={[styles.imageContainer, animatedImageStyle]}>
+			<Animated.View
+				style={[
+					styles.heroHeight,
+					styles.fullWidth,
+					styles.imageContainer,
+					animatedImageStyle
+				]}
+			>
 				<Image
 					cachePolicy="memory-disk"
 					source={{
 						uri: attraction.imageURL
 					}}
-					style={styles.image}
+					style={[styles.fullWidth, styles.image]}
 				/>
 			</Animated.View>
-			<View style={styles.buffer} />
+			<View style={styles.heroHeight} />
 			{events.length ? (
 				<Animated.ScrollView
 					onScroll={scrollHandler}
@@ -129,7 +136,6 @@ const Attraction = () => {
 };
 
 const styles = StyleSheet.create({
-	buffer: { height: HEADER_HEIGHT },
 	centered: { alignItems: "center" },
 	container: { flex: 1 },
 	eventContainer: {
@@ -139,12 +145,12 @@ const styles = StyleSheet.create({
 		padding: 20,
 		width: screenWidth
 	},
-	image: { width: "100%", height: "100%" },
+	fullWidth: { width: "100%" },
+	heroHeight: { height: HEADER_HEIGHT },
+	image: { height: "100%" },
 	imageContainer: {
-		height: HEADER_HEIGHT,
 		position: "absolute",
-		resizeMode: "cover",
-		width: "100%"
+		resizeMode: "cover"
 	},
 	text: {
 		color: colors.textPrimary,
