@@ -210,7 +210,7 @@ const EventDetailScreen = () => {
 						>
 							<Text style={styles.text}>
 								{DateTime.fromISO(
-									event.milestones[0]
+									event.milestones?.[0]?.date
 								).toLocaleString(
 									DateTime.DATETIME_MED_WITH_WEEKDAY
 								)}
@@ -255,7 +255,7 @@ const EventDetailScreen = () => {
 										}}
 									>
 										{DateTime.fromISO(
-											milestone
+											milestone.date
 										).toLocaleString(
 											DateTime.DATETIME_MED_WITH_WEEKDAY
 										)}
