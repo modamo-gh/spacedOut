@@ -1,24 +1,22 @@
 import AttractionCard from "@/components/AttractionCard";
+import EventCard from "@/components/EventCard";
 import SearchBar from "@/components/SearchBar";
 import StarryBackground from "@/components/StarryBackground";
+import colors from "@/constants/Colors";
+import fontSizes from "@/constants/fontSizes";
 import { useAttractionEventContext } from "@/context/AttractionEventContext";
+import { fetchNearbyEvents, fetchWeeksEvents } from "@/services/ticketmaster";
+import { Event } from "@/types/Event";
 import { FlashList } from "@shopify/flash-list";
-import { useFonts } from "expo-font";
 import React, { useEffect, useState } from "react";
 import {
 	ActivityIndicator,
 	SafeAreaView,
-	ScrollView,
 	StyleSheet,
 	Text,
 	View
 } from "react-native";
 import { useUserLocation } from "../hooks/useUserLocation";
-import { fetchNearbyEvents, fetchWeeksEvents } from "@/services/ticketmaster";
-import { Event } from "@/types/Event";
-import EventCard from "@/components/EventCard";
-import colors from "@/constants/Colors";
-import fontSizes from "@/constants/fontSizes";
 
 const FindEventsScreen = () => {
 	const [text, setText] = useState("");
@@ -92,31 +90,9 @@ const FindEventsScreen = () => {
 						/>
 					</View>
 				) : (
-					<View
-						style={{
-							display: "flex",
-							flex: 1,
-							gap: 16,
-							marginHorizontal: 20
-						}}
-					>
-						<Text
-							style={{
-								fontFamily: "Geist",
-								fontSize: fontSizes.large,
-								fontWeight: "semibold",
-								color: colors.textPrimary
-							}}
-						>
-							NEAR YOU
-						</Text>
-						<View
-							style={{
-								alignItems: "center",
-								flex: 1,
-								justifyContent: "center"
-							}}
-						>
+					<View style={styles.suggestionsContainer}>
+						<Text style={styles.nearYouText}>NEAR YOU</Text>
+						<View style={styles.nearYouContainer}>
 							{isLoadingNearbyEvents ? (
 								<ActivityIndicator
 									size="large"
@@ -137,32 +113,18 @@ const FindEventsScreen = () => {
 									)}
 								/>
 							) : (
-								<Text
-									style={{
-										color: colors.textPrimary,
-										fontSize: fontSizes.default
-									}}
-								>
+								<Text style={styles.noEventsText}>
 									No Nearby Events
 								</Text>
 							)}
 						</View>
 						<Text
-							style={{
-								fontFamily: "Geist",
-								fontSize: fontSizes.large,
-								fontWeight: "semibold",
-								color: colors.textPrimary
-							}}
+							style={styles.nextSevenText}
 						>
 							NEXT SEVEN DAYS
 						</Text>
 						<View
-							style={{
-								alignItems: "center",
-								flex: 1,
-								justifyContent: "center"
-							}}
+							style={styles.nextSevenContainer}
 						>
 							{isLoadingEventsThisWeek ? (
 								<ActivityIndicator
@@ -185,10 +147,7 @@ const FindEventsScreen = () => {
 								/>
 							) : (
 								<Text
-									style={{
-										color: colors.textPrimary,
-										fontSize: fontSizes.default
-									}}
+									style={styles.noEvents7}
 								>
 									No Events in the next Seven Days
 								</Text>
@@ -223,6 +182,42 @@ const styles = StyleSheet.create({
 	listContainer: {
 		flex: 1,
 		marginHorizontal: 20
+	},
+	suggestionsContainer: {
+		display: "flex",
+		flex: 1,
+		gap: 16,
+		marginHorizontal: 20
+	},
+	nearYouContainer: {
+		alignItems: "center",
+		flex: 1,
+		justifyContent: "center"
+	},
+	nearYouText: {
+		fontFamily: "Geist",
+		fontSize: fontSizes.large,
+		fontWeight: "semibold",
+		color: colors.textPrimary
+	},
+	nextSevenContainer: {
+		alignItems: "center",
+		flex: 1,
+		justifyContent: "center"
+	},
+	nextSevenText: {
+		fontFamily: "Geist",
+		fontSize: fontSizes.large,
+		fontWeight: "semibold",
+		color: colors.textPrimary
+	},
+	noEventsText: {
+		color: colors.textPrimary,
+		fontSize: fontSizes.default
+	},
+	noEvents7: {
+		color: colors.textPrimary,
+		fontSize: fontSizes.default
 	}
 });
 
