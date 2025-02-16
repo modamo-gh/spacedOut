@@ -66,7 +66,7 @@ export const fetchEvents = async (id: string) => {
 						),
 						milestones: [],
 						name: event.name,
-						notificationID: "",
+						notificationIDs: [],
 						type: event.type
 					});
 				}
@@ -141,7 +141,7 @@ export const fetchNearbyEvents = async (
 			longitude: Number(event._embedded?.venues?.[0].location.longitude),
 			milestones: [],
 			name: event.name,
-			notificationID: "",
+			notificationIDs: [],
 			type: event.type
 		});
 	}
@@ -185,7 +185,7 @@ export const fetchWeeksEvents = async () => {
 				),
 				milestones: [],
 				name: event.name,
-				notificationID: "",
+				notificationIDs: [],
 				type: event.type
 			});
 		}

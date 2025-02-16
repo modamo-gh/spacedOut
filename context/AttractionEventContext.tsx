@@ -63,32 +63,36 @@ checkPermissions();
 
 const debugScheduledNotifications = async () => {
 	const scheduled = await Notifications.getAllScheduledNotificationsAsync();
-	console.log("Scheduled Notifications:", scheduled);	
+	console.log("Scheduled Notifications:", scheduled);
 };
 
 debugScheduledNotifications();
 
 const scheduleEventNotification = async (event: Event) => {
-	const nextMilestone = event.milestones[0];
-
-	if (!nextMilestone) {
-		return;
+	if (!event.milestones.length) {
+		return [];
 	}
 
-	const notificationID = await Notifications.scheduleNotificationAsync({
-		content: {
-			title: `Upcoming Event: ${event.name}`,
-			body: "Your event is coming up!",
-			data: { eventID: event.id },
-			interruptionLevel: "active"
-		},
-		trigger: {
-			date: DateTime.fromISO(nextMilestone).toJSDate(),
-			type: Notifications.SchedulableTriggerInputTypes.DATE
-		}
-	});
+	const notificationIDs = [];
 
-	return notificationID;
+	for (const milestone of event.milestones) {
+		const notificationID = await Notifications.scheduleNotificationAsync({
+			content: {
+				title: `Upcoming Event: ${event.name}`,
+				body: "Your event is coming up!",
+				data: { eventID: event.id },
+				interruptionLevel: "active"
+			},
+			trigger: {
+				date: DateTime.fromISO(milestone).toJSDate(),
+				type: Notifications.SchedulableTriggerInputTypes.DATE
+			}
+		});
+
+		notificationIDs.push(notificationID);
+	}
+
+	return notificationIDs;
 };
 
 const AttractionEventContext = createContext<
@@ -167,16 +171,18 @@ export const AttractionEventProvider: React.FC<{
 	const addEvent = useCallback(async (event: Event) => {
 		const eventWithMilestones = {
 			...event,
-			milestones: generateMilestones(event.dateTime),
-		}
-		const notificationID = await scheduleEventNotification(eventWithMilestones);
+			milestones: generateMilestones(event.dateTime)
+		};
+		const notificationIDs = await scheduleEventNotification(
+			eventWithMilestones
+		);
 
 		setSavedEvents((prev) => {
 			const updatedEvents: Event[] = [
 				...prev,
 				{
 					...event,
-					notificationID: notificationID || ""
+					notificationIDs: notificationIDs || []
 				}
 			].sort(
 				(a, b) =>
@@ -202,10 +208,12 @@ export const AttractionEventProvider: React.FC<{
 			return updatedEvents;
 		});
 
-		if (eventToRemove?.notificationID) {
-			await Notifications.cancelScheduledNotificationAsync(
-				eventToRemove.notificationID
-			);
+		if (eventToRemove?.notificationIDs.length) {
+			for (const notificationID of eventToRemove.notificationIDs) {
+				await Notifications.cancelScheduledNotificationAsync(
+					notificationID
+				);
+			}
 		}
 	}, []);
 
