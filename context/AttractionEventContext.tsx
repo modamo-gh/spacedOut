@@ -1,7 +1,9 @@
 import { fetchAttractions, fetchEvents } from "@/services/ticketmaster";
 import { Attraction } from "@/types/Attraction";
-import { Event } from "@/types/Event";
 import { AttractionEventContextType } from "@/types/AttractionEventContext";
+import { Event } from "@/types/Event";
+import { Milestone } from "@/types/Milestone";
+import { TimeUnit } from "@/types/TimeUnit";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Notifications from "expo-notifications";
 import { DateTime } from "luxon";
@@ -80,11 +82,11 @@ const scheduleEventNotification = async (event: Event) => {
 			content: {
 				title: `Upcoming Event: ${event.name}`,
 				body: "Your event is coming up!",
-				data: {url: `/event/${event.id}`},
+				data: { eventID: event.id, url: `/event/${event.id}` },
 				interruptionLevel: "active"
 			},
 			trigger: {
-				date: DateTime.fromISO(milestone).toJSDate(),
+				date: DateTime.fromISO(milestone.date).toJSDate(),
 				type: Notifications.SchedulableTriggerInputTypes.DATE
 			}
 		});
@@ -99,10 +101,12 @@ const AttractionEventContext = createContext<
 	AttractionEventContextType | undefined
 >(undefined);
 
-export const generateMilestones = (eventDate: string): string[] => {
+export const generateMilestones = (eventDate: string): Milestone[] => {
 	const today = DateTime.now();
 	const concertDate = DateTime.fromISO(eventDate);
-	const milestoneDates = [eventDate];
+	const milestoneDates: Milestone[] = [
+		{ date: eventDate, delta: { unit: "days", number: 0 } }
+	];
 
 	if (!concertDate.isValid) {
 		console.error("Invalid ISO date format:", eventDate);
@@ -110,7 +114,7 @@ export const generateMilestones = (eventDate: string): string[] => {
 		return [];
 	}
 
-	const generateDates = (timeUnit: string, maxOfUnit: number) => {
+	const generateDates = (timeUnit: TimeUnit, maxOfUnit: number) => {
 		const timeObject: { [key: string]: number } = {};
 
 		timeObject[timeUnit] = 1;
@@ -119,7 +123,10 @@ export const generateMilestones = (eventDate: string): string[] => {
 			concertDate.minus(timeObject) >= today &&
 			timeObject[timeUnit] < maxOfUnit
 		) {
-			milestoneDates.push(concertDate.minus(timeObject).toISO());
+			milestoneDates.push({
+				date: concertDate.minus(timeObject).toISO(),
+				delta: { number: timeObject[timeUnit], unit: timeUnit }
+			});
 
 			timeObject[timeUnit] *= 2;
 		}
@@ -184,11 +191,19 @@ export const AttractionEventProvider: React.FC<{
 					...event,
 					notificationIDs: notificationIDs || []
 				}
-			].sort(
-				(a, b) =>
-					DateTime.fromISO(a.milestones[0]).toMillis() -
-					DateTime.fromISO(b.milestones[0]).toMillis()
-			);
+			].sort((a, b) => {
+				const aMilestone = a.milestones[0] ? a.milestones[0].date : "";
+				const bMilestone = b.milestones[0] ? b.milestones[0].date : "";
+
+				const aMillis = aMilestone
+					? DateTime.fromISO(aMilestone).toMillis()
+					: Infinity;
+				const bMillis = bMilestone
+					? DateTime.fromISO(bMilestone).toMillis()
+					: Infinity;
+
+				return aMillis - bMillis;
+			});
 
 			saveEventsToStorage(updatedEvents);
 
@@ -217,6 +232,30 @@ export const AttractionEventProvider: React.FC<{
 		}
 	}, []);
 
+	const handleMilestoneTriggered = (id: string) => {
+		setSavedEvents((prev) => {
+			const event = prev.find((e) => e.id === id);
+
+			if (!event) {
+				return prev;
+			}
+
+			const remainingMilestones = event.milestones.slice(1);
+
+			if (remainingMilestones.length === 0) {
+				return prev.filter((e) => e.id !== id);
+			} else {
+				const updatedEvents = prev.map((e) =>
+					e.id === id ? { ...e, milestones: remainingMilestones } : e
+				);
+
+				saveEventsToStorage(updatedEvents);
+
+				return updatedEvents;
+			}
+		});
+	};
+
 	return (
 		<AttractionEventContext.Provider
 			value={{
@@ -224,6 +263,7 @@ export const AttractionEventProvider: React.FC<{
 				attractions,
 				getAttractions,
 				getEvents,
+				handleMilestoneTriggered,
 				removeEvent,
 				savedEvents,
 				setAttractions

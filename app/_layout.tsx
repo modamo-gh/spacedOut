@@ -1,6 +1,8 @@
 import { useColorScheme } from "@/components/useColorScheme";
-import { AttractionEventProvider } from "@/context/AttractionEventContext";
-import FontAwesome from "@expo/vector-icons/FontAwesome";
+import {
+	AttractionEventProvider,
+	useAttractionEventContext
+} from "@/context/AttractionEventContext";
 import {
 	DarkTheme,
 	DefaultTheme,
@@ -27,8 +29,6 @@ export const unstable_settings = {
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
-	const router = useRouter();
-
 	const [loaded, error] = useFonts({
 		Geist: require("../assets/fonts/Geist-VariableFont_wght.ttf"),
 		Orbitron: require("../assets/fonts/Orbitron-VariableFont_wght.ttf")
@@ -38,21 +38,6 @@ export default function RootLayout() {
 	useEffect(() => {
 		if (error) throw error;
 	}, [error]);
-
-	useEffect(() => {
-		const subscription =
-			Notifications.addNotificationResponseReceivedListener(
-				(response) => {
-					const url = response.notification.request.content.data?.url;
-
-					if (url) {
-						router.push(url);
-					}
-				}
-			);
-
-		return () => subscription.remove();
-	}, [router]);
 
 	useEffect(() => {
 		if (loaded) {
@@ -68,7 +53,26 @@ export default function RootLayout() {
 }
 
 function RootLayoutNav() {
+	const { handleMilestoneTriggered } = useAttractionEventContext();
 	const colorScheme = useColorScheme();
+	const router = useRouter();
+
+	useEffect(() => {
+		const subscription =
+			Notifications.addNotificationResponseReceivedListener(
+				(response) => {
+					const { eventID, url } =
+						response.notification.request.content.data;
+
+					if (eventID) {
+						handleMilestoneTriggered(eventID);
+						router.push(url);
+					}
+				}
+			);
+
+		return () => subscription.remove();
+	}, [router]);
 
 	return (
 		<AttractionEventProvider>

@@ -1,3 +1,5 @@
+import { Milestone } from "./Milestone";
+
 export type Event = {
 	dateTime: string;
 	id: string;
@@ -6,7 +8,7 @@ export type Event = {
 	latitude: number;
 	location: string;
 	longitude: number;
-	milestones: string[];
+	milestones: Milestone[];
 	notificationIDs: string[];
 	name: string;
 	type: string;

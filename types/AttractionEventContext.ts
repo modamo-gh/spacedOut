@@ -7,7 +7,8 @@ export type AttractionEventContextType = {
 	attractions: Attraction[];
 	getAttractions: (searchTerm: string) => Promise<void>;
 	getEvents: (id: string) => Promise<Event[]>;
+	handleMilestoneTriggered: (id: string) => void;
 	savedEvents: Event[];
 	removeEvent: (id: string) => void;
-	setAttractions: Dispatch<SetStateAction<Attraction[]>>
+	setAttractions: Dispatch<SetStateAction<Attraction[]>>;
 };
