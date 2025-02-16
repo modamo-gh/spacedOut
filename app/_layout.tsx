@@ -6,13 +6,15 @@ import {
 import {
 	DarkTheme,
 	DefaultTheme,
+	NavigationContainerRef,
 	ThemeProvider
 } from "@react-navigation/native";
 import { useFonts } from "expo-font";
 import * as Notifications from "expo-notifications";
 import { Stack, useRouter } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
+import { InteractionManager } from "react-native";
 import "react-native-reanimated";
 
 export {
@@ -49,13 +51,17 @@ export default function RootLayout() {
 		return null;
 	}
 
-	return <RootLayoutNav />;
+	return (
+		<AttractionEventProvider>
+			<RootLayoutNav />
+		</AttractionEventProvider>
+	);
 }
 
 function RootLayoutNav() {
 	const { handleMilestoneTriggered } = useAttractionEventContext();
 	const colorScheme = useColorScheme();
-	const router = useRouter();
+	const navigationRef = useRef<NavigationContainerRef<any>>(null);
 
 	useEffect(() => {
 		const subscription =
@@ -66,26 +72,24 @@ function RootLayoutNav() {
 
 					if (eventID) {
 						handleMilestoneTriggered(eventID);
-						router.push(url);
+
+						if (navigationRef.current?.navigate) {
+							navigationRef.current.navigate(url);
+						}
 					}
 				}
 			);
 
 		return () => subscription.remove();
-	}, [router]);
+	}, []);
 
 	return (
-		<AttractionEventProvider>
-			<ThemeProvider
-				value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
-			>
-				<Stack screenOptions={{ headerShown: false }}>
-					<Stack.Screen
-						name="(tabs)"
-						options={{ headerShown: false }}
-					/>
-				</Stack>
-			</ThemeProvider>
-		</AttractionEventProvider>
+		<ThemeProvider
+			value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
+		>
+			<Stack screenOptions={{ headerShown: false }}>
+				<Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+			</Stack>
+		</ThemeProvider>
 	);
 }
