@@ -13,35 +13,25 @@ const AttractionCard: React.FC<AttractionCardProps> = ({ attraction }) => {
 	return (
 		<Pressable
 			onPress={() => {
+				Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
 				router.push(`/attraction/${attraction.id}`);
 			}}
-			style={styles.card}
+			style={[styles.container, styles.card]}
 		>
 			<Image
 				cachePolicy="memory-disk"
 				source={{ uri: attraction.imageURL }}
 				style={styles.image}
 			/>
-			<View style={styles.textContainer}>
+			<View style={[styles.container, styles.textContainer]}>
 				<Text style={styles.text}>{attraction.name}</Text>
-				<Pressable
-					onPress={() => {
-						Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-						router.push(`/attraction/${attraction.id}`);
-					}}
-					style={{
-						alignItems: "center",
-						height: 48,
-						justifyContent: "center",
-						width: 48
-					}}
-				>
+				<View style={[styles.container, styles.iconContainer]}>
 					<Feather
 						color={colors.interactiveIcon}
 						name="chevron-right"
 						style={styles.icon}
 					/>
-				</Pressable>
+				</View>
 			</View>
 		</Pressable>
 	);
@@ -49,14 +39,16 @@ const AttractionCard: React.FC<AttractionCardProps> = ({ attraction }) => {
 
 const styles = StyleSheet.create({
 	card: {
-		alignItems: "center",
-		borderRadius: 8,
-		display: "flex",
-		flexDirection: "row",
 		justifyContent: "space-between",
 		marginBottom: 32
 	},
+	container: { alignItems: "center", flexDirection: "row" },
 	icon: { color: colors.interactiveText, fontSize: 20, marginHorizontal: 16 },
+	iconContainer: {
+		height: 48,
+		justifyContent: "center",
+		width: 48
+	},
 	image: {
 		borderRadius: 50,
 		height: 72,
@@ -70,9 +62,7 @@ const styles = StyleSheet.create({
 		fontSize: 16
 	},
 	textContainer: {
-		alignItems: "center",
 		flex: 1,
-		flexDirection: "row",
 		paddingLeft: 20
 	}
 });
