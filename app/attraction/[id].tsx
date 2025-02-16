@@ -7,7 +7,7 @@ import { Event } from "@/types/Event";
 import { FlashList } from "@shopify/flash-list";
 import { Image } from "expo-image";
 import { useLocalSearchParams } from "expo-router";
-import React, { memo, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
 	ActivityIndicator,
 	Dimensions,
@@ -39,19 +39,17 @@ const Attraction = () => {
 	}
 
 	useEffect(() => {
-		if (!events.length) {
-			const fetchEvents = async () => {
-				setIsLoading(true);
+		const fetchEvents = async () => {
+			setIsLoading(true);
 
-				const fetchedEvents = await getEvents(attraction.id);
+			const fetchedEvents = await getEvents(attraction.id);
 
-				setEvents(fetchedEvents || []);
-				setIsLoading(false);
-			};
+			setEvents(fetchedEvents || []);
+			setIsLoading(false);
+		};
 
-			fetchEvents();
-		}
-	}, [attraction, getEvents]);
+		fetchEvents();
+	}, [attraction.id, getEvents]);
 
 	const scrollY = useSharedValue(0);
 
@@ -72,79 +70,88 @@ const Attraction = () => {
 		};
 	});
 
+	const eventContainerStyle = [
+		styles.eventContainer,
+		!events.length && styles.centered
+	];
+
 	return (
-		<View style={{ backgroundColor: colors.primary, flex: 1 }}>
+		<View style={styles.container}>
 			<BackButton />
 			<StarryBackground />
-			<Animated.View style={[styles.image, animatedImageStyle]}>
+			<Animated.View style={[styles.imageContainer, animatedImageStyle]}>
 				<Image
 					cachePolicy="memory-disk"
 					source={{
 						uri: attraction.imageURL
 					}}
-					style={{ width: "100%", height: "100%" }}
+					style={styles.image}
 				/>
 			</Animated.View>
-			<Animated.ScrollView
-				onScroll={scrollHandler}
-				scrollEventThrottle={16}
-				style={{ flex: 1 }}
-			>
-				<View style={{ height: HEADER_HEIGHT }} />
-				<View
-					style={{
-						alignItems: !events.length ? "center" : undefined,
-						flex: 1,
-						height: screenHeight - HEADER_HEIGHT,
-						gap: 8,
-						justifyContent: "center",
-						padding: 20,
-						width: screenWidth
-					}}
+			<View style={styles.buffer} />
+			{events.length ? (
+				<Animated.ScrollView
+					onScroll={scrollHandler}
+					scrollEventThrottle={16}
+					style={styles.container}
 				>
-					{isLoading ? (
-						<ActivityIndicator
-							size="large"
-							color={colors.textPrimary}
-						/>
-					) : events.length ? (
-						<FlashList
-							data={events}
-							estimatedItemSize={20}
-							keyExtractor={(item) => item.id}
-							renderItem={({ item }) => (
-								<EventCard
-									event={item}
-									isFeatured={false}
-									horizontalScroll={false}
-								/>
-							)}
-						/>
-					) : (
-						<Text
-							style={{
-								color: colors.textPrimary,
-								fontFamily: "Geist",
-								fontSize: 16,
-								fontWeight: "semibold",
-								textAlign: "center"
-							}}
-						>
-							Sorry, No Upcoming Events Found :/
-						</Text>
-					)}
+					<View style={[styles.container, eventContainerStyle]}>
+						{isLoading ? (
+							<ActivityIndicator
+								size="large"
+								color={colors.textPrimary}
+							/>
+						) : (
+							<FlashList
+								data={events}
+								estimatedItemSize={20}
+								keyExtractor={(item) => item.id}
+								renderItem={({ item }) => (
+									<EventCard
+										event={item}
+										isFeatured={false}
+										horizontalScroll={false}
+									/>
+								)}
+							/>
+						)}
+					</View>
+				</Animated.ScrollView>
+			) : (
+				<View style={[styles.container, eventContainerStyle]}>
+					<Text style={styles.text}>
+						Sorry, No Upcoming Events Found :/
+					</Text>
 				</View>
-			</Animated.ScrollView>
+			)}
 		</View>
 	);
 };
 
 const styles = StyleSheet.create({
-	image: {
+	buffer: { height: HEADER_HEIGHT },
+	centered: { alignItems: "center" },
+	container: { flex: 1 },
+	eventContainer: {
+		height: screenHeight - HEADER_HEIGHT,
+		gap: 8,
+		justifyContent: "center",
+		padding: 20,
+		width: screenWidth
+	},
+	image: { width: "100%", height: "100%" },
+	imageContainer: {
 		height: HEADER_HEIGHT,
 		position: "absolute",
 		resizeMode: "cover",
 		width: "100%"
+	},
+	text: {
+		color: colors.textPrimary,
+		fontFamily: "Geist",
+		fontSize: 16,
+		fontWeight: "semibold",
+		textAlign: "center"
 	}
 });
 

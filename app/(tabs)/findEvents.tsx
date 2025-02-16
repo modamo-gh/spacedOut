@@ -179,6 +179,7 @@ const styles = StyleSheet.create({
 		marginHorizontal: 20
 	},
 	noEventsText: {
+		color: colors.textPrimary,
 		fontFamily: "Geist",
 		fontSize: fontSizes.default
 	},
