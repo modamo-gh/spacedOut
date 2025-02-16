@@ -70,8 +70,8 @@ const FindEventsScreen = () => {
 	return (
 		<View style={styles.container}>
 			<StarryBackground />
-			<SafeAreaView style={styles.contentContainer}>
-				<Text style={styles.appName}>SPACEDOUT</Text>
+			<SafeAreaView style={[styles.container, styles.contentContainer]}>
+				<Text style={[styles.text, styles.appName]}>SPACEDOUT</Text>
 				<SearchBar
 					getAttractions={getAttractions}
 					setAttractions={setAttractions}
@@ -79,7 +79,7 @@ const FindEventsScreen = () => {
 					text={text}
 				/>
 				{text.length ? (
-					<View style={styles.listContainer}>
+					<View style={[styles.container, styles.listContainer]}>
 						<FlashList
 							data={attractions}
 							estimatedItemSize={20}
@@ -90,9 +90,15 @@ const FindEventsScreen = () => {
 						/>
 					</View>
 				) : (
-					<View style={styles.suggestionsContainer}>
-						<Text style={styles.nearYouText}>NEAR YOU</Text>
-						<View style={styles.nearYouContainer}>
+					<View
+						style={[styles.container, styles.suggestionsContainer]}
+					>
+						<Text style={[styles.text, styles.sectionHeader]}>
+							NEAR YOU
+						</Text>
+						<View
+							style={[styles.container, styles.sectionContainer]}
+						>
 							{isLoadingNearbyEvents ? (
 								<ActivityIndicator
 									size="large"
@@ -118,13 +124,11 @@ const FindEventsScreen = () => {
 								</Text>
 							)}
 						</View>
-						<Text
-							style={styles.nextSevenText}
-						>
+						<Text style={[styles.text, styles.sectionHeader]}>
 							NEXT SEVEN DAYS
 						</Text>
 						<View
-							style={styles.nextSevenContainer}
+							style={[styles.container, styles.sectionContainer]}
 						>
 							{isLoadingEventsThisWeek ? (
 								<ActivityIndicator
@@ -146,9 +150,7 @@ const FindEventsScreen = () => {
 									)}
 								/>
 							) : (
-								<Text
-									style={styles.noEvents7}
-								>
+								<Text style={styles.noEventsText}>
 									No Events in the next Seven Days
 								</Text>
 							)}
@@ -162,7 +164,6 @@ const FindEventsScreen = () => {
 
 const styles = StyleSheet.create({
 	appName: {
-		color: colors.textPrimary,
 		fontFamily: "Orbitron",
 		fontSize: fontSizes.title,
 		fontWeight: "700",
@@ -171,54 +172,23 @@ const styles = StyleSheet.create({
 		marginBottom: 12
 	},
 	container: { flex: 1 },
-	contentContainer: {
-		backgroundColor: "transparent",
-		display: "flex",
-		flex: 1,
-		flexDirection: "column",
-		fontFamily: "",
-		marginBottom: 16
-	},
-	listContainer: {
-		flex: 1,
-		marginHorizontal: 20
-	},
+	contentContainer: { marginBottom: 16 },
+	listContainer: { marginHorizontal: 20 },
 	suggestionsContainer: {
-		display: "flex",
-		flex: 1,
 		gap: 16,
 		marginHorizontal: 20
 	},
-	nearYouContainer: {
-		alignItems: "center",
-		flex: 1,
-		justifyContent: "center"
-	},
-	nearYouText: {
-		fontFamily: "Geist",
-		fontSize: fontSizes.large,
-		fontWeight: "semibold",
-		color: colors.textPrimary
-	},
-	nextSevenContainer: {
-		alignItems: "center",
-		flex: 1,
-		justifyContent: "center"
-	},
-	nextSevenText: {
-		fontFamily: "Geist",
-		fontSize: fontSizes.large,
-		fontWeight: "semibold",
-		color: colors.textPrimary
-	},
 	noEventsText: {
-		color: colors.textPrimary,
+		fontFamily: "Geist",
 		fontSize: fontSizes.default
 	},
-	noEvents7: {
-		color: colors.textPrimary,
-		fontSize: fontSizes.default
-	}
+	sectionContainer: { alignItems: "center", justifyContent: "center" },
+	sectionHeader: {
+		fontFamily: "Geist",
+		fontSize: fontSizes.large,
+		fontWeight: "semibold"
+	},
+	text: { color: colors.textPrimary }
 });
 
 export default FindEventsScreen;
