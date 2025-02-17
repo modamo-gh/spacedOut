@@ -5,13 +5,16 @@ import StarryBackground from "@/components/StarryBackground";
 import colors from "@/constants/Colors";
 import fontSizes from "@/constants/fontSizes";
 import { useAttractionEventContext } from "@/context/AttractionEventContext";
+import { getRecommendedEvent } from "@/services/lastfm";
 import { fetchNearbyEvents, fetchWeeksEvents } from "@/services/ticketmaster";
 import { Event } from "@/types/Event";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { FlashList } from "@shopify/flash-list";
 import React, { useEffect, useState } from "react";
 import {
 	ActivityIndicator,
 	SafeAreaView,
+	ScrollView,
 	StyleSheet,
 	Text,
 	View
@@ -29,11 +32,49 @@ const FindEventsScreen = () => {
 	const [isLoadingNearbyEvents, setIsLoadingNearbyEvents] = useState(false);
 	const [isLoadingEventsThisWeek, setIsLoadingEventsThisWeek] =
 		useState(false);
+	const [recommendedEvent, setRecommendedEvent] = useState<Event | null>(
+		null
+	);
+	const [isLoadingRecommendation, setIsLoadingRecommendation] =
+		useState(false);
 
-	const { attractions, getAttractions, setAttractions } =
-		useAttractionEventContext();
+	const {
+		attractions,
+		getAttractions,
+		savedEvents,
+		savedEventsHash,
+		setAttractions
+	} = useAttractionEventContext();
 
 	const location = useUserLocation();
+
+	const RECOMMENDED_EVENT_KEY = "recommendedEvent";
+
+	useEffect(() => {
+		const getWeeksEvents = async () => {
+			setIsLoadingEventsThisWeek(true);
+
+			try {
+				const wes = await fetchWeeksEvents();
+				setWeeksEvents(wes);
+			} finally {
+				setIsLoadingEventsThisWeek(false);
+			}
+		};
+
+		const loadSavedRecommendation = async () => {
+			const storedRecommendation = await AsyncStorage.getItem(
+				RECOMMENDED_EVENT_KEY
+			);
+
+			if (storedRecommendation) {
+				setRecommendedEvent(JSON.parse(storedRecommendation));
+			}
+		};
+
+		getWeeksEvents();
+		loadSavedRecommendation();
+	}, []);
 
 	useEffect(() => {
 		const getNearbyEvents = async () => {
@@ -52,20 +93,38 @@ const FindEventsScreen = () => {
 			}
 		};
 
-		const getWeeksEvents = async () => {
-			setIsLoadingEventsThisWeek(true);
+		getNearbyEvents();
+	}, [location]);
+
+	useEffect(() => {
+		if ( !savedEventsHash || !savedEvents || !savedEvents.length) {
+			return;
+		}
+
+		const getFeaturedRecommendation = async () => {
+			setIsLoadingRecommendation(true);
 
 			try {
-				const wes = await fetchWeeksEvents();
-				setWeeksEvents(wes);
+				const recommendation = await getRecommendedEvent(
+					savedEvents,
+					location
+				);
+
+				if (recommendation) {
+					setRecommendedEvent(recommendation);
+
+					await AsyncStorage.setItem(
+						RECOMMENDED_EVENT_KEY,
+						JSON.stringify(recommendation)
+					);
+				}
 			} finally {
-				setIsLoadingEventsThisWeek(false);
+				setIsLoadingRecommendation(false);
 			}
 		};
 
-		getNearbyEvents();
-		getWeeksEvents();
-	}, [location]);
+		getFeaturedRecommendation();
+	}, [savedEventsHash]);
 
 	return (
 		<View style={styles.container}>
@@ -90,14 +149,44 @@ const FindEventsScreen = () => {
 						/>
 					</View>
 				) : (
-					<View
-						style={[styles.container, styles.suggestionsContainer]}
+					<ScrollView
+						style={[{ flex: 1 }, styles.suggestionsContainer]}
 					>
+						<Text style={[styles.text, styles.sectionHeader]}>
+							BASED ON YOUR EVENTS
+						</Text>
+						<View
+							style={[
+								{
+									height: 200,
+									alignItems: "center",
+									justifyContent: "center"
+								}
+							]}
+						>
+							{isLoadingRecommendation ? (
+								<ActivityIndicator
+									size="large"
+									color={colors.textPrimary}
+								/>
+							) : recommendedEvent ? (
+								<EventCard
+									event={recommendedEvent}
+									isFeatured={true}
+									horizontalScroll={false}
+								/>
+							) : (
+								<Text style={styles.noEventsText}>
+									No Recommended Event
+								</Text>
+							)}
+						</View>
+
 						<Text style={[styles.text, styles.sectionHeader]}>
 							NEAR YOU
 						</Text>
 						<View
-							style={[styles.container, styles.sectionContainer]}
+							style={[{ height: 200 }, styles.sectionContainer]}
 						>
 							{isLoadingNearbyEvents ? (
 								<ActivityIndicator
@@ -128,7 +217,7 @@ const FindEventsScreen = () => {
 							NEXT SEVEN DAYS
 						</Text>
 						<View
-							style={[styles.container, styles.sectionContainer]}
+							style={[{ height: 200 }, styles.sectionContainer]}
 						>
 							{isLoadingEventsThisWeek ? (
 								<ActivityIndicator
@@ -155,7 +244,7 @@ const FindEventsScreen = () => {
 								</Text>
 							)}
 						</View>
-					</View>
+					</ScrollView>
 				)}
 			</SafeAreaView>
 		</View>

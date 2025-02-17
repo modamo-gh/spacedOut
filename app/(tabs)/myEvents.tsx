@@ -2,6 +2,7 @@ import EventCard from "@/components/EventCard";
 import StarryBackground from "@/components/StarryBackground";
 import colors from "@/constants/Colors";
 import { useAttractionEventContext } from "@/context/AttractionEventContext";
+import { logSavedEvents } from "@/services/lastfm";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { FlashList } from "@shopify/flash-list";
 import React from "react";
@@ -9,6 +10,8 @@ import { SafeAreaView, Text, View } from "react-native";
 
 const MyEventsScreen = () => {
 	const { savedEvents } = useAttractionEventContext();
+
+	logSavedEvents(savedEvents)
 
 	return (
 		<View style={{ flex: 1 }}>

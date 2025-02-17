@@ -123,12 +123,12 @@ const EventCard: React.FC<EventCardProps> = ({
 						{`Next Milestone: ${
 							isFeatured
 								? DateTime.fromISO(
-										event.milestones[0]
+										event.milestones?.[0]?.date
 								  ).toLocaleString(
 										DateTime.DATETIME_MED_WITH_WEEKDAY
 								  )
 								: DateTime.fromISO(
-										event.milestones[0]
+										event.milestones?.[0]?.date
 								  ).toLocaleString(
 										DateTime.DATE_MED_WITH_WEEKDAY
 								  )

@@ -5,6 +5,7 @@ import { Event } from "@/types/Event";
 import { Milestone } from "@/types/Milestone";
 import { TimeUnit } from "@/types/TimeUnit";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import crypto from "crypto";
 import * as Notifications from "expo-notifications";
 import { DateTime } from "luxon";
 import React, {
@@ -145,6 +146,7 @@ export const AttractionEventProvider: React.FC<{
 }> = ({ children }) => {
 	const [attractions, setAttractions] = useState<Attraction[]>([]);
 	const [savedEvents, setSavedEvents] = useState<Event[]>([]);
+	const [savedEventsHash, setSavedEventsHash] = useState<string | null>(null);
 
 	useEffect(() => {
 		const fetchStoredEvents = async () => {
@@ -153,9 +155,39 @@ export const AttractionEventProvider: React.FC<{
 			setSavedEvents(storedEvents);
 		};
 
+		const loadHash = async () => {
+			const storedHash = await AsyncStorage.getItem("savedEventsHash");
+
+			if (storedHash) {
+				setSavedEventsHash(storedHash);
+			}
+		};
+
 		fetchStoredEvents();
+		loadHash();
 		registerForPushNotifications();
 	}, []);
+
+	useEffect(() => {
+		if (!savedEvents || !savedEvents.length) {
+			return;
+		}
+
+		const updateHash = async () => {
+			const newHash = crypto
+				.createHash("md5")
+				.update(JSON.stringify(savedEvents))
+				.digest("hex");
+
+			if (newHash !== savedEventsHash) {
+				await AsyncStorage.setItem("savedEventsHash", newHash);
+
+				setSavedEventsHash(newHash);
+			}
+		};
+
+		updateHash();
+	}, [savedEvents]);
 
 	const getAttractions = async (searchTerm: string) => {
 		if (searchTerm.length) {
@@ -266,6 +298,7 @@ export const AttractionEventProvider: React.FC<{
 				handleMilestoneTriggered,
 				removeEvent,
 				savedEvents,
+				savedEventsHash,
 				setAttractions
 			}}
 		>

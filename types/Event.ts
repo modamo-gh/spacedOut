@@ -1,6 +1,7 @@
 import { Milestone } from "./Milestone";
 
 export type Event = {
+	attractions: string[];
 	dateTime: string;
 	id: string;
 	imageURL: string;

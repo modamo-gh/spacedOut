@@ -8,7 +8,8 @@ export type AttractionEventContextType = {
 	getAttractions: (searchTerm: string) => Promise<void>;
 	getEvents: (id: string) => Promise<Event[]>;
 	handleMilestoneTriggered: (id: string) => void;
-	savedEvents: Event[];
 	removeEvent: (id: string) => void;
+	savedEvents: Event[];
+	savedEventsHash: string | null;
 	setAttractions: Dispatch<SetStateAction<Attraction[]>>;
 };
