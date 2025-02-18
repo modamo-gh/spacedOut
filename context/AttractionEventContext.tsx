@@ -5,7 +5,7 @@ import { Event } from "@/types/Event";
 import { Milestone } from "@/types/Milestone";
 import { TimeUnit } from "@/types/TimeUnit";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import crypto from "crypto";
+import * as Crypto from "expo-crypto";
 import * as Notifications from "expo-notifications";
 import { DateTime } from "luxon";
 import React, {
@@ -174,10 +174,14 @@ export const AttractionEventProvider: React.FC<{
 		}
 
 		const updateHash = async () => {
-			const newHash = crypto
-				.createHash("md5")
-				.update(JSON.stringify(savedEvents))
-				.digest("hex");
+			const generateHash = async (data: string) => {
+				return await Crypto.digestStringAsync(
+					Crypto.CryptoDigestAlgorithm.MD5,
+					data
+				);
+			};
+
+			const newHash = await generateHash(JSON.stringify(savedEvents));
 
 			if (newHash !== savedEventsHash) {
 				await AsyncStorage.setItem("savedEventsHash", newHash);
