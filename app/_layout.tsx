@@ -11,10 +11,8 @@ import {
 } from "@react-navigation/native";
 import { useFonts } from "expo-font";
 import * as Notifications from "expo-notifications";
-import { Stack, useRouter } from "expo-router";
-import * as SplashScreen from "expo-splash-screen";
+import { Stack } from "expo-router";
 import React, { useEffect, useRef } from "react";
-import { InteractionManager } from "react-native";
 import "react-native-reanimated";
 
 export {
@@ -24,14 +22,12 @@ export {
 
 export const unstable_settings = {
 	// Ensure that reloading on `/modal` keeps a back button present.
-	initialRouteName: "(tabs)"
+	initialRouteName: "Start"
 };
-
-// Prevent the splash screen from auto-hiding before asset loading is complete.
-SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
 	const [loaded, error] = useFonts({
+		Averta: require("../assets/fonts/AvertaDemoPE-ExtraboldItalic.otf"),
 		Geist: require("../assets/fonts/Geist-VariableFont_wght.ttf"),
 		Orbitron: require("../assets/fonts/Orbitron-VariableFont_wght.ttf")
 	});
@@ -40,12 +36,6 @@ export default function RootLayout() {
 	useEffect(() => {
 		if (error) throw error;
 	}, [error]);
-
-	useEffect(() => {
-		if (loaded) {
-			SplashScreen.hideAsync();
-		}
-	}, [loaded]);
 
 	if (!loaded) {
 		return null;
