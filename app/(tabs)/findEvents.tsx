@@ -96,35 +96,35 @@ const FindEventsScreen = () => {
 		getNearbyEvents();
 	}, [location]);
 
-	useEffect(() => {
-		if ( !savedEventsHash || !savedEvents || !savedEvents.length) {
-			return;
-		}
+	// useEffect(() => {
+	// 	if (!savedEventsHash || !savedEvents || !savedEvents.length) {
+	// 		return;
+	// 	}
 
-		const getFeaturedRecommendation = async () => {
-			setIsLoadingRecommendation(true);
+	// 	const getFeaturedRecommendation = async () => {
+	// 		setIsLoadingRecommendation(true);
 
-			try {
-				const recommendation = await getRecommendedEvent(
-					savedEvents,
-					location
-				);
+	// 		try {
+	// 			const recommendation = await getRecommendedEvent(
+	// 				savedEvents,
+	// 				location
+	// 			);
 
-				if (recommendation) {
-					setRecommendedEvent(recommendation);
+	// 			if (recommendation) {
+	// 				setRecommendedEvent(recommendation);
 
-					await AsyncStorage.setItem(
-						RECOMMENDED_EVENT_KEY,
-						JSON.stringify(recommendation)
-					);
-				}
-			} finally {
-				setIsLoadingRecommendation(false);
-			}
-		};
+	// 				await AsyncStorage.setItem(
+	// 					RECOMMENDED_EVENT_KEY,
+	// 					JSON.stringify(recommendation)
+	// 				);
+	// 			}
+	// 		} finally {
+	// 			setIsLoadingRecommendation(false);
+	// 		}
+	// 	};
 
-		getFeaturedRecommendation();
-	}, [savedEventsHash]);
+	// 	getFeaturedRecommendation();
+	// }, [savedEventsHash]);
 
 	return (
 		<View style={styles.container}>
@@ -160,11 +160,12 @@ const FindEventsScreen = () => {
 								{
 									height: 200,
 									alignItems: "center",
-									justifyContent: "center"
+									justifyContent: "center",
+									marginBottom: 8
 								}
 							]}
 						>
-							{isLoadingRecommendation ? (
+							{/* {isLoadingRecommendation ? (
 								<ActivityIndicator
 									size="large"
 									color={colors.textPrimary}
@@ -179,14 +180,13 @@ const FindEventsScreen = () => {
 								<Text style={styles.noEventsText}>
 									No Recommended Event
 								</Text>
-							)}
+							)} */}
 						</View>
-
 						<Text style={[styles.text, styles.sectionHeader]}>
 							NEAR YOU
 						</Text>
 						<View
-							style={[{ height: 200 }, styles.sectionContainer]}
+							style={[{ height: 225 }, styles.sectionContainer]}
 						>
 							{isLoadingNearbyEvents ? (
 								<ActivityIndicator
@@ -217,7 +217,7 @@ const FindEventsScreen = () => {
 							NEXT SEVEN DAYS
 						</Text>
 						<View
-							style={[{ height: 200 }, styles.sectionContainer]}
+							style={[{ height: 225 }, styles.sectionContainer]}
 						>
 							{isLoadingEventsThisWeek ? (
 								<ActivityIndicator
@@ -264,7 +264,7 @@ const styles = StyleSheet.create({
 	contentContainer: { marginBottom: 16 },
 	listContainer: { marginHorizontal: 20 },
 	suggestionsContainer: {
-		gap: 16,
+		gap: 48,
 		marginHorizontal: 20
 	},
 	noEventsText: {
@@ -272,11 +272,11 @@ const styles = StyleSheet.create({
 		fontFamily: "Geist",
 		fontSize: fontSizes.default
 	},
-	sectionContainer: { alignItems: "center", justifyContent: "center" },
+	sectionContainer: { alignItems: "center", justifyContent: "center", marginBottom: 8 },
 	sectionHeader: {
 		fontFamily: "Geist",
 		fontSize: fontSizes.large,
-		fontWeight: "semibold"
+		fontWeight: "semibold", marginBottom: 8
 	},
 	text: { color: colors.textPrimary }
 });
