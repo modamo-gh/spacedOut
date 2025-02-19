@@ -79,10 +79,14 @@ const scheduleEventNotification = async (event: Event) => {
 	const notificationIDs = [];
 
 	for (const milestone of event.milestones) {
+		const { number, unit } = milestone.delta;
+
 		const notificationID = await Notifications.scheduleNotificationAsync({
 			content: {
 				title: `Upcoming Event: ${event.name}`,
-				body: "Your event is coming up!",
+				body: `Your event is coming up in ${number} ${
+					number === 1 ? unit.slice(0, -1) : unit
+				}!`,
 				data: { eventID: event.id, url: `/event/${event.id}` },
 				interruptionLevel: "active"
 			},

@@ -165,7 +165,7 @@ const FindEventsScreen = () => {
 								}
 							]}
 						>
-							{/* {isLoadingRecommendation ? (
+							{isLoadingRecommendation ? (
 								<ActivityIndicator
 									size="large"
 									color={colors.textPrimary}
@@ -180,7 +180,7 @@ const FindEventsScreen = () => {
 								<Text style={styles.noEventsText}>
 									No Recommended Event
 								</Text>
-							)} */}
+							)}
 						</View>
 						<Text style={[styles.text, styles.sectionHeader]}>
 							NEAR YOU
@@ -272,11 +272,16 @@ const styles = StyleSheet.create({
 		fontFamily: "Geist",
 		fontSize: fontSizes.default
 	},
-	sectionContainer: { alignItems: "center", justifyContent: "center", marginBottom: 8 },
+	sectionContainer: {
+		alignItems: "center",
+		justifyContent: "center",
+		marginBottom: 12
+	},
 	sectionHeader: {
 		fontFamily: "Geist",
 		fontSize: fontSizes.large,
-		fontWeight: "semibold", marginBottom: 8
+		fontWeight: "semibold",
+		marginBottom: 12
 	},
 	text: { color: colors.textPrimary }
 });

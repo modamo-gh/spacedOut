@@ -24,6 +24,8 @@ const EventCard: React.FC<EventCardProps> = ({
 
 	const pathname = usePathname();
 	const isMyEvents = pathname === "/myEvents";
+
+	console.log(event.milestones?.[0]);
 	return (
 		<Pressable
 			onPress={() => {
