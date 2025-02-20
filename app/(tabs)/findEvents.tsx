@@ -10,13 +10,7 @@ import { Event } from "@/types/Event";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { FlashList } from "@shopify/flash-list";
 import React, { useEffect, useState } from "react";
-import {
-	SafeAreaView,
-	ScrollView,
-	StyleSheet,
-	Text,
-	View
-} from "react-native";
+import { SafeAreaView, ScrollView, StyleSheet, Text, View } from "react-native";
 import { useUserLocation } from "../hooks/useUserLocation";
 
 const FindEventsScreen = () => {
@@ -148,7 +142,7 @@ const FindEventsScreen = () => {
 					</View>
 				) : (
 					<ScrollView
-						style={[{ flex: 1 }, styles.suggestionsContainer]}
+						style={[styles.container, styles.suggestionsContainer]}
 					>
 						<EventsSection
 							isLoadingSectionEvents={isLoadingRecommendation}

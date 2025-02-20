@@ -2,7 +2,7 @@ import { Attraction } from "@/types/Attraction";
 import { Event } from "@/types/Event";
 import { DateTime } from "luxon";
 
-const BASE_URL = "https://api.spacedout.modamo.xyz";
+const BASE_URL = "https://spacedout.modamo.xyz/api";
 
 export const fetchAttractions = async (artistName: string) => {
 	try {
