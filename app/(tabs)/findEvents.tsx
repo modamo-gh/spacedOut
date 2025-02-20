@@ -1,18 +1,16 @@
 import AttractionCard from "@/components/AttractionCard";
-import EventCard from "@/components/EventCard";
+import EventsSection from "@/components/EventsSection";
 import SearchBar from "@/components/SearchBar";
 import StarryBackground from "@/components/StarryBackground";
 import colors from "@/constants/Colors";
 import fontSizes from "@/constants/fontSizes";
 import { useAttractionEventContext } from "@/context/AttractionEventContext";
-import { getRecommendedEvent } from "@/services/lastfm";
 import { fetchNearbyEvents, fetchWeeksEvents } from "@/services/ticketmaster";
 import { Event } from "@/types/Event";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { FlashList } from "@shopify/flash-list";
 import React, { useEffect, useState } from "react";
 import {
-	ActivityIndicator,
 	SafeAreaView,
 	ScrollView,
 	StyleSheet,
@@ -32,9 +30,9 @@ const FindEventsScreen = () => {
 	const [isLoadingNearbyEvents, setIsLoadingNearbyEvents] = useState(false);
 	const [isLoadingEventsThisWeek, setIsLoadingEventsThisWeek] =
 		useState(false);
-	const [recommendedEvent, setRecommendedEvent] = useState<Event | null>(
-		null
-	);
+	const [recommendedEvent, setRecommendedEvent] = useState<
+		Event[] | undefined
+	>(undefined);
 	const [isLoadingRecommendation, setIsLoadingRecommendation] =
 		useState(false);
 
@@ -152,98 +150,21 @@ const FindEventsScreen = () => {
 					<ScrollView
 						style={[{ flex: 1 }, styles.suggestionsContainer]}
 					>
-						<Text style={[styles.text, styles.sectionHeader]}>
-							BASED ON YOUR EVENTS
-						</Text>
-						<View
-							style={[
-								{
-									height: 200,
-									alignItems: "center",
-									justifyContent: "center",
-									marginBottom: 8
-								}
-							]}
-						>
-							{isLoadingRecommendation ? (
-								<ActivityIndicator
-									size="large"
-									color={colors.textPrimary}
-								/>
-							) : recommendedEvent ? (
-								<EventCard
-									event={recommendedEvent}
-									isFeatured={true}
-									horizontalScroll={false}
-								/>
-							) : (
-								<Text style={styles.noEventsText}>
-									No Recommended Event
-								</Text>
-							)}
-						</View>
-						<Text style={[styles.text, styles.sectionHeader]}>
-							NEAR YOU
-						</Text>
-						<View
-							style={[{ height: 225 }, styles.sectionContainer]}
-						>
-							{isLoadingNearbyEvents ? (
-								<ActivityIndicator
-									size="large"
-									color={colors.textPrimary}
-								/>
-							) : nearbyEvents?.length ? (
-								<FlashList
-									data={nearbyEvents}
-									estimatedItemSize={20}
-									horizontal
-									keyExtractor={({ id }) => id}
-									renderItem={({ item }) => (
-										<EventCard
-											event={item}
-											isFeatured={false}
-											horizontalScroll
-										/>
-									)}
-								/>
-							) : (
-								<Text style={styles.noEventsText}>
-									No Nearby Events
-								</Text>
-							)}
-						</View>
-						<Text style={[styles.text, styles.sectionHeader]}>
-							NEXT SEVEN DAYS
-						</Text>
-						<View
-							style={[{ height: 225 }, styles.sectionContainer]}
-						>
-							{isLoadingEventsThisWeek ? (
-								<ActivityIndicator
-									size="large"
-									color={colors.textPrimary}
-								/>
-							) : weeksEvents?.length ? (
-								<FlashList
-									data={weeksEvents}
-									estimatedItemSize={20}
-									horizontal
-									keyExtractor={({ id }) => id}
-									renderItem={({ item }) => (
-										<EventCard
-											event={item}
-											isFeatured={false}
-											horizontalScroll
-										/>
-									)}
-								/>
-							) : (
-								<Text style={styles.noEventsText}>
-									No Events in the next Seven Days
-								</Text>
-							)}
-						</View>
+						<EventsSection
+							isLoadingSectionEvents={isLoadingRecommendation}
+							sectionEvents={recommendedEvent}
+							sectionName="Recommended Event"
+						/>
+						<EventsSection
+							isLoadingSectionEvents={isLoadingNearbyEvents}
+							sectionEvents={nearbyEvents}
+							sectionName="Local Events"
+						/>
+						<EventsSection
+							isLoadingSectionEvents={isLoadingEventsThisWeek}
+							sectionEvents={weeksEvents}
+							sectionName="Upcoming Events"
+						/>
 					</ScrollView>
 				)}
 			</SafeAreaView>
@@ -266,22 +187,6 @@ const styles = StyleSheet.create({
 	suggestionsContainer: {
 		gap: 48,
 		marginHorizontal: 20
-	},
-	noEventsText: {
-		color: colors.textPrimary,
-		fontFamily: "Geist",
-		fontSize: fontSizes.default
-	},
-	sectionContainer: {
-		alignItems: "center",
-		justifyContent: "center",
-		marginBottom: 12
-	},
-	sectionHeader: {
-		fontFamily: "Geist",
-		fontSize: fontSizes.large,
-		fontWeight: "semibold",
-		marginBottom: 12
 	},
 	text: { color: colors.textPrimary }
 });
